@@ -1,5 +1,6 @@
+flumodelr: An R Package for estimating attributable influenza morbidity and mortality
+===============
 ---
-title: "flumodelr: An R Package for estimating attributable influenza morbidity and mortality"
 output:
   github_document:
     fig_width: 9
