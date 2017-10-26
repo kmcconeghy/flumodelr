@@ -1,5 +1,3 @@
-flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality
-===============
 ---
 output:
   github_document:
@@ -7,11 +5,14 @@ output:
     fig_height: 5
 ---
 
+flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality
+===============
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(eval = TRUE)
 knitr::opts_chunk$set(warning = FALSE)
 ```
-<img src="images/testimage.gif" width=364 height=197 align="right"/>
+<img src="images/testimage.gif" width=364 height=197 align="center"/>
                                                                   
 # Authors
 Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo
