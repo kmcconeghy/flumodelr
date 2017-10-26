@@ -10,7 +10,7 @@ output:
 knitr::opts_chunk$set(eval = TRUE)
 knitr::opts_chunk$set(warning = FALSE)
 ```
-<img src=images\testimage.gif" width=364 height=197 align="right"/>
+<img src=images/testimage.gif" width=364 height=197 align="right"/>
                                                                   
 # Authors
 Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo
