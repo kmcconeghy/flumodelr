@@ -1,7 +1,7 @@
-<img src="images/testimage.gif" width=364 height=197 align="center"/>
+
 flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality
 ===============
-
+<img src="images/testimage.gif" width=364 height=197 align="center"/>
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(eval = TRUE)
 knitr::opts_chunk$set(warning = FALSE)
