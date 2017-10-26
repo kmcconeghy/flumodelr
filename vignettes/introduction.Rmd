@@ -1,0 +1,49 @@
+---
+title: 'Introducing flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality'
+author: "Kevin W. McConeghy"
+date: '`r format(Sys.time(), "%Y-%m-%d")`'
+output:
+  html_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+vignette: >
+  %\VignetteIndexEntry{Introducing flumodelr}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+<!--
+This file is part of flumodelr.
+
+flumodelr is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+flumodelr is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with flumodelr If not, see <http:#www.gnu.org/licenses/>.
+-->
+```{r setup, echo = FALSE, cache = FALSE}
+suppressWarnings({
+  suppressMessages({
+    #library(knitr, warn.conflicts = FALSE) # for opts_chunk only
+    library(flumodelr)
+    library(tidyverse)
+    library(lubridate)
+    })
+  })
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+
+```
+
+## Introduction
