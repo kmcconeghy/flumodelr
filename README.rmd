@@ -1,4 +1,4 @@
-flumodelr: An R Package for estimating attributable influenza morbidity and mortality
+flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality
 ===============
 ---
 output:
