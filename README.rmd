@@ -6,14 +6,24 @@ flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mort
 # Authors
 Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo
 
-# Description 
-The following software is a collection of R functions and datasets to examine attributable influenza morbidity and mortality. The software draws from multiple peer-reviewed studies, unpublished SAS and R code developed by other researchers (see acknowledgements). 
+# Overview 
+The following software is a collection of R functions and datasets to examine attributable influenza morbidity and mortality. The software draws from multiple peer-reviewed studies, as well as unpublished SAS and R code developed by other researchers (see acknowledgements). 
 
-```{r}
+# Installation  
+```{r }
+# install from CRAN: (Not implemented yet)
+install.packages("flumodelr")
+
+# Or the the development version from GitHub:
+# install.packages("devtools")
 devtools::install_github("kmcconeghy/flumodelr")
 ```
 
-This package calls on several other packages such as "dplyr", "lubridate".
+## Warning. This package calls on several other packages e.g. "dplyr", "lubridate", that must be installed for proper functioning.
+
+# Usage 
+
+The primary goal of this package is to provide a toolkit for researchers who wish to estimate the proportion of a particular outcome which is due to influenza. Conceptually this is achieved through estimating a baseline rate of the outcome across seasons, then using a measure of influenza endemicity to identify the marginal rate due to influenza morbidity. The particular measure of influenza endemicity and outcome being modelled can be arbitrarily specified by the user.  
 
 # Important Citations
 
