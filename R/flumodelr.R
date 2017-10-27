@@ -8,6 +8,6 @@
 #' Introduction: A general introduction to package 
 #' testdata: A description of example data sources
 #' 
-#' @docType Package
+#' @docType package
 #' @name flumodelr
 NULL

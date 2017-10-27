@@ -22,19 +22,16 @@ Suggests: testthat,
     devtools,
     knitr,
     microbenchmark,
-    magrittr,
     XML,
     memoise,
     profr,
-    ggplot2,
     digest,
     xtable,
     rmarkdown,
-    roxygen2 (>= 5.0.0)
+    roxygen2 (>= 6.0.0)
 LazyData: true
 LazyDataCompression: xz
 BugReports: https://github.com/kmcconeghy/flumodelr/issues
-License: GNU General Public License v3.0
+License: GPL-3
 VignetteBuilder: knitr
-LinkingTo: Rcpp
 RoxygenNote: 6.0.1

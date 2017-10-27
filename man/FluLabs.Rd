@@ -21,9 +21,7 @@
 FluLabs
 }
 \description{
-Description from CDC Flu Portal Dashboard
-}
-\details{
+Description from CDC Flu Portal Dashboard:
 Virologic Surveillance — Approximately 110 U.S. World Health Organization (WHO)
 Collaborating Laboratories and 270 National Respiratory and Enteric Virus 
 Surveillance System (NREVSS) laboratories, which include both public health 
@@ -46,5 +44,8 @@ CDC for further characterization, including antiviral resistance
 testing and antigenic and/or genetic characterization, and this 
 information is presented in the antiviral resistance and 
 virus characterization sections of the FluView report.
+}
+\details{
+Some variables renamed from original file for parsimony.
 }
 \keyword{datasets}

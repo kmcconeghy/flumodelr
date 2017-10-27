@@ -6,7 +6,7 @@
 \title{Deaths in 122 U.S. cities - 1962-2016. 122 Cities Mortality Reporting System.}
 \format{A data frame with 346342 rows and 8 variables:
 \describe{
-  \item{region}{Census tract region}
+  \item{region}{Referral region}
   \item{state}{Postal code for U.S. State, character string}
   \item{city}{Proper name of U.S. city, character string}
   \item{year}{observation year, integer}
@@ -14,7 +14,6 @@
   \item{deaths_pnaflu}{No. of deaths attributed to Pneumonia / Influenza}
   \item{deaths_allcause}{No. of deaths due to any cause}
   \item{deaths_65older}{No. of deaths due to any cause in those 65 years or older}
-  ...
 }}
 \source{
 \url{https://data.cdc.gov/dataset/Deaths-in-122-U-S-cities-1962-2016-122-Cities-Mort/mr8w-325u}
@@ -45,5 +44,7 @@ Date last obtained: 10/27/2017
 }
 \details{
 The dataset is in a "panel" format, city by year-week.
+
+Some variables renamed from original file for parsimony.
 }
 \keyword{datasets}
