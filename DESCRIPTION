@@ -1,27 +1,24 @@
 Package: flumodelr
 Title: An R Package for Estimating Attributable Influenza Morbidity and Mortality
-Description: The primary goal of this package is to provide a toolkit for 
-researchers who wish to estimate the proportion of a particular outcome 
-which is due to influenza. Conceptually this is achieved through estimating 
-a baseline rate of the outcome across seasons, then using a measure of 
-influenza endemicity to identify the marginal rate due to influenza morbidity. 
-The particular measure of influenza endemicity and outcome being modelled 
-can be arbitrarily specified by the user.
-Version: 0.0.1
+Description: The primary goal of this package is to provide a toolkit for researchers who wish to estimate the proportion of a particular outcome which is due to influenza. Conceptually this is achieved through estimating a baseline rate of the outcome across seasons, then using a measure of influenza endemicity to identify the marginal rate due to influenza morbidity. The particular measure of influenza endemicity and outcome being modelled can be arbitrarily specified by the user.
+Version: 0.0.0.9000
 Date: 2017-10-26
 Authors@R: c(
-    person(given = "Kevin W.", family = "McConeghy", role = c("aut", "cre", "cph"), email = "kevin_mcconeghy@brown.edu"),
+    person(given = "Kevin W.", family = "McConeghy", role = c("aut", "cre", "cph"), email = "kevin_mcconeghy@brown.edu")
     )
 Maintainer: Kevin W. McConeghy <kevin_mcconeghy@brown.edu>
 URL: https://github.com/kmcconeghy/flumodelr
 Depends:
-    R (>= 3.4.1)
-Imports:
+    R (>= 3.4.2)
+Imports: dplyr (>= 0.7.4),
+    tidyr(>= 0.7.2),
+    broom (>= 0.4.2),
+    magrittr (>= 1.5.0),
+    lubridate (>= 1.6.0),
+    ggplot2 (>= 2.2.1),
     tidyverse,
-    lubridate,
-    forecasting
-Suggests:
-    testthat,
+    forecast (>= 8.2.0)
+Suggests: testthat,
     devtools,
     knitr,
     microbenchmark,
@@ -40,4 +37,4 @@ BugReports: https://github.com/kmcconeghy/flumodelr/issues
 License: GNU General Public License v3.0
 VignetteBuilder: knitr
 LinkingTo: Rcpp
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

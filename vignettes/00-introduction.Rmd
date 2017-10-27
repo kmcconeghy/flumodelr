@@ -1,49 +1,25 @@
 ---
-title: 'Introducing flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality'
+title: "flumodelr: Introduction"
 author: "Kevin W. McConeghy"
-date: '`r format(Sys.time(), "%Y-%m-%d")`'
-output:
-  html_document:
-    toc: yes
-  pdf_document:
-    toc: yes
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introducing flumodelr}
+  %\VignetteIndexEntry{flumodelr: Introduction}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
-<!--
-This file is part of flumodelr.
 
-flumodelr is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-flumodelr is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with flumodelr If not, see <http:#www.gnu.org/licenses/>.
--->
-```{r setup, echo = FALSE, cache = FALSE}
-suppressWarnings({
-  suppressMessages({
-    #library(knitr, warn.conflicts = FALSE) # for opts_chunk only
-    library(flumodelr)
-    library(tidyverse)
-    library(lubridate)
-    })
-  })
-
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
-
-```
+Welcome to flumodelr! This program was written as a companion to academic work performed by researchers at Brown University in collaboration with Sanofi-Pasteur. The primary objective was to streamline and formalize published work on estimating attributable influenza cases. We drew from many sources which are acknowledged and cited throughout in the development of this package. 
 
 ## Introduction
+
+This vignette is a short introduction to the package for interested readers. In following vignettes describe in detail:  
+1) Publicly available data used to develop and test this software. See: INSERT LINK  
+2) Background and context of estimating influenza morbidity. See: INSERT LINK  
+3) Programming and set-up of our own functions. See: INSERT LINK  
+4) Reproduced example from an unaffiliated published scientify study. See: INSERT LINK  
+5) Special models, testing assumptions, and estimate stability analyses. See: INSERT LINK  
+
+## Contacting authors
+
+The primary author of the package and programming was Kevin W. McConeghy. Several other researchers including Andrew Zullo, Rob Van Aalst, Vincent Mor, Stefan Gravenstein provided statistical consultation, clinical insight and institutional support.  
