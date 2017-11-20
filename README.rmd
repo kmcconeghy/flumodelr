@@ -19,7 +19,7 @@ install.packages("flumodelr")
 devtools::install_github("kmcconeghy/flumodelr")
 ```
 
-### Warning. This package calls on several other packages e.g. "dplyr", "lubridate", that must be installed for proper functioning.
+### Warning. This package relies heavily of the suite of packages and programming termed 'Tidyverse' which includes several well-known packages e.g. "dplyr", "lubridate", that must be installed for proper functioning.
 
 # Usage 
 

@@ -17,9 +17,8 @@ This vignette is a short introduction to the package for interested readers. In 
 1) Publicly available data used to develop and test this software. See: INSERT LINK  
 2) Background and context of estimating influenza morbidity. See: INSERT LINK  
 3) Programming and set-up of our own functions. See: INSERT LINK  
-4) Reproduced example from an unaffiliated published scientify study. See: INSERT LINK  
+4) Reproduced example from an unaffiliated published scientific study. See: INSERT LINK  
 5) Special models, testing assumptions, and estimate stability analyses. See: INSERT LINK  
 
-## Contacting authors
-
-The primary author of the package and programming was Kevin W. McConeghy. Several other researchers including Andrew Zullo, Rob Van Aalst, Vincent Mor, Stefan Gravenstein provided statistical consultation, clinical insight and institutional support.  
+## Contacting authors  
+The primary author of the package was Kevin W. McConeghy. Several other researchers including Andrew Zullo, Rob Van Aalst, Vincent Mor, Stefan Gravenstein provided statistical consultation, clinical insight and institutional support.  
