@@ -1,5 +1,6 @@
 #' flumodelr: 
-#' An R Package for Estimating Attributable Influenza Morbidity and Mortality.
+#' An R Package for Estimating Attributable Influenza Morbidity 
+#' and Mortality.
 #' 
 #' This package contains multiple vignettes describing datasources, 
 #' background and examples.
@@ -11,10 +12,11 @@
 #' Introduction: A general introduction to package  
 #' testdata: A description of example data sources
 #' 
-#' @section Important Citations:  
+#' @references
 #' Serfling RE. Methods for current statistical analysis of 
 #' excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 
-#' 78(6): 494–506. /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/} 
+#' 78(6): 494 - 506.  
+#' /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/} 
 #' 
 #' @docType package
 #' @name flumodelr
