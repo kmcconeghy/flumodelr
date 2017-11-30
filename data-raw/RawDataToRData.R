@@ -8,7 +8,7 @@ df.ILI <- read_csv('ILINET.csv', skip=1)
 head(df.ILI)
 
   #--Some editing
-  ILINet <- df.ILI %>%
+  ilinet <- df.ILI %>%
       select(REGION, YEAR, WEEK, `%UNWEIGHTED ILI`, 
              ILITOTAL, `NUM. OF PROVIDERS`, `TOTAL PATIENTS`) %>%
       rename(state = REGION,
@@ -22,14 +22,14 @@ head(df.ILI)
              ili_tot = as.integer(ili_tot),
              providers = as.integer(providers),
              patients = as.integer(patients))
-    head(ILINet)
-    summary(ILINet)
+    head(ilinet)
+    summary(ilinet)
   #--Save for package
-  use_data(ILINet, overwrite = T)
+  use_data(ilinet, overwrite = T)
     
 ##--WHO_NREVSS_Labs
   df.Labs <- read_csv('WHO_NREVSS_Combined_prior_to_2015_16.csv', skip=1)
-  FluLabs <- df.Labs %>%
+  nrevss <- df.Labs %>%
     select(REGION, YEAR, WEEK, `TOTAL SPECIMENS`, 
            `PERCENT POSITIVE`, 
            starts_with('A '), starts_with('B'), H3N2v) %>%
@@ -48,10 +48,10 @@ head(df.ILI)
     mutate(spec_tot = as.integer(spec_tot),
            spec_pos = as.numeric(spec_pos)) %>%
     mutate_at(vars(starts_with('type')), funs(as.integer))
-    head(FluLabs)
-    summary(FluLabs)
+    head(nrevss)
+    summary(nrevss)
     #--Save for package
-    use_data(FluLabs, overwrite = T)
+    use_data(nrevss, overwrite = T)
     
 ##--CDC 122-cities data
     df.122cities <- read_csv('Deaths_in_122_U.S._cities_-_1962-2016._122_Cities_Mortality_Reporting_System.csv')
