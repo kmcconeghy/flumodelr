@@ -37,4 +37,4 @@
 #'   ...
 #' }
 #' @source \url{https://gis.cdc.gov/grasp/fluview/fluportaldashboard.html}
-"FluLabs"
+"nrevss"

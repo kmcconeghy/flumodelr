@@ -30,4 +30,4 @@
 #'   \item{patients}{No. of total patient visits}
 #' }
 #' @source \url{https://gis.cdc.gov/grasp/fluview/fluportaldashboard.html}
-"ILINet"
+"ilinet"

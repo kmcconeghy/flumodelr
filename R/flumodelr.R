@@ -5,13 +5,16 @@
 #' background and examples.
 #' 
 #' @section Functions:
-#' 
+#' serflm: Cyclical Linear Regression Model  
 #' 
 #' @section Vignettes:
 #' Introduction: A general introduction to package  
 #' testdata: A description of example data sources
 #' 
-#' @section Important Citations:
+#' @section Important Citations:  
+#' Serfling RE. Methods for current statistical analysis of 
+#' excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 
+#' 78(6): 494–506. /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/} 
 #' 
 #' @docType package
 #' @name flumodelr
