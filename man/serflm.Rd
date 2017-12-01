@@ -19,9 +19,7 @@ or 'serfling' model
 \examples{
 require(flumodelr)
 cdc122 <- flumodelr::cdc122city
-m.out <- serflm(treat ~ age + educ + black + hispan, 
-                data=cdc122)
+m.out <- serflm(data=cdc122)
 summary(m.out)
-
 
 }

@@ -18,8 +18,10 @@ serflm: Cyclical Linear Regression Model
 
 \section{Vignettes}{
 
+
 Introduction: A general introduction to package  
-testdata: A description of example data sources
+
+Data: A description of example data sources
 }
 
 \references{

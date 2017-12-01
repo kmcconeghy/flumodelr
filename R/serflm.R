@@ -14,6 +14,7 @@
 #' cdc122 <- flumodelr::cdc122city
 #' m.out <- serflm(data=cdc122)
 #' summary(m.out)
+#' 
 serflm <- function(data=NULL) {
   
   #sanity checks

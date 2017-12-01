@@ -7,4 +7,4 @@ md
 ^\.travis\.yml$
 th travis
 ^data-raw$
-^buildpackage1.R$
+^buildpackage.R$
