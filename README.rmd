@@ -35,6 +35,14 @@ The current objective is to successfully recreate the basic Surfling model.
 
 We hope to increase the number of modelling options periodically including, bayesian estimation, advancing forecasting, and machine learning.
 
-# Important Citations
+# Important Citations  
+Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506.  
+/url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/}  
 
-# Acknowledgements
+# Acknowledgements  
+
+The programming was derived with guidance and example code from the following individuals.  
+
+* Yenong and Ellyn Russo. White River Junction VA Medical Center, VT. Department of Veteran Affairs.  
+
+* Baltazar Nunes. Researcher, Epidemiological Research Unit (Head), Departament of Epidemiology.  
