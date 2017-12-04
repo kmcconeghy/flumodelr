@@ -16,11 +16,34 @@ knitr::opts_chunk$set(
 )
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+The primary method paper was a 1963 paper published by Robert Serfling from the Centers for Disease Control and Prevention.  
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+[Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/)
+
+The paper outlines a strategy for estimating the proportion of deaths are due to influenza. The primary goal was to develop a "standard curve of expected seasonal mortality". The concept was that an individual could use historical data to estimate seasonal trends in influenza. Then for a given place-time an researcher could evaluate how many deaths occurred in excess of this baseline rate. Much of the original paper is of little interest given modern computing methods, but the basic concept persists as a reasonable approach to estimating "flu" deaths.      
+
+## Influenza  
+Critically, it should be understood that influenza epidemics are highly seasonal with spikes in the winter months, commonly January - February. This seasonality leads to a cyclical rate of influenza morbidity and mortality.  
+
+<img src="C:\\Users\\User\\Documents\\GitHub\\flumodelr\\images\\flumodelr_cdc122ex.gif" width=364 height=197 align="center"/>  
+![Image obtained from: https://www.cdc.gov/flu/weekly/]  
+
+It was noted by early researchers that the cyclical rate (red line), could be modeled by a mathematical function (black lines). 
+
+## Linear and Cyclical Regression Models 
+
+The classical ordinary least squares framework is often described in matrix notation as:  
+$$y_i = X_i\beta + u_{i} \quad \textrm{where} \quad i = 1,..,n$$
+
+Where $y$ is a dependent variable, $X$ is a vector of regressors (i.e. independent variables) with $k$-dimensions, $\beta$ is a vector of the coefficients for $X$, and $u$ is the residual error term.  often simply as: $y= X\beta+u$.  
+
+Given a simple additive model with one independent variable x:
+$$Figure \ 1. \  y = \alpha_0 + \beta_1*x_1 + u$$
+
+Assume x, is the rate of influenza in as simple time-series.  The above model is inadequate, and will poorly fit the above figure.  
+
+Early investigators including Serfling propose the following modifications:
+$$Figure \ 2. \  y = \alpha_0 + \beta_1*x_1 + u$$
 
 ## Vignette Info
 

@@ -1,6 +1,6 @@
 ---
 title: "flumodelr: data"
-author: "Vignette Author"
+author: "Kevin W. McConeghy"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
