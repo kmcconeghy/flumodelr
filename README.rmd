@@ -26,6 +26,12 @@ devtools::install_github("kmcconeghy/flumodelr")
 
 The primary goal of this package is to provide a toolkit for researchers who wish to estimate the proportion of a particular outcome which is due to influenza. Conceptually this is achieved through estimating a baseline rate of the outcome across seasons, then using a measure of influenza endemicity to identify the marginal rate due to influenza morbidity. The particular measure of influenza endemicity and outcome being modelled can be arbitrarily specified by the user.  
 
+# Vignettes  
+
+Several companion documents have been written to assist interested readers with the background and use of the package. We suggest you start here:
+
+
+
 # Latest Version Updates  
 
 This package is in the early stages of development. Many features may change in a short amount of time.  
