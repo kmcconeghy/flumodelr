@@ -4,11 +4,11 @@
 \name{flumodelr}
 \alias{flumodelr}
 \alias{flumodelr-package}
-\title{flumodelr: 
-An R Package for Estimating Attributable Influenza Morbidity 
+\title{flumodelr:
+An R Package for Estimating Attributable Influenza Morbidity
 and Mortality.}
 \description{
-This package contains multiple vignettes describing datasources, 
+This package contains multiple vignettes describing datasources,
 background and examples.
 }
 \section{Functions}{
@@ -19,14 +19,14 @@ serflm: Cyclical Linear Regression Model
 \section{Vignettes}{
 
 
-Introduction: A general introduction to package  
+Introduction: A general introduction to package
 
 Data: A description of example data sources
 }
 
 \references{
-Serfling RE. Methods for current statistical analysis of 
-excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 
-78(6): 494 - 506.  
+Serfling RE. Methods for current statistical analysis of
+excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun;
+78(6): 494 - 506.
 /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/}
 }

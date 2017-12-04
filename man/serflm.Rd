@@ -13,7 +13,7 @@ serflm(data = NULL)
 an object of class lm.summary
 }
 \description{
-Performs a cyclical linear regression model, 
+Performs a cyclical linear regression model,
 or 'serfling' model
 }
 \examples{
@@ -24,8 +24,8 @@ summary(m.out)
 
 }
 \references{
-Serfling RE. Methods for current statistical analysis of 
-excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 
-78(6): 494 - 506.  
+Serfling RE. Methods for current statistical analysis of
+excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun;
+78(6): 494 - 506.
 /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/}
 }

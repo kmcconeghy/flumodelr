@@ -12,8 +12,8 @@
 #' @examples
 #' require(flumodelr)
 #' cdc122 <- flumodelr::cdc122city
-#' m.out <- serflm(data=cdc122)
-#' summary(m.out)
+#' fit <- serflm(data=cdc122)
+#' summary(fit)
 #' 
 #' @references 
 #' Serfling RE. Methods for current statistical analysis of 
