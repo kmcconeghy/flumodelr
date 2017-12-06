@@ -245,7 +245,7 @@ df_epi <- df_base %>%
   rowwise() %>%
   mutate(epidemic = if_else(sum(epidemic, epidemic2, epidemic3, 
                                    epidemic4, epidemic5, na.rm=T)>0, T, F),
-         excess = if_else(epidemic==T, fludeaths - pred_y0_uci, 0))
+         excess = if_else(epidemic==T & (fludeaths - pred_y0_uci)>0, fludeaths - pred_y0_uci, 0))
 df_epi %>% select(year, week, threshold, epidemic, excess)
 ```
 
