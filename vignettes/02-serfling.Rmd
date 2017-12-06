@@ -237,15 +237,22 @@ The next step is to compute the no. of deaths in excess of the epidemic threshol
 ```{r }
 df_epi <- df_base %>%
   mutate(threshold = if_else(fludeaths > pred_y0_uci, T, F),
-         epidemic = if_else(lead(threshold)==T & threshold==T, T, F),
+         epidemic = if_else(threshold==T & lead(threshold)==T, T, NA),
+         epidemic2 = if_else(lag(epidemic)==T & threshold==T, T, epidemic),
+         epidemic3 = if_else(lag(epidemic2)==T & lead(threshold)==T, T, epidemic2),
+         epidemic4 = if_else(lag(epidemic3)==T & threshold==T, T, epidemic3),
+         epidemic5 = coalesce(epidemic4, F)) %>%
+  rowwise() %>%
+  mutate(epidemic = if_else(sum(epidemic, epidemic2, epidemic3, 
+                                   epidemic4, epidemic5, na.rm=T)>0, T, F),
          excess = if_else(epidemic==T, fludeaths - pred_y0_uci, 0))
-df_epi %>% select(year, week, fludeaths, pred_y0_uci, threshold, epidemic, excess)
+df_epi %>% select(year, week, threshold, epidemic, excess)
 ```
 
 ```{r, echo=F, results='as.is', fig.width=7.0}
 ggplot(df_epi, aes(x=yrweek_dt)) + 
   geom_line(aes(y=excess, colour="Excess mortality"), size=0.8, linetype=2) +
-  geom_line(aes(y=fludeaths, colour="Reported mortality"), size=0.8, linetype=2) +
+  geom_line(aes(y=fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
   scale_colour_manual("Line",
@@ -262,6 +269,6 @@ We see the following problems with this approach the reader should consider:
 
  * The authors view the concept as sound, but its implementation in the original work is somewhat dated given modern computing methods. The constrains of needing an easy to estimate linear model are no longer relevant to the modern analyst. More elegant models (e.g. ARIMA) are available to the modern analyst. 
  
- * Additionally the approach is dependent on an accurate baseline period. Whether to include mild or known epidemic seasons is an important but subjective decision the analyst must make.
+ * Additionally the approach is dependent on an accurate baseline period. Whether to include mild or known epidemic seasons, which cut-off to define as the influenza season (e.g. week 40 - week 20) are important but subjective decisions the analyst must make.  
  
  * The selected threshold for what constitutes "excess" is somewhat arbitrary. The original Serfling paper describes 1.64 standard deviations for 2 or more weeks as criteria. There is no empirical evidence given for this, but a threshold is needed and the argument is pragmatic and logical. Recent papers have used the 95% prediction interval.    

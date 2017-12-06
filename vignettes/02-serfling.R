@@ -135,14 +135,21 @@ ggplot(df_base, aes(x=yrweek_dt)) +
 ## ------------------------------------------------------------------------
 df_epi <- df_base %>%
   mutate(threshold = if_else(fludeaths > pred_y0_uci, T, F),
-         epidemic = if_else(lead(threshold)==T & threshold==T, T, F),
+         epidemic = if_else(threshold==T & lead(threshold)==T, T, NA),
+         epidemic2 = if_else(lag(epidemic)==T & threshold==T, T, epidemic),
+         epidemic3 = if_else(lag(epidemic2)==T & lead(threshold)==T, T, epidemic2),
+         epidemic4 = if_else(lag(epidemic3)==T & threshold==T, T, epidemic3),
+         epidemic5 = coalesce(epidemic4, F)) %>%
+  rowwise() %>%
+  mutate(epidemic = if_else(sum(epidemic, epidemic2, epidemic3, 
+                                   epidemic4, epidemic5, na.rm=T)>0, T, F),
          excess = if_else(epidemic==T, fludeaths - pred_y0_uci, 0))
-df_epi %>% select(year, week, fludeaths, pred_y0_uci, threshold, epidemic, excess)
+df_epi %>% select(year, week, threshold, epidemic, excess)
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
 ggplot(df_epi, aes(x=yrweek_dt)) + 
   geom_line(aes(y=excess, colour="Excess mortality"), size=0.8, linetype=2) +
-  geom_line(aes(y=fludeaths, colour="Reported mortality"), size=0.8, linetype=2) +
+  geom_line(aes(y=fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
   scale_colour_manual("Line",
