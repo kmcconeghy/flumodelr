@@ -72,3 +72,19 @@ head(df.ILI)
     summary(cdc122city)
     #--Save for package
     use_data(cdc122city, overwrite = T)
+    
+#--Make example time-series object  
+    flu_ex <- cdc122city %>%
+      arrange(year, week) %>%
+      group_by(year, week) %>%
+      summarize(fludeaths = mean(deaths_pnaflu, na.rm=T)) %>%
+      mutate(yrweek_dt = as.POSIXct(paste0(year, "-", week, "-", "1"), format = "%Y-%U-%u"),
+             yrweek_dt = as_date(yrweek_dt)) %>%
+      na.omit() %>% #drop missing
+      ungroup() %>%
+      mutate(epi = if_else(yrweek_dt >= date(paste0(year(yrweek_dt), "-10-01")) |
+                           yrweek_dt <= date(paste0(year(yrweek_dt), "-05-31")), T, F))
+      
+    #--Save for package
+    use_data(flu_ex, overwrite = T)
+    
