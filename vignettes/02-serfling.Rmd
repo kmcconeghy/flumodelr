@@ -24,7 +24,7 @@ The paper outlines a strategy for estimating the proportion of deaths are due to
 
 ## Influenza  
 Critically, it should be understood that influenza epidemics are highly seasonal with spikes in the winter months, commonly January - February. This seasonality leads to a cyclical rate of influenza morbidity and mortality.  
-```{r }
+```{r, results='asis', fig.width=9}
 setwd("~/GitHub/flumodelr/")
 library(dplyr)
 library(ggplot2)
