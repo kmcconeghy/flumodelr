@@ -16,50 +16,85 @@ knitr::opts_chunk$set(
 )
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+The primary method paper was a 1963 paper published by Robert Serfling from the Centers for Disease Control and Prevention.  
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+[Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/)
 
-## Vignette Info
+The paper outlines a strategy for estimating the proportion of deaths are due to influenza. The primary goal was to develop a "standard curve of expected seasonal mortality". The concept was that an individual could use historical data to estimate seasonal trends in influenza. Then for a given place-time an researcher could evaluate how many deaths occurred in excess of this baseline rate. Much of the original paper is of little interest given modern computing methods, but the basic concept persists as a reasonable approach to estimating "flu" deaths.      
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+## Influenza  
+Critically, it should be understood that influenza epidemics are highly seasonal with spikes in the winter months, commonly January - February. This seasonality leads to a cyclical rate of influenza morbidity and mortality.  
+```{r }
+setwd("~/GitHub/flumodelr/")
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(scales)
 
-## Styles
+load(paste0(getwd(), "/data/cdc122city.rda"))
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+## Make Example Figure 
+weekly <- cdc122city %>%
+  group_by(year, week) %>%
+  summarize(fludeaths = mean(deaths_pnaflu, na.rm=T)) %>%
+  mutate(yrweek_dt = as.POSIXct(paste0(year, "-", week, "-", "1"), format = "%Y-%U-%u"),
+         yrweek_dt = as_date(yrweek_dt)) %>%
+  filter(year>=2010)
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+g1 <- ggplot(weekly, aes(x=yrweek_dt, y=fludeaths)) + 
+  geom_line(size=0.8, colour="#CC0000") +
+  scale_x_date(labels = date_format("%Y-%b"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year-month") + 
+  ylab("Deaths per 100,000") + 
+  theme_light(base_size=16)
+g1
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+It was noted by early researchers that the cyclical rate (red line), could be modeled by a mathematical function. 
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+## Linear and Cyclical Regression Models 
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+The classical ordinary least squares framework is often described in matrix notation as:  
+$$y_i = X_i\beta + u_{i} \quad \textrm{where} \quad i = 1,..,n$$
 
-## More Examples
+Where $y$ is a dependent variable, $X$ is a vector of regressors (i.e. independent variables) with $k$-dimensions, $\beta$ is a vector of the coefficients for $X$, and $u$ is the residual error term.  often simply as: $y= X\beta+u$.  
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+Given a simple additive model with one independent variable x:
+$$Eq \ 1. \  y = \alpha_0 + \beta_1*x_1 + u$$
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
+Assume x, is the rate of influenza in as simple time-series.  The above model is inadequate, and will poorly fit the above figure.  
 
-Also a quote using `>`:
+Early investigators including Serfling proposed that a Fourier term be added to model the cycle like so:
+$$Eq \ 2. \  y = \alpha_0 + \beta_1*t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u$$
+This allows us to estimate a linear model which accounts for the cyclical nature of the disease.  The original paper recommends one Fourier term (i.e. sine/cos pair). However, this was a pragmatic decision, and modern approaches could easily incorporate more. 
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+See: https://en.wikipedia.org/wiki/Fourier_series for background on Fourier terms.  
+
+## Estimation approach  
+
+The serfling paper describes 4 steps:
+
+ * Estimate secular trend  
+ * Remove trend from data  
+ * Estimate seasonal change from adjusted data  
+ * Restore trend component  
+ 
+In this package we operationalize this like so:
+
+ * Given a time-series dataset; with a variable for a flu outcome (i.e. deaths, hospitalizations).  
+ * Estimate a cyclical regression as above; 
+  * predict outcome rate  (solid black line)
+  * predict outcome rate + 1.64 standard deviations (dashed black line)
+ * Observations falling outside the dashed black line are "excess"  
+  * Compute the difference between the observed - predicted  
+ 
+## Criticisms of this approach  
+
+We see the following problems with this approach the reader should consider:  
+
+ * The authors view the concept as sound, but its implementation in the original work is somewhat dated given modern computing methods. The constrains of needing an easy to estimate linear model are no longer relevant to the modern analyst. More elegant models (e.g. ARIMA) which may better account for seasonal spikes (i.e. epidemics) are probably an overall better approach. 
+ 
+ * Additionally the approach is dependent on an accurate baseline period. Whether to include mild or known epidemic seasons is an important but subjective decision the analyst must make.  
+ 
+ * The selected threshold for what constitutes "excess" is somewhat arbitrary. The original Serfling paper describes 1.64 standard deviations for 2 or more weeks as criteria. There is not an evidence for this, but a threshold is needed and the argument is pragmatic and logical.  
