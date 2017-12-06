@@ -1,15 +1,12 @@
 
 flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality
 ===============
-<<<<<<< HEAD
-<img src="images/testimage.gif" width=364 height=197 align="center"/>
                                                                  
 # Authors
 Kevin W. McConeghy, Rob van Aalst, Andrew Zullo
 =======
 <img src="images/flumodelr_cdc122ex.gif" width=364 height=197 align="center"/>  
 [Image obtained from: https://www.cdc.gov/flu/weekly/]
->>>>>>> 4ff49f3fbd5d25d8782456a0a3da61ccb02b520d
 
 # Authors  
 Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo  
@@ -37,19 +34,13 @@ The primary goal of this package is to provide a toolkit for researchers who wis
 
 Several companion documents have been written to assist interested readers with the background and use of the package. We suggest you start here:
 
-
-
 # Latest Version Updates  
 
 This package is in the early stages of development. Many features may change in a short amount of time.  
 
 # Future Goals for flumodelr  
 
-<<<<<<< HEAD
 The current objective is to successfully recreate the basic Serfling model. 
-=======
-The current objective is to successfully recreate the basic Surfling model.  
->>>>>>> 4ff49f3fbd5d25d8782456a0a3da61ccb02b520d
 
 We hope to increase the number of modelling options periodically including, bayesian estimation, advancing forecasting, and machine learning.  
 
