@@ -4,10 +4,28 @@
 \alias{serflm}
 \title{serflm}
 \usage{
-serflm(data = NULL)
+serflm(data = NULL, flu = NULL, epi = NULL, time = NULL,
+  t.interval = "wofy", smooth = F)
 }
 \arguments{
-\item{data}{A dataframe class object}
+\item{data}{A dataframe class object, must contain time variable,
+epidemic indicator, and measure of influenza morbidity}
+
+\item{flu}{A character string of length=1, identifies
+a numeric type variable in dataframe data which is the measure
+of disease morbidity / mortality}
+
+\item{epi}{A character string of length=1, identifies
+a logical type variable in dataframe data which indicates epidemic
+vs non-epidemic periods}
+
+\item{time}{A character string of length=1, identifies
+a numeric/integer class variable in dataframe which corresponds
+to a unit of time, must be unique (i.e. non-repeating)}
+
+\item{t.interval}{A character string, must specify whether
+unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
+or month/years ("mofy"), days/years("dofy")}
 }
 \value{
 an object of class lm.summary
@@ -18,8 +36,11 @@ or 'serfling' model
 }
 \examples{
 require(flumodelr)
-cdc122 <- flumodelr::cdc122city
-fit <- serflm(data=cdc122)
+flu_ex <- flumodelr::flu_ex
+fit <- serflm(data=flu_ex, 
+              flu = "fludeaths", epi="epi", 
+              time="yrweek_dt", smooth=T)
+              
 summary(fit)
 
 }
