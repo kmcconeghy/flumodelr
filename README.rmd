@@ -5,7 +5,7 @@ flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mort
 # Authors
 Kevin W. McConeghy, Rob van Aalst, Andrew Zullo
 =======
-<img src="images/flumodelr_cdc122ex.jpeg" width=1024 height=394 align="center"/>  
+<img src="images/flumodelr_cdc122ex.jpeg" width=920 height=350 align="center"/>  
 [Data obtained from: https://www.cdc.gov/flu/weekly/]
 
 # Authors  
