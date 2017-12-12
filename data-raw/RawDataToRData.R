@@ -2,6 +2,7 @@ setwd("~/GitHub/flumodelr/data-raw")
 library('dplyr')
 library('readr')
 library('devtools')
+library('lubridate')
 
 ##--ILINET
 df.ILI <- read_csv('ILINET.csv', skip=1)
@@ -74,6 +75,15 @@ head(df.ILI)
     use_data(cdc122city, overwrite = T)
     
 #--Make example time-series object  
+  nrevss2 <- nrevss %>%
+      mutate(spec_pos = rowSums(select(., starts_with('type_')), na.rm=T)) %>%
+      group_by(year, week) %>%
+      summarize(spec_tot = sum(spec_tot, na.rm=T),
+                spec_pos = sum(spec_pos, na.rm=T),
+                prop_flupos = spec_pos / spec_tot) %>%
+    mutate(yrweek_dt = as.POSIXct(paste0(year, "-", week, "-", "1"), format = "%Y-%U-%u"),
+           yrweek_dt = as_date(yrweek_dt) + dweeks(2)) #Add 2 weeks for delay
+                
     flu_ex <- cdc122city %>%
       arrange(year, week) %>%
       group_by(year, week) %>%
@@ -83,8 +93,10 @@ head(df.ILI)
       na.omit() %>% #drop missing
       ungroup() %>%
       mutate(epi = if_else(yrweek_dt >= date(paste0(year(yrweek_dt), "-10-01")) |
-                           yrweek_dt <= date(paste0(year(yrweek_dt), "-05-31")), T, F))
-      
+                           yrweek_dt <= date(paste0(year(yrweek_dt), "-05-31")), T, F)) %>%
+      inner_join(., nrevss2[,c('yrweek_dt', 'prop_flupos')], 
+                 by=c('yrweek_dt')) %>% #visual inspection
+
     #--Save for package
     use_data(flu_ex, overwrite = T)
     

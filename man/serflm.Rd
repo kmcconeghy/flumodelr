@@ -26,6 +26,10 @@ to a unit of time, must be unique (i.e. non-repeating)}
 \item{t.interval}{A character string, must specify whether
 unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
 or month/years ("mofy"), days/years("dofy")}
+
+\item{smooth}{A logical type indicator, if set T, then model will
+include a set of polynomial terms (time-unit*time-unit) which
+will smooth the fitted line.}
 }
 \value{
 an object of class lm.summary

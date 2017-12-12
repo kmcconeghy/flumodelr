@@ -7,6 +7,7 @@ vignette: >
   %\VignetteIndexEntry{Serfling Model Background}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: flumodelr.bib
 ---
 
 ```{r setup, include = FALSE}
@@ -278,12 +279,101 @@ ggplot(df_epi, aes(x=yrweek_dt)) +
   theme_light(base_size=16)
 ```
 
+## Virology data  
+
+In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases see `?nrevss`. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of high flu activity can be used to inform spikes in influenza activity, increasing confidence that deaths are influenza related and estimated influenza morbidity and mortality.  
+
+```{r, echo=F, results='as.is', fig.width=7.0}
+ggplot(flu_ex, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=prop_flupos)) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("Proportion of influenza (+) isolates") + 
+  theme_light(base_size=16)
+```
+
+In light of this the above model can be modified like so:
+
+$$Eq \ 3. \  y = \alpha_0 + \beta_1*t + \beta_2*Flu_t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u$$
+Where Flu = no. of isolates positive for influenza / total isolates tested in a given timepoint t.  
+
+Many published examples of this exist. Some authors include data on the % RSV (+), as well as breakdown influenza by subtype and even include data on weather, humidity etc.  
+
+See [@Wang2012, @Matias2016]
+
+###  Model
+```{r, echo=F, results='as.is', fig.width=7}
+#### Step 2b. Baseline Cyclical model + virology 
+base_fit <- df_mod %>%
+  #mutate(fludeaths = if_else(epi == T, NA_real_, fludeaths)) %>%
+  lm(fludeaths ~ week2 + week_2 + week_3 + week_4 + prop_flupos + 
+       sin_f1 + cos_f1, 
+     data=., na.action = na.exclude)
+
+## Fitted values + prediction interval
+df_pred <- df_mod %>%
+  predict(base_fit, newdata=., se.fit=TRUE, 
+          interval="prediction", level=0.95)
+
+pred_y0 <- df_pred$fit[,1] #fitted values
+pred_y0_uci <- df_pred$fit[,3] #95% UCI
+pred_y0_serf <- df_pred$fit[,1] + 
+                  1.64*sd(df_pred$fit[,1]) #Fitted line + 1.64 SD
+
+df_base <- df %>%
+  add_column(., pred_y0, pred_y0_uci, pred_y0_serf)  
+
+ggplot(df_base, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=fludeaths, colour="Observed Deaths", 
+                linetype="Observed Deaths"), size=0.8) +
+  geom_line(aes(y=pred_y0, colour="Predicted Deaths", 
+                linetype="Predicted Deaths"), size=0.8) +
+  geom_line(aes(y=pred_y0_uci, colour="95% PI", 
+                linetype="95% PI"), size=0.8) +
+  geom_line(aes(y=pred_y0_serf, colour="Serfling Threshold", 
+                linetype="Serfling Threshold"), size=0.8) +
+  scale_colour_manual("Line",
+                      breaks=c("Observed Deaths", 
+                                 "Predicted Deaths", 
+                                 "95% PI",
+                                 "Serfling Threshold"),
+                      values = c("Observed Deaths"="#CC0000", 
+                                 "Predicted Deaths"="black", 
+                                 "95% PI"="black",
+                                 "Serfling Threshold"="black")) +
+  scale_linetype_manual("Line", 
+                        breaks=c("Observed Deaths", 
+                                 "Predicted Deaths", 
+                                 "95% PI",
+                                 "Serfling Threshold"),
+                        values = c("Observed Deaths"=1,
+                                   "Predicted Deaths"=1,
+                                   "95% PI"=2, 
+                                   "Serfling Threshold"=3)) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("Deaths per 100,000") + 
+  theme_light(base_size=14) +
+  theme(legend.text=element_text(size=10)) +
+  labs(title="Influenza Deaths, Epidemic Thresholds") +
+  guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
+```
+
+## Alternative approachs  
+### Periodic Cubic Splines  
+```{r }
+
+```
+
 ## Criticisms of this approach  
 
-We see the following problems with this approach the reader should consider:  
-
- * The authors view the concept as sound, but its implementation in the original work is somewhat dated given modern computing methods. The constrains of needing an easy to estimate linear model are no longer relevant to the modern analyst. More elegant models (e.g. ARIMA) are available to the modern analyst. 
+We see the following problems with this approach the reader should consider:    
+ * The authors view the concept as sound, but its implementation in the original work is somewhat dated given modern computing methods. The constrains of needing an easy to estimate linear model are no longer relevant to the modern analyst. More elegant models (e.g. ARIMA, splines) are now available.  
  
  * Additionally the approach is dependent on an accurate baseline period. Whether to include mild or known epidemic seasons, which cut-off to define as the influenza season (e.g. week 40 - week 20) are important but subjective decisions the analyst must make.  
  
  * The selected threshold for what constitutes "excess" is somewhat arbitrary. The original Serfling paper describes 1.64 standard deviations for 2 or more weeks as criteria. There is no empirical evidence given for this, but a threshold is needed and the argument is pragmatic and logical. Recent papers have used the 95% prediction interval.    
+ 
+# References  

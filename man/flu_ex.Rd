@@ -11,6 +11,7 @@
 \item{fludeaths}{No. of deaths / 100,000 attributed to Pneumonia / Influenza}
 \item{yrweek_dt}{year-week-day of rate, Date}
 \item{epi}{an indicator T if between Oct, 1st - May, 31st}
+\item{prop_flupos}{No. of influenza positive isolates / total no. tested, from NREVSS data, see ?nrevss}
 }}
 \source{
 \url{https://data.cdc.gov/dataset/Deaths-in-122-U-S-cities-1962-2016-122-Cities-Mort/mr8w-325u}
