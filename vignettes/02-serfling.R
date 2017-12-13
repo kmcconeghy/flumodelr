@@ -171,3 +171,72 @@ ggplot(df_epi, aes(x=yrweek_dt)) +
   ylab("Deaths per 100,000") + 
   theme_light(base_size=16)
 
+## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
+ggplot(flu_ex, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=prop_flupos)) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("Proportion of influenza (+) isolates") + 
+  theme_light(base_size=16)
+
+## ---- echo=F, results='as.is', fig.width=7-------------------------------
+#### Step 2b. Baseline Cyclical model + virology 
+base_fit <- df_mod %>%
+  #mutate(fludeaths = if_else(epi == T, NA_real_, fludeaths)) %>%
+  lm(fludeaths ~ week2 + week_2 + week_3 + week_4 + prop_flupos + 
+       sin_f1 + cos_f1, 
+     data=., na.action = na.exclude)
+
+## Fitted values + prediction interval
+df_pred <- df_mod %>%
+  predict(base_fit, newdata=., se.fit=TRUE, 
+          interval="prediction", level=0.95)
+
+pred_y0 <- df_pred$fit[,1] #fitted values
+pred_y0_uci <- df_pred$fit[,3] #95% UCI
+pred_y0_serf <- df_pred$fit[,1] + 
+                  1.64*sd(df_pred$fit[,1]) #Fitted line + 1.64 SD
+
+df_base <- df %>%
+  add_column(., pred_y0, pred_y0_uci, pred_y0_serf)  
+
+ggplot(df_base, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=fludeaths, colour="Observed Deaths", 
+                linetype="Observed Deaths"), size=0.8) +
+  geom_line(aes(y=pred_y0, colour="Predicted Deaths", 
+                linetype="Predicted Deaths"), size=0.8) +
+  geom_line(aes(y=pred_y0_uci, colour="95% PI", 
+                linetype="95% PI"), size=0.8) +
+  geom_line(aes(y=pred_y0_serf, colour="Serfling Threshold", 
+                linetype="Serfling Threshold"), size=0.8) +
+  scale_colour_manual("Line",
+                      breaks=c("Observed Deaths", 
+                                 "Predicted Deaths", 
+                                 "95% PI",
+                                 "Serfling Threshold"),
+                      values = c("Observed Deaths"="#CC0000", 
+                                 "Predicted Deaths"="black", 
+                                 "95% PI"="black",
+                                 "Serfling Threshold"="black")) +
+  scale_linetype_manual("Line", 
+                        breaks=c("Observed Deaths", 
+                                 "Predicted Deaths", 
+                                 "95% PI",
+                                 "Serfling Threshold"),
+                        values = c("Observed Deaths"=1,
+                                   "Predicted Deaths"=1,
+                                   "95% PI"=2, 
+                                   "Serfling Threshold"=3)) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("Deaths per 100,000") + 
+  theme_light(base_size=14) +
+  theme(legend.text=element_text(size=10)) +
+  labs(title="Influenza Deaths, Epidemic Thresholds") +
+  guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
+
+## ------------------------------------------------------------------------
+
+

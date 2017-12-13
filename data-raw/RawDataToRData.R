@@ -95,7 +95,7 @@ head(df.ILI)
       mutate(epi = if_else(yrweek_dt >= date(paste0(year(yrweek_dt), "-10-01")) |
                            yrweek_dt <= date(paste0(year(yrweek_dt), "-05-31")), T, F)) %>%
       inner_join(., nrevss2[,c('yrweek_dt', 'prop_flupos')], 
-                 by=c('yrweek_dt')) %>% #visual inspection
+                 by=c('yrweek_dt')) #visual inspection
 
     #--Save for package
     use_data(flu_ex, overwrite = T)

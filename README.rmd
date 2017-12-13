@@ -1,15 +1,27 @@
+```{r, echo = FALSE}
+
+suppressPackageStartupMessages({
+  library(flumodelr)
+})
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
 
 flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality
 ===============
+## flumodelr statistics, based on Rstudio mirror
+[![CRAN version](https://www.r-pkg.org/badges/version/flumodelr)](https://cran.r-project.org/package=flumodelr)
+[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/flumodelr)](https://cran.r-project.org/package=flumodelr)
                                                                  
 # Authors
-Kevin W. McConeghy, Rob van Aalst, Andrew Zullo
+Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo
 =======
 <img src="images/flumodelr_cdc122ex.jpeg" width=920 height=350 align="center"/>  
 [Data obtained from: https://www.cdc.gov/flu/weekly/]
-
-# Authors  
-Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo  
 
 # Overview  
 The following software is a collection of R functions and datasets to examine attributable influenza morbidity and mortality. The software draws from multiple peer-reviewed studies, as well as unpublished SAS and R code developed by other researchers (see acknowledgements).  
@@ -24,15 +36,21 @@ install.packages("flumodelr")
 devtools::install_github("kmcconeghy/flumodelr")
 ```
 
-### Warning. This package relies heavily of the suite of packages and programming termed 'Tidyverse' which includes several well-known packages e.g. "dplyr", "lubridate", that must be installed for proper functioning.  
+### Warning. This package relies heavily on the suite of packages and programming termed "Tidyverse", e.g. "dplyr", "lubridate", that must be installed for proper functioning.  
 
 # Usage  
 
-The primary goal of this package is to provide a toolkit for researchers who wish to estimate the proportion of a particular outcome which is due to influenza. Conceptually this is achieved through estimating a baseline rate of the outcome across seasons, then using a measure of influenza endemicity to identify the marginal rate due to influenza morbidity. The particular measure of influenza endemicity and outcome being modelled can be arbitrarily specified by the user.  
+The primary goal of this package is to provide a toolkit for researchers who wish to estimate the attributable proportion of an outcome due to influenza morbidity and mortality. Conceptually this is achieved through estimating a baseline rate of the outcome in the absence of influenza, then using a measure of influenza endemicity to identify the marginal rate due to influenza morbidity. The particular measure of influenza endemicity and outcome being modelled can be arbitrarily specified by the user.  
 
 # Vignettes  
 
 Several companion documents have been written to assist interested readers with the background and use of the package. We suggest you start here:
+[Introduction to flumodelr](https://github.com/kmcconeghy/flumodelr/blob/master/vignettes/01-introduction.Rmd)  
+
+or if the package is installed:  
+```{r, eval=F}
+browseVignettes("flumodelr")
+```
 
 # Latest Version Updates  
 
@@ -46,6 +64,8 @@ We hope to increase the number of modelling options periodically including, baye
 
 # Important References   
 Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506.  [Pubmed Link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/)  
+
+Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L, Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated deaths made using four different methods. Influenza Other Respir Viruses. 2009 Jan;3(1):37-49.[Pubmed Link](https://www.ncbi.nlm.nih.gov/pubmed/19453440)  
 
 # Acknowledgements  
 
