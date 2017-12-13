@@ -92,8 +92,6 @@ head(df.ILI)
              yrweek_dt = as_date(yrweek_dt)) %>%
       na.omit() %>% #drop missing
       ungroup() %>%
-      mutate(epi = if_else(yrweek_dt >= date(paste0(year(yrweek_dt), "-10-01")) |
-                           yrweek_dt <= date(paste0(year(yrweek_dt), "-05-31")), T, F)) %>%
       inner_join(., nrevss2[,c('yrweek_dt', 'prop_flupos')], 
                  by=c('yrweek_dt')) #visual inspection
 

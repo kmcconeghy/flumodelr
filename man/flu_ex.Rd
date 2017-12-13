@@ -10,7 +10,6 @@
 \item{week}{observation week, integer}
 \item{fludeaths}{No. of deaths / 100,000 attributed to Pneumonia / Influenza}
 \item{yrweek_dt}{year-week-day of rate, Date}
-\item{epi}{an indicator T if between Oct, 1st - May, 31st}
 \item{prop_flupos}{No. of influenza positive isolates / total no. tested, from NREVSS data, see ?nrevss, the data was linked with the cdc122 data with a 2 week lead to account for delays in reporting}
 }}
 \source{

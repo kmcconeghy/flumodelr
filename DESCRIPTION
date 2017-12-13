@@ -25,6 +25,7 @@ Suggests: testthat,
     digest,
     xtable,
     rmarkdown,
+    scales,
     roxygen2 (>= 6.0.0)
 LazyData: true
 LazyDataCompression: xz

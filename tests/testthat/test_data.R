@@ -3,7 +3,7 @@ context("Package Data Files")
 test_that("flu_ex properly formatted", {
   #load data
   d <- flumodelr::flu_ex
-  dnames <- c("year", "week", "fludeaths", "yrweek_dt", "epi")
+  dnames <- c("year", "week", "fludeaths", "yrweek_dt", "prop_flupos")
   
   #Tests
   expect_s3_class(d, "data.frame")
@@ -12,5 +12,5 @@ test_that("flu_ex properly formatted", {
   expect_type(d$week, "integer")
   expect_type(d$fludeaths, "double")
   expect_s3_class(d$yrweek_dt, "Date")
-  expect_type(d$epi, "logical")
+  expect_type(d$prop_flupos, "double")
 })

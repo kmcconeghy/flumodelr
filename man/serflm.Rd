@@ -4,20 +4,21 @@
 \alias{serflm}
 \title{serflm}
 \usage{
-serflm(data = NULL, flu = NULL, epi = NULL, time = NULL,
+serflm(data = NULL, outc = NULL, epi = NULL, time = NULL,
   t.interval = "wofy", smooth = F)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
 epidemic indicator, and measure of influenza morbidity}
 
-\item{flu}{A character string of length=1, identifies
+\item{outc}{A character string of length=1, identifies
 a numeric type variable in dataframe data which is the measure
 of disease morbidity / mortality}
 
-\item{epi}{A character string of length=1, identifies
-a logical type variable in dataframe data which indicates epidemic
-vs non-epidemic periods}
+\item{epi}{either a character string of length=1 (e.g. '"epi")',
+identifying a logical type variable in dataframe data which indicates epidemic
+vs non-epidemic periods, or a vector of length=2 which identifies
+periods of epidemicity, e.g. 'c(40,20)'.}
 
 \item{time}{A character string of length=1, identifies
 a numeric/integer class variable in dataframe which corresponds
@@ -32,7 +33,7 @@ include a set of polynomial terms (time-unit*time-unit) which
 will smooth the fitted line.}
 }
 \value{
-an object of class lm.summary
+an object of class data.frame (input dataframe + fitted values)
 }
 \description{
 Performs a cyclical linear regression model,
@@ -41,9 +42,7 @@ or 'serfling' model
 \examples{
 require(flumodelr)
 flu_ex <- flumodelr::flu_ex
-fit <- serflm(data=flu_ex, 
-              flu = "fludeaths", epi="epi", 
-              time="yrweek_dt", smooth=T)
+fit <- serflm(data=flu_ex, outc = "fludeaths", epi="epi", time="yrweek_dt")
               
 summary(fit)
 
