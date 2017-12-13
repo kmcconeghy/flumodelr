@@ -22,10 +22,6 @@
 #' @param t.interval A character string, must specify whether 
 #' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
 #' or month/years ("mofy"), days/years("dofy")  
-#'  
-#' @param smooth A logical type indicator, if set T, then model will
-#' include a set of polynomial terms (time-unit*time-unit) which 
-#' will smooth the fitted line.  
 #'   
 #' @return an object of class data.frame (input dataframe + fitted values)
 #' 
@@ -45,7 +41,7 @@
 #' /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/} 
 #' 
 serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL, 
-                   t.interval="wofy", smooth=F) {
+                   t.interval="wofy") {
   cat("Cyclical Regression Model \n",
       paste0(rep("=", 60), collapse=""), "\n")
   

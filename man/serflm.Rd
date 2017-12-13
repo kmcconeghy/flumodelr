@@ -5,7 +5,7 @@
 \title{serflm}
 \usage{
 serflm(data = NULL, outc = NULL, epi = NULL, time = NULL,
-  t.interval = "wofy", smooth = F)
+  t.interval = "wofy")
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
@@ -27,10 +27,6 @@ to a unit of time, must be unique (i.e. non-repeating)}
 \item{t.interval}{A character string, must specify whether
 unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
 or month/years ("mofy"), days/years("dofy")}
-
-\item{smooth}{A logical type indicator, if set T, then model will
-include a set of polynomial terms (time-unit*time-unit) which
-will smooth the fitted line.}
 }
 \value{
 an object of class data.frame (input dataframe + fitted values)

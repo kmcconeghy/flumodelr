@@ -14,7 +14,8 @@ Welcome to flumodelr! This program was written as a companion to academic work p
 ## Introduction
 
 This vignette is a short introduction to the package for interested readers. In following vignettes describe in detail:  
-1) Publicly available data used to develop and test this software.   [02-Data]()  
+1) Publicly available data used to develop and test this software.  
+[02-Data]()  
 
 2) Explanation of original Serfling Model.  
 [03-Serfling]()  
@@ -22,7 +23,7 @@ This vignette is a short introduction to the package for interested readers. In 
 3) Explanation of modern implementation of Serfling Model.  
 [04-ModernSerfling]()  
 
-4) Reproduced example from an unaffiliated published scientific study. 
+4) Reproduced example from an unaffiliated published scientific study.  
 [05-]()  
 
 ## Contacting authors  

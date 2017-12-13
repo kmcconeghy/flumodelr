@@ -13,4 +13,8 @@ test_that("flu_ex properly formatted", {
   expect_type(d$fludeaths, "double")
   expect_s3_class(d$yrweek_dt, "Date")
   expect_type(d$prop_flupos, "double")
+  expect_that(min(flu_ex$year), equals(2010))
+  expect_that(max(flu_ex$year), equals(2015))
+  expect_that(min(flu_ex$week), equals(1))
+  expect_that(max(flu_ex$week), equals(52))
 })
