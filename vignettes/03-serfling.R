@@ -1,16 +1,4 @@
----
-title: "Serfling Model Background"
-author: "Kevin W. McConeghy"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{03-serfling}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
-bibliography: flumodelr.bib
----
-
-```{r setup, include = FALSE}
+## ----setup, include = FALSE----------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -22,18 +10,8 @@ library(lubridate)
 library(scales)
 library(flumodelr)
 library(tibble)
-```
 
-The primary method paper was a 1963 paper published by Robert Serfling from the 
-Centers for Disease Control and Prevention.  
-
-[Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/)
-
-The paper outlines a strategy for estimating the proportion of deaths are due to influenza. The primary goal was to develop a "standard curve of expected seasonal mortality". The concept was that an individual could use historical data to estimate seasonal trends in influenza. Then for a given place-time an researcher could evaluate how many deaths occurred in excess of this baseline rate. Much of the original paper is of little interest given modern computing methods, but the basic concept persists as a reasonable approach to estimating "flu" deaths.      
-
-## Influenza  
-Critically, it should be understood that influenza epidemics are highly seasonal with spikes in the winter months, commonly January - February. This seasonality leads to a cyclical rate of influenza morbidity and mortality.  
-```{r, results='asis', fig.width=7}
+## ---- results='asis', fig.width=7----------------------------------------
 flu_ex <- flumodelr::flu_ex
 
 ## Make Example Figure 
@@ -48,29 +26,8 @@ g1 <- ggplot(df, aes(x=yrweek_dt, y=fludeaths)) +
   ylab("Deaths per 100,000") + 
   theme_light(base_size=16)
 g1
-```
 
-It was noted by early researchers that the cyclical rate (red line), could be modeled by a mathematical function. 
-
-## Linear and Cyclical Regression Models 
-
-The classical ordinary least squares framework is often described in matrix notation as:  
-$$y_i = X_i\beta + u_{i} \quad \textrm{where} \quad i = 1,..,n$$
-
-Where $y$ is a dependent variable, $X$ is a vector of regressors (i.e. independent variables) with $k$-dimensions, $\beta$ is a vector of the coefficients for $X$, and $u$ is the residual error term.  often simply as: $y= X\beta+u$.  
-
-Given a simple additive model with one independent variable x:
-$$Eq \ 1. \  y = \alpha_0 + \beta_1*x_1 + u$$
-
-Assume x, is a unit of time.  The above model is inadequate, and will poorly fit the data (figure) because the secular trend is cyclical around winter months.  
-
-Early investigators such as Serfling proposed that a Fourier term be added to model the cycle like so:
-$$Eq \ 2. \  y = \alpha_0 + \beta_1*t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u$$
-Where t, is unit of time (i.e. week). The waveform will be approximately sawtooth if the week counter resets (0-52). If the unit of time is continuous it will be a smooth curve. This allows us to estimate a linear model which accounts for the cyclical nature of the disease.  The original paper recommends one [Fourier term](https://en.wikipedia.org/wiki/Fourier_series). However, this was a pragmatic decision, and modern approaches could easily incorporate more.  
-
-## Example. Fitted line (one Fourier term)   
-
-```{r , results='as.is', fig.width=7}
+## ---- results='as.is', fig.width=7---------------------------------------
 ## Add fourier term
 fit <- df %>%
   mutate(week2 = row_number(),
@@ -89,13 +46,8 @@ g1 <- ggplot(fit, aes(x=yrweek_dt)) +
   ylab("Deaths per 100,000") + 
   theme_light(base_size=16)
 g1
-```
 
-You can add polynomial terms to smooth the line.       
-
-## Example. Smoothed line  
-
-```{r , results='as.is', fig.width=7}
+## ---- results='as.is', fig.width=7---------------------------------------
 ## Add fourier term, polynomials
 fit <- df %>%
   mutate(week2 = row_number(),
@@ -117,44 +69,11 @@ ggplot(fit, aes(x=yrweek_dt)) +
   xlab("Year") + 
   ylab("Deaths per 100,000") + 
   theme_light(base_size=16)
-```
 
-It can be noted here that during certain seasons, there is a pronounced spike above the predicted (fit) line. For example in the 12-13, 13-14 and 14-15 seasons.  These can be subjectively considered severe influenza epidemics. However a goal could be to define objective criteria for epidemics.   
-
-## Estimation approach  
-
-The serfling paper describes 4 steps:
-
- * Estimate secular trend  
- * Remove trend from data  
- * Estimate seasonal change from adjusted data  
- * Restore trend component  
- 
-In this package we operationalize this like so:
-
- * Construct a time-series dataset, with a variable for a flu outcome (i.e. deaths, hospitalizations).  
- * Estimate a cyclical regression as above; 
-  * Fit a trend line  (solid black line)  
-  * predict epidemic threshold (dashed black line)  
- * Observations falling outside the dashed black line are "excess"  
-  * Quantify values in excess of threshold    
-
-## Step-wise example  
-The flumodelr function serflm will perform the above steps. We present the individual steps here for demonstration. 
-
-It is assumed the influenza epidemic period begins Oct. 1st, and ends May 31st. This is a conventional "flu" season in the U.S. However individual areas / regions may justify tailored periods. These assumptions are modifiable as options in the regression function.  
-
-### Step 1. Formatted Influenza data  
-The input dataframe must have time vector, indicator for the epidemic period (Oct. - May), and measure of influenza morbidity / mortality to be modeled.  
-```{r }
+## ------------------------------------------------------------------------
 flu_ex %>% select(yrweek_dt, epi, fludeaths)
-```
 
-### Step 2. Fit predicted outcome and epidemic threshold    
-Here we run a model as above, but only for non-epidemic periods.  
-
-#### Step 2a. Compute fourier terms  
-```{r }
+## ------------------------------------------------------------------------
 ## Compute fourier terms
 df_mod <- df %>%
   mutate(week2 = row_number(),
@@ -164,29 +83,14 @@ df_mod <- df %>%
          week_2 = week2^2,
          week_3 = week2^3,
          week_4 = week2^4)
-```
 
-#### Step 2b. Baseline Cyclical model  
-```{r }
+## ------------------------------------------------------------------------
 base_fit <- df_mod %>%
   mutate(fludeaths = if_else(epi == T, NA_real_, fludeaths)) %>%
   lm(fludeaths ~ week2 + week_2 + week_3 + week_4 + sin_f1 + cos_f1, 
      data=., na.action = na.exclude)
-```
-Fit a model using only non-epidemic periods.  
 
-### Note regarding standard errors.  
-By default R's predict.lm will fit a 95% prediction interval. In Serfling's original 
-paper it states:  
-
-> "The epidemic threshold...is placed at a distance of 1.64 standard 
-> deviations above the trend line, a level which experience has shown 
-> to be useful for distinguishing epidemic increase from random variation."
-
-However recent papers have selected a 95% prediction interval (i.e. 1.96 standard deviations). ` serflm ` will allow the user to specify which threshold is desired.  
-
-#### Step 2c. Add predicted values to original dataset.  
-```{r }
+## ------------------------------------------------------------------------
 ## Fitted values + prediction interval
 df_pred <- df_mod %>%
   predict(base_fit, newdata=., se.fit=TRUE, 
@@ -202,9 +106,8 @@ df_base <- df %>%
 
 df_base %>% select(year, week, fludeaths, 
                    pred_y0, pred_y0_uci, pred_y0_serf)  
-```
 
-```{r, echo=F, results='as.is', fig.width=7}
+## ---- echo=F, results='as.is', fig.width=7-------------------------------
 ggplot(df_base, aes(x=yrweek_dt)) + 
   geom_line(aes(y=fludeaths, colour="Observed Deaths", 
                 linetype="Observed Deaths"), size=0.8) +
@@ -240,17 +143,8 @@ ggplot(df_base, aes(x=yrweek_dt)) +
   theme(legend.text=element_text(size=10)) +
   labs(title="Influenza Deaths, Epidemic Thresholds") +
   guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
-```
 
-**Observed Deaths** - No. of influenza / pneumonia deaths per 100,000 people.  
-**Predicted Deaths** - A fit of the cyclical regression model, (one Fourier term).  
-**95% PI** - upper 95% prediction interval.  
-**Serfling Threshold** The fitted line + 1.64 standard deviations.  
-
-### Step 3. Compute excess deaths    
-The next step is to compute the no. of deaths in excess of the epidemic threshold.  In addition to being in excess, Serfling and others apply a rule that values are counted starting from two consecutive timepoints exceeding the threshold, then stopped after two timepoints below the threshold. For this exercise we will use the 95% prediction interval.   
-
-```{r }
+## ------------------------------------------------------------------------
 df_epi <- df_base %>%
   mutate(threshold = if_else(fludeaths > pred_y0_uci, T, F),
          epidemic = if_else(threshold==T & lead(threshold)==T, T, NA),
@@ -263,9 +157,8 @@ df_epi <- df_base %>%
                                    epidemic4, epidemic5, na.rm=T)>0, T, F),
          excess = if_else(epidemic==T & (fludeaths - pred_y0_uci)>0, fludeaths - pred_y0_uci, 0))
 df_epi %>% select(year, week, threshold, epidemic, excess)
-```
 
-```{r, echo=F, results='as.is', fig.width=7.0}
+## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
 ggplot(df_epi, aes(x=yrweek_dt)) + 
   geom_line(aes(y=excess, colour="Excess mortality"), size=0.8, linetype=2) +
   geom_line(aes(y=fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
@@ -277,13 +170,8 @@ ggplot(df_epi, aes(x=yrweek_dt)) +
   xlab("Year") + 
   ylab("Deaths per 100,000") + 
   theme_light(base_size=16)
-```
 
-## Virology data  
-
-In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases see `?nrevss`. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of high flu activity can be used to inform spikes in influenza activity, increasing confidence that deaths are influenza related and estimated influenza morbidity and mortality.  
-
-```{r, echo=F, results='as.is', fig.width=7.0}
+## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
 ggplot(flu_ex, aes(x=yrweek_dt)) + 
   geom_line(aes(y=prop_flupos)) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
@@ -291,19 +179,8 @@ ggplot(flu_ex, aes(x=yrweek_dt)) +
   xlab("Year") + 
   ylab("Proportion of influenza (+) isolates") + 
   theme_light(base_size=16)
-```
 
-In light of this the above model can be modified like so:
-
-$$Eq \ 3. \  y = \alpha_0 + \beta_1*t + \beta_2*Flu_t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u$$
-Where Flu = no. of isolates positive for influenza / total isolates tested in a given timepoint t.  
-
-Many published examples of this exist. Some authors include data on the % RSV (+), as well as breakdown influenza by subtype and even include data on weather, humidity etc.  
-
-See [@Wang2012, @Matias2016]
-
-###  Model
-```{r, echo=F, results='as.is', fig.width=7}
+## ---- echo=F, results='as.is', fig.width=7-------------------------------
 #### Step 2b. Baseline Cyclical model + virology 
 base_fit <- df_mod %>%
   #mutate(fludeaths = if_else(epi == T, NA_real_, fludeaths)) %>%
@@ -359,21 +236,7 @@ ggplot(df_base, aes(x=yrweek_dt)) +
   theme(legend.text=element_text(size=10)) +
   labs(title="Influenza Deaths, Epidemic Thresholds") +
   guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
-```
 
-## Alternative approachs  
-### Periodic Cubic Splines  
-```{r }
+## ------------------------------------------------------------------------
 
-```
 
-## Criticisms of this approach  
-
-We see the following problems with this approach the reader should consider:    
- * The authors view the concept as sound, but its implementation in the original work is somewhat dated given modern computing methods. The constrains of needing an easy to estimate linear model are no longer relevant to the modern analyst. More elegant models (e.g. ARIMA, splines) are now available.  
- 
- * Additionally the approach is dependent on an accurate baseline period. Whether to include mild or known epidemic seasons, which cut-off to define as the influenza season (e.g. week 40 - week 20) are important but subjective decisions the analyst must make.  
- 
- * The selected threshold for what constitutes "excess" is somewhat arbitrary. The original Serfling paper describes 1.64 standard deviations for 2 or more weeks as criteria. There is no empirical evidence given for this, but a threshold is needed and the argument is pragmatic and logical. Recent papers have used the 95% prediction interval.    
- 
-# References  

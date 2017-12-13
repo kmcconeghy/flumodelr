@@ -1,10 +1,10 @@
 ---
-title: "flumodelr: data"
+title: "flumodelr: Data"
 author: "Kevin W. McConeghy"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{flumodelr: data}
+  %\VignetteIndexEntry{flumodelr: 02-Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

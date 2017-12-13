@@ -1,16 +1,3 @@
-```{r, echo = FALSE}
-
-suppressPackageStartupMessages({
-  library(flumodelr)
-})
-
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
-```
-
 flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality
 ===============
 ## flumodelr statistics, based on Rstudio mirror
@@ -49,7 +36,7 @@ Several companion documents have been written to assist interested readers with 
 
 or if the package is installed:  
 ```{r, eval=F}
-browseVignettes("flumodelr")
+devtools::vignette("01-Introduction", "flumodelr")
 ```
 
 # Latest Version Updates  
