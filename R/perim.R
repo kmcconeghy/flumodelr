@@ -20,6 +20,14 @@
 #' @param t.interval A character string, must specify whether 
 #' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
 #' or month/years ("mofy"), days/years("dofy")  
+#' 
+#' @param t.respStart A character string, must specify whether 
+#' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
+#' or month/years ("mofy"), days/years("dofy")  
+#'   
+#' @param t.respStop A character string, must specify whether 
+#' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
+#' or month/years ("mofy"), days/years("dofy")  
 #'   
 #' @return 
 #' 
