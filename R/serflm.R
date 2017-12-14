@@ -1,4 +1,4 @@
-#' @title serflm
+#' @title serflm: Fit a Serling Model on Time Series Data
 #' 
 #' @description Performs a cyclical linear regression model, 
 #' or 'serfling' model

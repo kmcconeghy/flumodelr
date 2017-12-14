@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Kevin W. McConeghy" />
+
+<meta name="date" content="2017-12-14" />
+
+<title>Modified Serfling Models</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Modified Serfling Models</h1>
+<h4 class="author"><em>Kevin W. McConeghy</em></h4>
+<h4 class="date"><em>2017-12-14</em></h4>
+
+
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex</code></pre></div>
+<div id="virology-data" class="section level2">
+<h2>Virology data</h2>
+<p>In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases see <code>?nrevss</code>. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of high flu activity can be used to inform spikes in influenza activity, increasing confidence that deaths are influenza related and estimated influenza morbidity and mortality.</p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>In light of this the above model can be modified like so:</p>
+<p><span class="math display">\[Eq \ 3. \  y = \alpha_0 + \beta_1*t + \beta_2*Flu_t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u\]</span> Where Flu = no. of isolates positive for influenza / total isolates tested in a given timepoint t.</p>
+<p>Many published examples of this exist. Some authors include data on the % RSV (+), as well as breakdown influenza by subtype and even include data on weather, humidity etc.</p>
+<p>See <span class="citation">[@Wang2012, @Matias2016]</span></p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

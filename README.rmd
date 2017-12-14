@@ -1,11 +1,14 @@
 flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality
 ===============
+
 [![CRAN version](https://www.r-pkg.org/badges/version/flumodelr)](https://cran.r-project.org/package=flumodelr)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/flumodelr)](https://cran.r-project.org/package=flumodelr)
                                                                  
 # Authors
-Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo
-=======
+Kevin W. McConeghy, Pharm.D, M.S., Brown University School of Public Health, Dept. Health Services Research  
+Rob Van Aalst, Sanofi-Pasteur  
+Andrew Zullo, Pharm.D., MSc, Ph.D., Brown University School of Public Health, Dept. Health Services Research  
+
 <img src="man/figures/flumodelr_cdc122ex.jpeg" width=600 height=400 align="center"/>  
 
 # Overview  
@@ -20,40 +23,32 @@ install.packages("flumodelr")
 # install.packages("devtools")
 devtools::install_github("kmcconeghy/flumodelr")
 ```
-
-### Warning. This package relies heavily on the suite of packages and programming termed "Tidyverse", e.g. "dplyr", "lubridate", that must be installed for proper functioning.  
+This package relies heavily on the suite of packages and programming termed "Tidyverse", e.g. "dplyr", "lubridate", that must be installed for proper functioning.  
 
 # Usage  
-
 The primary goal of this package is to provide a toolkit for researchers who wish to estimate the attributable proportion of an outcome due to influenza morbidity and mortality. Conceptually this is achieved through estimating a baseline rate of the outcome in the absence of influenza, then using a measure of influenza endemicity to identify the marginal rate due to influenza morbidity. The particular measure of influenza endemicity and outcome being modelled can be arbitrarily specified by the user.  
 
 # Vignettes  
-
 Several companion documents have been written to assist interested readers with the background and use of the package. We suggest you start here:
-[Introduction to flumodelr](https://github.com/kmcconeghy/flumodelr/blob/master/vignettes/01-introduction.Rmd)  
-
-or if the package is installed:  
+[Introduction to flumodelr](https://kmcconeghy.github.io/flumodelr/index.html) or if the package is installed:  
 ```{r, eval=F}
 devtools::vignette("01-Introduction", "flumodelr")
 ```
 
 # Latest Version Updates  
-
 This package is in the early stages of development. Many features may change in a short amount of time.  
 
 # Future Goals for flumodelr  
-
 The current objective is to successfully recreate the basic Serfling model. 
 
 We hope to increase the number of modelling options periodically including, bayesian estimation, advancing forecasting, and machine learning.  
 
 # Important References   
-Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506.  [Pubmed Link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/)  
+ 1. Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506.  [Pubmed Link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/)  
 
-Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L, Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated deaths made using four different methods. Influenza Other Respir Viruses. 2009 Jan;3(1):37-49.[Pubmed Link](https://www.ncbi.nlm.nih.gov/pubmed/19453440)  
+ 2. Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L, Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated deaths made using four different methods. Influenza Other Respir Viruses. 2009 Jan;3(1):37-49.[Pubmed Link](https://www.ncbi.nlm.nih.gov/pubmed/19453440)   
 
 # Acknowledgements  
-
 The programming was derived with guidance and example code from the following individuals.  
 
 * Yinong Young-Xu and Ellyn Russo. White River Junction VA Medical Center, VT. Department of Veteran Affairs.  

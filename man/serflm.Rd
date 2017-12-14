@@ -2,7 +2,7 @@
 % Please edit documentation in R/serflm.R
 \name{serflm}
 \alias{serflm}
-\title{serflm}
+\title{serflm: Fit a Serling Model on Time Series Data}
 \usage{
 serflm(data = NULL, outc = NULL, epi = NULL, time = NULL,
   t.interval = "wofy")

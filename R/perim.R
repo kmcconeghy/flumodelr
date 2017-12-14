@@ -1,8 +1,7 @@
-#' @title perim
+#' @title perim: Perform a difference model on peri- vs off-season influenza data
 #' 
 #' @description Performs a peri-seasonal adjustment model 
 #' 
-#'
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
 #' 

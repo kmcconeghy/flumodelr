@@ -14,17 +14,15 @@ Welcome to flumodelr! This program was written as a companion to academic work p
 ## Introduction
 
 This vignette is a short introduction to the package for interested readers. In following vignettes describe in detail:  
+
 1) Publicly available data used to develop and test this software.  
-[02-Data]()  
+[Data](https://kmcconeghy.github.io/flumodelr/articles/02-data.html)  
 
 2) Explanation of original Serfling Model.  
-[03-Serfling]()  
+[Serfling Background](https://kmcconeghy.github.io/flumodelr/articles/03-serfling.html)  
 
 3) Explanation of modern implementation of Serfling Model.  
-[04-ModernSerfling]()  
-
-4) Reproduced example from an unaffiliated published scientific study.  
-[05-]()  
+[Modern Serfling Applications](https://kmcconeghy.github.io/flumodelr/articles/04-modserf.html)  
 
 ## Contacting authors  
 The primary author of the package was Kevin W. McConeghy. Several other researchers including Andrew Zullo, Rob Van Aalst, Vincent Mor, Stefan Gravenstein provided statistical consultation, clinical insight and institutional support.  

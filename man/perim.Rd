@@ -2,7 +2,7 @@
 % Please edit documentation in R/perim.R
 \name{perim}
 \alias{perim}
-\title{perim}
+\title{perim: Perform a difference model on peri- vs off-season influenza data}
 \usage{
 perim(data = NULL, flu = NULL, epi = NULL, time = NULL,
   t.interval = "wofy")
