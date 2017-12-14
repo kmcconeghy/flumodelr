@@ -3,11 +3,6 @@ flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mort
 
 [![CRAN version](https://www.r-pkg.org/badges/version/flumodelr)](https://cran.r-project.org/package=flumodelr)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/flumodelr)](https://cran.r-project.org/package=flumodelr)
-                                                                 
-# Authors
-Kevin W. McConeghy, Pharm.D, M.S., Brown University School of Public Health, Dept. Health Services Research  
-Rob Van Aalst, Sanofi-Pasteur  
-Andrew Zullo, Pharm.D., MSc, Ph.D., Brown University School of Public Health, Dept. Health Services Research  
 
 <img src="man/figures/flumodelr_cdc122ex.jpeg" width=600 height=400 align="center"/>  
 
@@ -46,7 +41,12 @@ We hope to increase the number of modelling options periodically including, baye
 # Important References   
  1. Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506.  [Pubmed Link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/)  
 
- 2. Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L, Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated deaths made using four different methods. Influenza Other Respir Viruses. 2009 Jan;3(1):37-49.[Pubmed Link](https://www.ncbi.nlm.nih.gov/pubmed/19453440)   
+ 2. Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L, Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated deaths made using four different methods. Influenza Other Respir Viruses. 2009 Jan;3(1):37-49. [Pubmed Link](https://www.ncbi.nlm.nih.gov/pubmed/19453440)   
+
+# Authors  
+Kevin W. McConeghy, Pharm.D, M.S., Brown University School of Public Health, Dept. Health Services Research  
+Rob Van Aalst, Sanofi-Pasteur  
+Andrew Zullo, Pharm.D., MSc, Ph.D., Brown University School of Public Health, Dept. Health Services Research  
 
 # Acknowledgements  
 The programming was derived with guidance and example code from the following individuals.  
@@ -54,3 +54,4 @@ The programming was derived with guidance and example code from the following in
 * Yinong Young-Xu and Ellyn Russo. White River Junction VA Medical Center, VT. Department of Veteran Affairs.  
 
 * Baltazar Nunes. Researcher, Epidemiological Research Unit (Head), Departament of Epidemiology.  
+
