@@ -50,7 +50,7 @@
 #' 78(6): 494 - 506.  
 #' /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/} 
 #' 
-perim <- function(data=NULL, flu=NULL, epi=NULL, time=NULL, 
+ird <- function(data=NULL, flu=NULL, epi=NULL, time=NULL, 
                    t.interval="wofy") {
   cat("Periseasonal Adjustment Model \n",
       paste0(rep("=", 60), collapse=""), "\n")
