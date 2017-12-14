@@ -1,14 +1,12 @@
 flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality
 ===============
-## flumodelr statistics, based on Rstudio mirror
 [![CRAN version](https://www.r-pkg.org/badges/version/flumodelr)](https://cran.r-project.org/package=flumodelr)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/flumodelr)](https://cran.r-project.org/package=flumodelr)
                                                                  
 # Authors
 Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo
 =======
-<img src="images/flumodelr_cdc122ex.jpeg" width=750 height=400 align="center"/>  
-[Data obtained from: https://www.cdc.gov/flu/weekly/]
+<img src="man/figures/flumodelr_cdc122ex.jpeg" width=600 height=400 align="center"/>  
 
 # Overview  
 The following software is a collection of R functions and datasets to examine attributable influenza morbidity and mortality. The software draws from multiple peer-reviewed studies, as well as unpublished SAS and R code developed by other researchers (see acknowledgements).  

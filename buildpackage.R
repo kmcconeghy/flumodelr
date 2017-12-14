@@ -20,7 +20,9 @@ if (first_time==T) {
   }
 
 ## Build
-devtools::build_vignettes(pkg='C:\\Users\\User\\Documents\\GitHub\\flumodelr')
 devtools::document()
 devtools::check()
 devtools::build()
+devtools::test()
+pkgdown::build_site()
+
