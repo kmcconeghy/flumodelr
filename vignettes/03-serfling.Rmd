@@ -74,6 +74,7 @@ g1 <- ggplot(flu_ex, aes(x=yrweek_dt, y=fludeaths)) +
        caption="Ordinary Least Squares")
 g1
 ```
+  
 Early investigators such as Serfling proposed that a Fourier term be added to model the cycle like so:
 $$Eq \ 2. \  y = \alpha_0 + \beta_1*t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u$$
 The original paper used 4-week periods so the period denominator is 13. The waveform will be approximately sawtooth if t resets within a period (0-52). If t is continuous it will be a smooth curve. This allows us to use a linear model which accounts for the cyclical nature of the disease.  The original paper recommends one [Fourier term](https://en.wikipedia.org/wiki/Fourier_series).   
@@ -105,7 +106,7 @@ g1 <- ggplot(fit, aes(x=yrweek_dt)) +
 g1
 ```
 
-A single Fourier term does a reasonable job approximating the secular trend of diseas, except notably during severe influenza epidemics.  The black solid line represents a single Fourier term.  
+A single Fourier term does a reasonable job approximating the secular trend of disease, except notably during severe influenza epidemics.  The black solid line represents a single Fourier term.  
 
 During certain seasons, there is a pronounced spike above the predicted (fit) line. For example in the 12-13, 13-14 and 14-15 seasons.  These can be subjectively considered severe influenza epidemics. However a goal could be to define objective criteria for epidemics. Such as any time-period 1.64 standard deviations above the fitted line representing a time of severe influenza morbidity and mortality, requiring significant public health intervention.    
 
@@ -132,7 +133,7 @@ The flumodelr function serflm will perform the above steps. We present the indiv
 
 It is assumed the influenza epidemic period begins Oct. 1st, and ends May 31st. This is a conventional "flu" season in the U.S. However individual areas / regions may justify tailored periods. These assumptions are modifiable as options in the regression function.  
 
-### Step 1. Formatted Influenza data  
+### Step 1. Formatted influenza data  
 To compute a traditional Serfling model. The input dataframe must have time vector, indicator for the epidemic period (Oct. - May), and measure of influenza morbidity / mortality to be modeled.  
 ```{r }
 flu_ex %>% select(yrweek_dt, fludeaths)
@@ -236,7 +237,7 @@ ggplot(df_base, aes(x=yrweek_dt)) +
 
 **Observed Deaths** - No. of influenza / pneumonia deaths per 100,000 people.  
 **Predicted Deaths** - A fit of the cyclical regression model, (one Fourier term).  
-**Serfling Threshold** The fitted line + 1.64 standard deviations.  
+**Serfling Threshold** - The fitted line + 1.64 standard deviations.  
 
 ### Step 3. Compute excess deaths    
 The next step is to compute the no. of deaths in excess of the epidemic threshold.  In addition to being in excess, Serfling applies a rule that values are counted starting from two consecutive timepoints exceeding the threshold, then stopped after two timepoints below the threshold. 

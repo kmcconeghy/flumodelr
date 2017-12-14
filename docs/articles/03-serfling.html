@@ -96,28 +96,17 @@
 <div id="influenza" class="section level2">
 <h2 class="hasAnchor">
 <a href="#influenza" class="anchor"></a>Influenza</h2>
-<p>Critically, it should be understood that influenza epidemics are highly seasonal with spikes in the winter months, commonly January - February. This seasonality leads to a cyclical rate of influenza morbidity and mortality.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex
-
-g1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(flu_ex, <span class="kw">aes</span>(<span class="dt">x=</span>yrweek_dt, <span class="dt">y=</span>fludeaths)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size=</span><span class="fl">0.8</span>, <span class="dt">colour=</span><span class="st">"#CC0000"</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">labels =</span> <span class="kw">date_format</span>(<span class="st">"%Y"</span>), <span class="dt">date_breaks=</span><span class="st">"1 year"</span>,
-               <span class="dt">expand=</span><span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">9</span>)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">xlab</span>(<span class="st">"Year-month"</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ylab</span>(<span class="st">"Deaths per 100,000"</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">theme_light</span>(<span class="dt">base_size=</span><span class="dv">16</span>)
-g1</code></pre></div>
-<p><img src="03-serfling_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
-<p>It was noted by early researchers that the rate of reported deaths (red line), could be modeled by a mathematical function.</p>
+<p>Critically, it should be understood that influenza epidemics are highly seasonal with spikes in the winter months, commonly January - February. This seasonality leads to a cyclical rate of influenza morbidity and mortality.<br><img src="03-serfling_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
+<p>It was noted by early researchers that the rate of reported deaths (red line), may be modeled by a trigonomic function.</p>
 </div>
 <div id="linear-and-cyclical-regression-models" class="section level2">
 <h2 class="hasAnchor">
 <a href="#linear-and-cyclical-regression-models" class="anchor"></a>Linear and Cyclical Regression Models</h2>
 <p>The classical ordinary least squares framework is often described in matrix notation as:<br><span class="math display">\[y_i = X_i\beta + u_{i} \quad \textrm{where} \quad i = 1,..,n\]</span></p>
 <p>Where <span class="math inline">\(y\)</span> is a dependent variable, <span class="math inline">\(X\)</span> is a vector of regressors (i.e. independent variables) with <span class="math inline">\(k\)</span>-dimensions, <span class="math inline">\(\beta\)</span> is a vector of the coefficients for <span class="math inline">\(X\)</span>, and <span class="math inline">\(u\)</span> is the residual error term. often simply as: <span class="math inline">\(y= X\beta+u\)</span>.</p>
-<p>Given a simple additive model with one independent variable x: <span class="math display">\[Eq \ 1. \  y = \alpha_0 + \beta_1*x_1 + u\]</span></p>
-<p>Assume x, is a unit of time. The above model is inadequate, and will poorly fit the data (figure) because the secular trend is non-linear.</p>
-<p>Early investigators such as Serfling proposed that a Fourier term be added to model the cycle like so: <span class="math display">\[Eq \ 2. \  y = \alpha_0 + \beta_1*t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u\]</span> Where t, is some unit of time (i.e. week, month). The original paper used 4-week periods so the period denominator is 13. The waveform will be approximately sawtooth if the unit of time resets (0-52). If the unit of time is continuous it will be a smooth curve. This allows us to use a linear model which accounts for the cyclical nature of the disease. The original paper recommends one <a href="https://en.wikipedia.org/wiki/Fourier_series">Fourier term</a>.</p>
+<p>Given a simple additive model with one independent variable t: <span class="math display">\[Eq \ 1. \  y = \alpha_0 + \beta_1*t_1 + u\]</span></p>
+<p>Let t, be the unit of time in figure 1 (week = 1, week=2, …). The above model is inadequate, and will poorly fit the data (figure) because the secular trend is non-linear.<br><img src="03-serfling_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
+<p>Early investigators such as Serfling proposed that a Fourier term be added to model the cycle like so: <span class="math display">\[Eq \ 2. \  y = \alpha_0 + \beta_1*t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u\]</span> The original paper used 4-week periods so the period denominator is 13. The waveform will be approximately sawtooth if t resets within a period (0-52). If t is continuous it will be a smooth curve. This allows us to use a linear model which accounts for the cyclical nature of the disease. The original paper recommends one <a href="https://en.wikipedia.org/wiki/Fourier_series">Fourier term</a>.</p>
 </div>
 <div id="example--fitted-line-one-fourier-term" class="section level2">
 <h2 class="hasAnchor">
@@ -128,17 +117,10 @@ fit &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
          <span class="dt">theta =</span> <span class="dv">2</span><span class="op">*</span>week2<span class="op">/</span><span class="dv">52</span>,
          <span class="dt">sin_f1 =</span> <span class="kw">sinpi</span>(theta),
          <span class="dt">cos_f1 =</span> <span class="kw">cospi</span>(theta),
-         <span class="dt">week_2 =</span> week2<span class="op">^</span><span class="dv">2</span>,
-         <span class="dt">week_3 =</span> week2<span class="op">^</span><span class="dv">3</span>,
-         <span class="dt">week_4 =</span> week2<span class="op">^</span><span class="dv">4</span>,
-         <span class="dt">week_5 =</span> week2<span class="op">^</span><span class="dv">5</span>,
          <span class="dt">pred_y =</span> <span class="kw">predict</span>( <span class="kw">lm</span>(fludeaths <span class="op">~</span><span class="st"> </span>
-<span class="st">                                </span>week2 <span class="op">+</span><span class="st"> </span>sin_f1 <span class="op">+</span><span class="st"> </span>cos_f1, <span class="dt">data=</span>.)),
-         <span class="dt">pred_ypoly =</span> <span class="kw">predict</span>( <span class="kw">lm</span>(fludeaths <span class="op">~</span><span class="st"> </span>week2 <span class="op">+</span><span class="st"> </span>
-<span class="st">                                </span>week_<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>week_<span class="dv">3</span> <span class="op">+</span><span class="st"> </span>week_<span class="dv">4</span> <span class="op">+</span><span class="st"> </span>week_<span class="dv">5</span> <span class="op">+</span>
-<span class="st">                                </span>sin_f1 <span class="op">+</span><span class="st"> </span>cos_f1, <span class="dt">data=</span>.)))</code></pre></div>
-<p><img src="03-serfling_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
-<p>A single Fourier term does a reasonable job approximating the secular trend of diseas, except notably during severe influenza epidemics. The black solid line represents a single Fourier term, while the blue dashed line includes a series of polynomial terms to smooth the line.</p>
+<span class="st">                                </span>week2 <span class="op">+</span><span class="st"> </span>sin_f1 <span class="op">+</span><span class="st"> </span>cos_f1, <span class="dt">data=</span>.)))</code></pre></div>
+<p><img src="03-serfling_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+<p>A single Fourier term does a reasonable job approximating the secular trend of disease, except notably during severe influenza epidemics. The black solid line represents a single Fourier term.</p>
 <p>During certain seasons, there is a pronounced spike above the predicted (fit) line. For example in the 12-13, 13-14 and 14-15 seasons. These can be subjectively considered severe influenza epidemics. However a goal could be to define objective criteria for epidemics. Such as any time-period 1.64 standard deviations above the fitted line representing a time of severe influenza morbidity and mortality, requiring significant public health intervention.</p>
 </div>
 <div id="estimation-approach-for-attributable-or-excess-mortality" class="section level2">
@@ -175,11 +157,9 @@ fit &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
 <p>It is assumed the influenza epidemic period begins Oct. 1st, and ends May 31st. This is a conventional “flu” season in the U.S. However individual areas / regions may justify tailored periods. These assumptions are modifiable as options in the regression function.</p>
 <div id="step-1--formatted-influenza-data" class="section level3">
 <h3 class="hasAnchor">
-<a href="#step-1--formatted-influenza-data" class="anchor"></a>Step 1. Formatted Influenza data</h3>
+<a href="#step-1--formatted-influenza-data" class="anchor"></a>Step 1. Formatted influenza data</h3>
 <p>To compute a traditional Serfling model. The input dataframe must have time vector, indicator for the epidemic period (Oct. - May), and measure of influenza morbidity / mortality to be modeled.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(<span class="st">"Example data"</span>)
-<span class="co">#&gt; Example data</span>
-flu_ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(yrweek_dt, fludeaths)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(yrweek_dt, fludeaths)
 <span class="co">#&gt; # A tibble: 259 x 2</span>
 <span class="co">#&gt;    yrweek_dt fludeaths</span>
 <span class="co">#&gt;       &lt;date&gt;     &lt;dbl&gt;</span>
@@ -243,7 +223,7 @@ flu_ex_serfling &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</sp
 <blockquote>
 <p>“The epidemic threshold…is placed at a distance of 1.64 standard deviations above the trend line, a level which experience has shown to be useful for distinguishing epidemic increase from random variation.”</p>
 </blockquote>
-<p><code>serflm</code> allows the user to specify which threshold is desired.</p>
+<p><code>serflm</code> follows this method, but the modified serfling function allows for more options for threshold prediction.</p>
 <div id="step-2c--add-predicted-values-to-original-dataset-" class="section level4">
 <h4 class="hasAnchor">
 <a href="#step-2c--add-predicted-values-to-original-dataset-" class="anchor"></a>Step 2c. Add predicted values to original dataset.</h4>
@@ -253,24 +233,23 @@ df_pred &lt;-<span class="st"> </span>flu_ex_serfling <span class="op">%&gt;%</s
           <span class="dt">interval=</span><span class="st">"prediction"</span>, <span class="dt">level=</span><span class="fl">0.95</span>)
 
 pred_y0 &lt;-<span class="st"> </span>df_pred<span class="op">$</span>fit[,<span class="dv">1</span>] <span class="co">#fitted values</span>
-pred_y0_uci &lt;-<span class="st"> </span>df_pred<span class="op">$</span>fit[,<span class="dv">3</span>] <span class="co">#95% UCI</span>
 pred_y0_serf &lt;-<span class="st"> </span>df_pred<span class="op">$</span>fit[,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span><span class="fl">1.64</span><span class="op">*</span><span class="kw">sd</span>(df_pred<span class="op">$</span>fit[,<span class="dv">1</span>]) 
 
 df_base &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_column</span>(., pred_y0, pred_y0_uci, pred_y0_serf)  
+<span class="st">  </span><span class="kw">add_column</span>(., pred_y0, pred_y0_serf)  
 
 df_base <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, fludeaths, 
-                   pred_y0, pred_y0_uci, pred_y0_serf)  
-<span class="co">#&gt; # A tibble: 259 x 6</span>
-<span class="co">#&gt;    year  week fludeaths  pred_y0 pred_y0_uci pred_y0_serf</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42  6.482143 8.197778    9.940941     9.783488</span>
-<span class="co">#&gt; 2  2010    43  6.605505 8.252288    9.956168     9.837998</span>
-<span class="co">#&gt; 3  2010    44  6.779817 8.309852    9.978698     9.895562</span>
-<span class="co">#&gt; 4  2010    45  6.581818 8.368915   10.006804     9.954625</span>
+                   pred_y0, pred_y0_serf)  
+<span class="co">#&gt; # A tibble: 259 x 5</span>
+<span class="co">#&gt;    year  week fludeaths  pred_y0 pred_y0_serf</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2010    42  6.482143 8.197778     9.783488</span>
+<span class="co">#&gt; 2  2010    43  6.605505 8.252288     9.837998</span>
+<span class="co">#&gt; 3  2010    44  6.779817 8.309852     9.895562</span>
+<span class="co">#&gt; 4  2010    45  6.581818 8.368915     9.954625</span>
 <span class="co">#&gt; # ... with 255 more rows</span></code></pre></div>
-<p><img src="03-serfling_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
-<p><strong>Observed Deaths</strong> - No. of influenza / pneumonia deaths per 100,000 people.<br><strong>Predicted Deaths</strong> - A fit of the cyclical regression model, (one Fourier term).<br><strong>95% PI</strong> - upper 95% prediction interval.<br><strong>Serfling Threshold</strong> The fitted line + 1.64 standard deviations.</p>
+<p><img src="03-serfling_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<p><strong>Observed Deaths</strong> - No. of influenza / pneumonia deaths per 100,000 people.<br><strong>Predicted Deaths</strong> - A fit of the cyclical regression model, (one Fourier term).<br><strong>Serfling Threshold</strong> - The fitted line + 1.64 standard deviations.</p>
 </div>
 </div>
 <div id="step-3--compute-excess-deaths" class="section level3">
@@ -287,7 +266,7 @@ df_base <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">epidemic =</span> <span class="kw">if_else</span>(<span class="kw">sum</span>(epidemic, epidemic2, epidemic3, 
                                    epidemic4, epidemic5, <span class="dt">na.rm=</span>T)<span class="op">&gt;</span><span class="dv">0</span>, T, F),
-         <span class="dt">excess =</span> <span class="kw">if_else</span>(epidemic<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span>(fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_uci)<span class="op">&gt;</span><span class="dv">0</span>, fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_uci, <span class="dv">0</span>))
+         <span class="dt">excess =</span> <span class="kw">if_else</span>(epidemic<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span>(fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_serf)<span class="op">&gt;</span><span class="dv">0</span>, fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_serf, <span class="dv">0</span>))
 df_epi <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, threshold, epidemic, excess)
 <span class="co">#&gt; Source: local data frame [259 x 5]</span>
 <span class="co">#&gt; Groups: &lt;by row&gt;</span>
@@ -300,7 +279,7 @@ df_epi <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">s
 <span class="co">#&gt; 3  2010    44     FALSE    FALSE      0</span>
 <span class="co">#&gt; 4  2010    45     FALSE    FALSE      0</span>
 <span class="co">#&gt; # ... with 255 more rows</span></code></pre></div>
-<p><img src="03-serfling_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
+<p><img src="03-serfling_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
 </div>
 </div>
 <div id="serflm-function" class="section level2">
@@ -365,7 +344,7 @@ flu_ex_pred &lt;-<span class="st"> </span><span class="kw"><a href="../reference
 
 
       <footer><div class="copyright">
-  <p>Developed by Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo.</p>
+  <p>Developed by Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo, Nina joyce.</p>
 </div>
 
 <div class="pkgdown">
