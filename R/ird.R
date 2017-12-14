@@ -1,6 +1,8 @@
-#' @title perim: Perform a difference model on peri- vs off-season influenza data
+#' @title ird: Perform incidence rate-difference models
 #' 
-#' @description Performs a peri-seasonal adjustment model 
+#' @description Calculates the rate difference between influenza season 
+#' and peri-influenza season, or between influenza season and
+#' summer season
 #' 
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
@@ -18,6 +20,14 @@
 #' to a unit of time, must be unique (i.e. non-repeating)  
 #' 
 #' @param t.interval A character string, must specify whether 
+#' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
+#' or month/years ("mofy"), days/years("dofy")  
+#' 
+#' @param t.respStart A character string, must specify whether 
+#' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
+#' or month/years ("mofy"), days/years("dofy")  
+#'   
+#' @param t.respStop A character string, must specify whether 
 #' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
 #' or month/years ("mofy"), days/years("dofy")  
 #'   
@@ -40,7 +50,7 @@
 #' 78(6): 494 - 506.  
 #' /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/} 
 #' 
-perim <- function(data=NULL, flu=NULL, epi=NULL, time=NULL, 
+ird <- function(data=NULL, flu=NULL, epi=NULL, time=NULL, 
                    t.interval="wofy") {
   cat("Periseasonal Adjustment Model \n",
       paste0(rep("=", 60), collapse=""), "\n")

@@ -25,4 +25,4 @@ This vignette is a short introduction to the package for interested readers. In 
 [Modern Serfling Applications](https://kmcconeghy.github.io/flumodelr/articles/04-modserf.html)  
 
 ## Contacting authors  
-The primary author of the package was Kevin W. McConeghy. Several other researchers including Andrew Zullo, Rob Van Aalst, Vincent Mor, Stefan Gravenstein provided statistical consultation, clinical insight and institutional support.  
+The primary author of the package was Kevin W. McConeghy. Several other researchers including Andrew Zullo, Rob van Aalst, Vincent Mor, Stefan Gravenstein provided statistical consultation, clinical insight and institutional support.  
