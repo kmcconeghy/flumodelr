@@ -1,6 +1,8 @@
-#' @title perim: Perform a difference model on peri- vs off-season influenza data
+#' @title ird: Perform incidence rate-difference models
 #' 
-#' @description Performs a peri-seasonal adjustment model 
+#' @description Calculates the rate difference between influenza season 
+#' and peri-influenza season, or between influenza season and
+#' summer season
 #' 
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
