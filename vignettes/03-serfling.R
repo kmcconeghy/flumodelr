@@ -133,8 +133,10 @@ ggplot(df_base, aes(x=yrweek_dt)) +
   xlab("Year") + 
   ylab("Deaths per 100,000") + 
   theme_light(base_size=14) +
-  theme(legend.text=element_text(size=10)) +
-  labs(title="Influenza Deaths, Epidemic Thresholds") +
+  theme(legend.text=element_text(size=10), 
+        plot.title = element_text(size=14)) +
+  labs(title="Figure 4. Pneumonia and Influenza Deaths Over Time",
+       caption="Serfling Model + Threshold for epidemic level") +
   guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
 
 ## ------------------------------------------------------------------------
@@ -162,7 +164,9 @@ ggplot(df_epi, aes(x=yrweek_dt)) +
                                  "Reported mortality"="black")) +
   xlab("Year") + 
   ylab("Deaths per 100,000") + 
-  theme_light(base_size=16)
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 5. Periods of excess mortality over time")
 
 ## ------------------------------------------------------------------------
 ##The following command completes the above steps 

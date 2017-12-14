@@ -23,29 +23,236 @@ library(flumodelr)
 library(tibble)
 ```
 
-```{r, results='asis', fig.width=7}
+# Modern Applications of Serfling Models  
+The cyclical regression model published by Serfling [@Serlfing1963] is not commonly implemented in its original form.  
+
+## Virology data  
+In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases, see `?nrevss`. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of low flu activity can be used to construct a counterfactual for what the rate of the reported influenza outcome would be in the absence of high influenza activity. Whereas the original model relied on "off-season" data and the Fourier term, virology data gives you a more direct measure. This ultimately provides increased confidence that deaths are influenza related and estimated influenza morbidity and mortality.  
+
+The example dataset for this package, `flumodelr::fluex` is a combination of the CDC-122 cities dataset, `?cdc122city` and the public virology data `?nrevss`.  The virology is matched by week, with a lag of 2 weeks to allow for reporting of deaths (i.e. Virology(week_t-2)=Mortality(week_t)).  
+
+```{r }
 flu_ex <- flumodelr::flu_ex
 ```
 
-## Virology data  
-
-In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases see `?nrevss`. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of high flu activity can be used to inform spikes in influenza activity, increasing confidence that deaths are influenza related and estimated influenza morbidity and mortality.  
-
 ```{r, echo=F, results='as.is', fig.width=7.0}
 ggplot(flu_ex, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=prop_flupos)) +
+  geom_line(aes(y=fludeaths, colour="Observed Deaths", 
+                linetype="Observed Deaths"), size=0.8) +
+  geom_line(aes(y=prop_flupos*10, colour="No. Positive per 10 isolates", 
+                linetype="No. Positive per 10 isolates"), size=0.8) +
+  scale_colour_manual("Line",
+                      breaks=c("Observed Deaths", 
+                                 "No. Positive per 10 isolates"),
+                      values = c("Observed Deaths"="#CC0000", 
+                                 "No. Positive per 10 isolates"="black")) +
+  scale_linetype_manual("Line", 
+                        breaks=c("Observed Deaths", 
+                                 "No. Positive per 10 isolates"),
+                        values = c("Observed Deaths"=1,
+                                   "No. Positive per 10 isolates"=2)) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) +
+  xlab("Year") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 1. Influenza (+) isolates over time")
+```
+
+The original model can be modified like so:
+
+$$Eq \ 1. \  y = \alpha_0 + \beta_1*t + \beta_2*Flu_t + sin(\frac{2 \pi t}{period}) + cos(\frac{2 \pi t}{period}) + u$$
+Where *Flu* = no. of isolates positive for influenza / total isolates tested in a given timepoint *t*. *period* is a fixed parameter equal to the cycle of the time unit (e.g. 52 weeks in a year).  
+
+Many published examples of this exist [@Wang2012, @Matias2016]. Some authors include data on the % RSV (+), as well as breakdown influenza by subtype and even include data on weather, humidity etc.  Including individual terms for each viral subtype may have advantages as certain types of influenza are associated with more severe outcomes such as hospitalization and death.  
+
+## mflu()
+
+A general wrapper, ` mflu() `, for modeling time-series data is written for this purpose. This will compute a traditional serfling model, (runs `serflm()` under the hood), a smoothed model (adds polynomial terms), a model which allows for virology data, and other options explored below.  
+
+### Influenza data
+```{r }
+flu_ex <- flumodelr::flu_ex
+flu_ex
+```
+
+## General Estimation Procedure (performed by `mflu()`)    
+### add Fourier term  
+```{r }
+flu_ex_mod <- flu_ex %>%
+  mutate(week2 = row_number(),
+         theta = 2*week2/52,
+         sin_f1 = sinpi(theta),
+         cos_f1 = cospi(theta))
+```
+See [Serfling model background](https://kmcconeghy.github.io/flumodelr/articles/03-serfling.html) for discussion on Fourier terms and cyclical regression.  
+
+### add polynomials
+```{r }
+flu_ex_mod <- flu_ex_mod %>%
+  mutate(week_2 = week2^2,
+         week_3 = week2^3,
+         week_4 = week2^4,
+         week_5 = week2^5)
+```
+
+### Estimate coefficients for baseline model
+```{r }
+base_fit <- flu_ex_mod %>%
+  lm(fludeaths ~ week2 + week_2 + week_3 + week_4 + prop_flupos + sin_f1 + cos_f1, data=., na.action = na.exclude)
+summary(base_fit)
+```
+
+### Predict outcome values, assuming no influenza activity  
+Here we predict the outcome for each observation, given the fitted model `base_fit` above. We tell R to compute 95% prediction intervals.  This is conventional for most modern approaches, see [insert cites]. The original Serfling paper estimated a threshold 1.64 standard deviations above the trend line.   
+```{r }
+base_pred <- flu_ex_mod %>%
+  mutate(prop_flupos = 0) %>% #Note setting to zero
+  predict(base_fit, newdata=., se.fit=TRUE, 
+          interval="prediction", level=0.95)
+```
+
+Critically, before predicting observations, we set the measure of our influenza activity, `prop_flupos` to zero. This is telling the program to estimate the influenza activity at each timepoint, assuming that proportion of influenza isolates was equal to zero.  
+
+## Add fitted values to dataset
+```{r }
+pred_y0 <- base_pred$fit[,1] #fitted values
+pred_y0_uci <- base_pred$fit[,3] #95% Upper Prediction Interval
+
+flu_ex <- flu_ex %>%
+  add_column(., pred_y0, pred_y0_uci) 
+flu_ex
+```
+
+```{r, echo=F, results='as.is', fig.width=7}
+ggplot(flu_ex, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=fludeaths, colour="Observed Deaths", 
+                linetype="Observed Deaths"), size=0.8) +
+  geom_line(aes(y=pred_y0, colour="Predicted Deaths", 
+                linetype="Predicted Deaths"), size=0.8) +
+  geom_line(aes(y=pred_y0_uci, colour="95% PI", 
+                linetype="95% PI"), size=0.8) +
+  scale_colour_manual("Line",
+                      breaks=c("Observed Deaths", 
+                                 "Predicted Deaths", 
+                                 "95% PI"),
+                      values = c("Observed Deaths"="#CC0000", 
+                                 "Predicted Deaths"="black", 
+                                 "95% PI"="black")) +
+  scale_linetype_manual("Line", 
+                        breaks=c("Observed Deaths", 
+                                 "Predicted Deaths", 
+                                 "95% PI"),
+                        values = c("Observed Deaths"=1,
+                                   "Predicted Deaths"=1,
+                                   "95% PI"=2)) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
   xlab("Year") + 
-  ylab("Proportion of influenza (+) isolates") + 
-  theme_light(base_size=16)
+  ylab("Deaths per 100,000") + 
+  theme_light(base_size=14) +
+  theme(legend.text=element_text(size=10), 
+        plot.title = element_text(size=14)) +
+  labs(title="Figure 2. Pneumonia and Influenza Deaths Over Time",
+       caption="Modified Serfling Model") +
+  guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
+```
+**Observed Deaths** - No. of influenza / pneumonia deaths per 100,000 people.  
+**Predicted Deaths** - A fit of the cyclical regression model, (one Fourier term).  
+**95% PI** - 95% Upper Prediction Interval    
+
+This model differs from the original Serfling regressions because of it's use of influenza virology to generate a counterfactual vs. using an off-season secular trend.  
+
+## Compute attributable mortality  
+### Excess mortality 
+You can either report the deaths in excess of the 95% prediction interval, which are sometimes described as epidemics or severe periods of influenza morbidity and mortality.  
+```{r }
+flu_ex <- flu_ex %>%
+  rowwise() %>%
+  mutate(excess = if_else((fludeaths - pred_y0_uci)>0, 
+                          fludeaths - pred_y0_uci, 0))
+flu_ex
 ```
 
-In light of this the above model can be modified like so:
+```{r, echo=F, results='as.is', fig.width=7.0}
+ggplot(flu_ex, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=excess, colour="Epidemic mortality"), size=0.8, linetype=2) +
+  geom_line(aes(y=fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  scale_colour_manual("Line",
+                      values = c("Epidemic mortality"="#CC0000", 
+                                 "Reported mortality"="black")) +
+  xlab("Year") + 
+  ylab("Deaths per 100,000") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 3. Periods of influenza epidemics over time")
+```
 
-$$Eq \ 3. \  y = \alpha_0 + \beta_1*t + \beta_2*Flu_t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u$$
-Where Flu = no. of isolates positive for influenza / total isolates tested in a given timepoint t.  
+### Attributable influenza mortality  
+Alternatively, you can simply take the excess deaths above the predicted line and report these as deaths attributable to influenza. Since they are in excess of the predicted deaths in the absence of influenza (i.e. no influenza positive isolates).  
+```{r }
+flu_ex <- flu_ex %>%
+  rowwise() %>%
+  mutate(excess = if_else((fludeaths - pred_y0)>0, 
+                          fludeaths - pred_y0, 0))
+flu_ex %>% select(year, week, excess)
+```
 
-Many published examples of this exist. Some authors include data on the % RSV (+), as well as breakdown influenza by subtype and even include data on weather, humidity etc.  
+```{r, echo=F, results='as.is', fig.width=7.0}
+ggplot(flu_ex, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=excess, colour="Excess mortality"), size=0.8, linetype=2) +
+  geom_line(aes(y=fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  scale_colour_manual("Line",
+                      values = c("Excess mortality"="#CC0000", 
+                                 "Reported mortality"="black")) +
+  xlab("Year") + 
+  ylab("Deaths per 100,000") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 3. Periods of excess mortality over time")
+```
 
-See [@Wang2012, @Matias2016]
+## Examples with mflu()  
+
+### original serfling model  
+```{r, eval=F}
+flu_ex <- flumodelr::flu_ex  
+
+flu_ex_mod <- mflu(flu_ex, method="serfling", 
+                   outc="fludeaths", time="yrweek_dt", epi="epi")
+
+flu_ex_mod %>% select(year, week, fludeaths, pred_y0, pred_y0_serf)
+```
+
+### Virology-based model  
+```{r , eval=F}
+flu_ex <- flumodelr::flu_ex  
+
+flu_ex_mod <- mflu(flu_ex, method="virology", 
+                   outc="fludeaths", time="yrweek_dt", lab="prop_flupos")
+
+flu_ex_mod %>% select(year, week, fludeaths, pred_y0, pred_y0_uci)
+```
+
+### Other options  
+```{r , eval=F}
+## Without polynomial terms
+flu_ex_mod <- mflu(flu_ex, method="virology", 
+                   outc="fludeaths", time="yrweek_dt", lab="prop_flupos",
+                   poly=F)
+
+## Epidemic period specified (serfling model only)
+flu_ex_mod <- mflu(flu_ex, method="serfling", 
+                   outc="fludeaths", time="yrweek_dt", epi=c(40, 20)
+                   )
+```
+
+# References  
+
+```{r }
+sessioninfo::session_info()
+```
