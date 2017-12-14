@@ -34,23 +34,11 @@ In current methods, most researchers incorporate data on the percent of isolates
 ## Definition of the Peri- and Summer-season
 
 Incidence rate-difference models have been used frequently to estimate influenza-associated hospitalizations and
-deaths. We followed Thompson  and defined five periods for each respiratory season: (i) a period when ‡10% of specimens tested were positive for influenza, (ii) a period when ‡15% of specimens were positive, (iii) a peri-season baseline period when <10% of specimens were positive, (iv) a peri-season baseline period when <15% of specimens were positive, and (v) a summer-season baseline period. The summer-season baseline period was defined as the weeks from July through September at the beginning of each season and May and June at the end of each season when there is little influenza activity.
+deaths. We followed Thompson and defined five periods for each respiratory season: (i) a period when ‡10% of specimens tested were positive for influenza, (ii) a period when ‡15% of specimens were positive, (iii) a peri-season baseline period when <10% of specimens were positive, (iv) a peri-season baseline period when <15% of specimens were positive, and (v) a summer-season baseline period. The summer-season baseline period was defined as the weeks from July through September at the beginning of each season and May and June at the end of each season when there is little influenza activity.
 
 ```{r, echo=F, results='as.is', fig.width=7.0}
-ggplot(flu_ex, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=prop_flupos)) +
-  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
-               expand=c(0, .9)) + 
-  xlab("Year") + 
-  ylab("Proportion of influenza (+) isolates") + 
-  theme_light(base_size=16)
+
 ```
 
-In light of this the above model can be modified like so:
 
-$$Eq \ 3. \  y = \alpha_0 + \beta_1*t + \beta_2*Flu_t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u$$
-Where Flu = no. of isolates positive for influenza / total isolates tested in a given timepoint t.  
-
-Many published examples of this exist. Some authors include data on the % RSV (+), as well as breakdown influenza by subtype and even include data on weather, humidity etc.  
-
-See [@Wang2012, @Matias2016]
+See [@Thompson2009]
