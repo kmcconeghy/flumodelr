@@ -34,7 +34,7 @@ In current methods, most researchers incorporate data on the percent of isolates
 ## Definition of the Peri- and Summer-season
 
 Incidence rate-difference models have been used frequently to estimate influenza-associated hospitalizations and
-deaths. We followed Thompson and defined five periods for each respiratory season: (i) a period when ‡10% of specimens tested were positive for influenza, (ii) a period when ‡15% of specimens were positive, (iii) a peri-season baseline period when <10% of specimens were positive, (iv) a peri-season baseline period when <15% of specimens were positive, and (v) a summer-season baseline period. The summer-season baseline period was defined as the weeks from July through September at the beginning of each season and May and June at the end of each season when there is little influenza activity.
+deaths. We followed Thompson and defined five periods for each respiratory season: (i) a period when ‡10% of specimens tested were positive for influenza, (ii) a period when ‡15% of specimens were positive, (iii) a peri-season baseline period when <10% of specimens were positive, (iv) a peri-season baseline period when <15% of specimens were positive, and (v) a summer-season baseline period. The summer-season baseline period was defined as the weeks from July through September at the beginning of each season and May and June at the end of each season when there is little influenza activity..
 
 ```{r, echo=F, results='as.is', fig.width=7.0}
 
