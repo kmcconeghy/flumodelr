@@ -31,7 +31,7 @@
 #' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
 #' or month/years ("mofy"), days/years("dofy")  
 #'   
-#' @return 
+#' @return dataframe
 #' 
 #' @export
 #' 
