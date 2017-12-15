@@ -35,6 +35,9 @@ or month/years ("mofy"), days/years("dofy")}
 unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
 or month/years ("mofy"), days/years("dofy")}
 }
+\value{
+dataframe
+}
 \description{
 Calculates the rate difference between influenza season
 and peri-influenza season, or between influenza season and
