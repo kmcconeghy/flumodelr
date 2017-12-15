@@ -90,16 +90,262 @@
     
     
 <div class="contents">
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex</code></pre></div>
+<div id="modern-applications-of-serfling-models" class="section level1">
+<h1 class="hasAnchor">
+<a href="#modern-applications-of-serfling-models" class="anchor"></a>Modern Applications of Serfling Models</h1>
+<p>The cyclical regression model published by Serfling <span class="citation">[@Serlfing1963]</span> is not commonly implemented in its original form.</p>
 <div id="virology-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#virology-data" class="anchor"></a>Virology data</h2>
-<p>In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases see <code><a href="../reference/nrevss.html">?nrevss</a></code>. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of high flu activity can be used to inform spikes in influenza activity, increasing confidence that deaths are influenza related and estimated influenza morbidity and mortality.</p>
+<p>In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases, see <code><a href="../reference/nrevss.html">?nrevss</a></code>. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of low flu activity can be used to construct a counterfactual for what the rate of the reported influenza outcome would be in the absence of high influenza activity. Whereas the original model relied on “off-season” data and the Fourier term, virology data gives you a more direct measure. This ultimately provides increased confidence that deaths are influenza related and estimated influenza morbidity and mortality.</p>
+<p>The example dataset for this package, <code>flumodelr::fluex</code> is a combination of the CDC-122 cities dataset, <code><a href="../reference/cdc122city.html">?cdc122city</a></code> and the public virology data <code><a href="../reference/nrevss.html">?nrevss</a></code>. The virology is matched by week, with a lag of 2 weeks to allow for reporting of deaths (i.e. Virology(week_t-2)=Mortality(week_t)).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex</code></pre></div>
 <p><img src="04-modserf_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
-<p>In light of this the above model can be modified like so:</p>
-<p><span class="math display">\[Eq \ 3. \  y = \alpha_0 + \beta_1*t + \beta_2*Flu_t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u\]</span> Where Flu = no. of isolates positive for influenza / total isolates tested in a given timepoint t.</p>
-<p>Many published examples of this exist. Some authors include data on the % RSV (+), as well as breakdown influenza by subtype and even include data on weather, humidity etc.</p>
-<p>See <span class="citation">[@Wang2012, @Matias2016]</span></p>
+<p>The original model can be modified like so:</p>
+<p><span class="math display">\[Eq \ 1. \  y = \alpha_0 + \beta_1*t + \beta_2*Flu_t + sin(\frac{2 \pi t}{period}) + cos(\frac{2 \pi t}{period}) + u\]</span> Where <em>Flu</em> = no. of isolates positive for influenza / total isolates tested in a given timepoint <em>t</em>. <em>period</em> is a fixed parameter equal to the cycle of the time unit (e.g. 52 weeks in a year).</p>
+<p>Many published examples of this exist <span class="citation">[@Wang2012, @Matias2016]</span>. Some authors include data on the % RSV (+), as well as breakdown influenza by subtype and even include data on weather, humidity etc. Including individual terms for each viral subtype may have advantages as certain types of influenza are associated with more severe outcomes such as hospitalization and death.</p>
+</div>
+<div id="mflu" class="section level2">
+<h2 class="hasAnchor">
+<a href="#mflu" class="anchor"></a>mflu()</h2>
+<p>A general wrapper, <code>mflu()</code>, for modeling time-series data is written for this purpose. This will compute a traditional serfling model, (runs <code><a href="../reference/serflm.html">serflm()</a></code> under the hood), a smoothed model (adds polynomial terms), a model which allows for virology data, and other options explored below.</p>
+<div id="influenza-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#influenza-data" class="anchor"></a>Influenza data</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex
+flu_ex
+<span class="co">#&gt; # A tibble: 259 x 5</span>
+<span class="co">#&gt;    year  week fludeaths  yrweek_dt prop_flupos</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2010    42  6.482143 2010-10-18  0.01331601</span>
+<span class="co">#&gt; 2  2010    43  6.605505 2010-10-25  0.01928211</span>
+<span class="co">#&gt; 3  2010    44  6.779817 2010-11-01  0.01726122</span>
+<span class="co">#&gt; 4  2010    45  6.581818 2010-11-08  0.02305556</span>
+<span class="co">#&gt; # ... with 255 more rows</span></code></pre></div>
+</div>
+</div>
+<div id="general-estimation-procedure-performed-by-mflu" class="section level2">
+<h2 class="hasAnchor">
+<a href="#general-estimation-procedure-performed-by-mflu" class="anchor"></a>General Estimation Procedure (performed by <code>mflu()</code>)</h2>
+<div id="add-fourier-term" class="section level3">
+<h3 class="hasAnchor">
+<a href="#add-fourier-term" class="anchor"></a>add Fourier term</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex_mod &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">week2 =</span> <span class="kw">row_number</span>(),
+         <span class="dt">theta =</span> <span class="dv">2</span><span class="op">*</span>week2<span class="op">/</span><span class="dv">52</span>,
+         <span class="dt">sin_f1 =</span> <span class="kw">sinpi</span>(theta),
+         <span class="dt">cos_f1 =</span> <span class="kw">cospi</span>(theta))</code></pre></div>
+<p>See <a href="https://kmcconeghy.github.io/flumodelr/articles/03-serfling.html">Serfling model background</a> for discussion on Fourier terms and cyclical regression.</p>
+</div>
+<div id="add-polynomials" class="section level3">
+<h3 class="hasAnchor">
+<a href="#add-polynomials" class="anchor"></a>add polynomials</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex_mod &lt;-<span class="st"> </span>flu_ex_mod <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">week_2 =</span> week2<span class="op">^</span><span class="dv">2</span>,
+         <span class="dt">week_3 =</span> week2<span class="op">^</span><span class="dv">3</span>,
+         <span class="dt">week_4 =</span> week2<span class="op">^</span><span class="dv">4</span>,
+         <span class="dt">week_5 =</span> week2<span class="op">^</span><span class="dv">5</span>)</code></pre></div>
+</div>
+<div id="estimate-coefficients-for-baseline-model" class="section level3">
+<h3 class="hasAnchor">
+<a href="#estimate-coefficients-for-baseline-model" class="anchor"></a>Estimate coefficients for baseline model</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_fit &lt;-<span class="st"> </span>flu_ex_mod <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">lm</span>(fludeaths <span class="op">~</span><span class="st"> </span>week2 <span class="op">+</span><span class="st"> </span>week_<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>week_<span class="dv">3</span> <span class="op">+</span><span class="st"> </span>week_<span class="dv">4</span> <span class="op">+</span><span class="st"> </span>prop_flupos <span class="op">+</span><span class="st"> </span>sin_f1 <span class="op">+</span><span class="st"> </span>cos_f1, <span class="dt">data=</span>., <span class="dt">na.action =</span> na.exclude)
+<span class="kw">summary</span>(base_fit)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = fludeaths ~ week2 + week_2 + week_3 + week_4 + prop_flupos + </span>
+<span class="co">#&gt;     sin_f1 + cos_f1, data = ., na.action = na.exclude)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residuals:</span>
+<span class="co">#&gt;     Min      1Q  Median      3Q     Max </span>
+<span class="co">#&gt; -3.2838 -0.3355  0.0066  0.3841  3.3789 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;               Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">#&gt; (Intercept)  6.409e+00  2.881e-01  22.243  &lt; 2e-16 ***</span>
+<span class="co">#&gt; week2        2.047e-02  1.443e-02   1.419   0.1573    </span>
+<span class="co">#&gt; week_2      -5.326e-04  2.250e-04  -2.367   0.0187 *  </span>
+<span class="co">#&gt; week_3       3.310e-06  1.298e-06   2.551   0.0113 *  </span>
+<span class="co">#&gt; week_4      -6.166e-09  2.474e-09  -2.493   0.0133 *  </span>
+<span class="co">#&gt; prop_flupos  5.500e+00  8.153e-01   6.746 1.04e-10 ***</span>
+<span class="co">#&gt; sin_f1       8.380e-01  1.044e-01   8.030 3.78e-14 ***</span>
+<span class="co">#&gt; cos_f1      -5.186e-01  8.989e-02  -5.770 2.33e-08 ***</span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residual standard error: 0.8346 on 251 degrees of freedom</span>
+<span class="co">#&gt; Multiple R-squared:  0.6945, Adjusted R-squared:  0.686 </span>
+<span class="co">#&gt; F-statistic: 81.53 on 7 and 251 DF,  p-value: &lt; 2.2e-16</span></code></pre></div>
+</div>
+<div id="predict-outcome-values-assuming-no-influenza-activity" class="section level3">
+<h3 class="hasAnchor">
+<a href="#predict-outcome-values-assuming-no-influenza-activity" class="anchor"></a>Predict outcome values, assuming no influenza activity</h3>
+<p>Here we predict the outcome for each observation, given the fitted model <code>base_fit</code> above. We tell R to compute 95% prediction intervals. This is conventional for most modern approaches, see [insert cites]. The original Serfling paper estimated a threshold 1.64 standard deviations above the trend line.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_pred &lt;-<span class="st"> </span>flu_ex_mod <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop_flupos =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#Note setting to zero</span>
+<span class="st">  </span><span class="kw">predict</span>(base_fit, <span class="dt">newdata=</span>., <span class="dt">se.fit=</span><span class="ot">TRUE</span>, 
+          <span class="dt">interval=</span><span class="st">"prediction"</span>, <span class="dt">level=</span><span class="fl">0.95</span>)</code></pre></div>
+<p>Critically, before predicting observations, we set the measure of our influenza activity, <code>prop_flupos</code> to zero. This is telling the program to estimate the influenza activity at each timepoint, assuming that proportion of influenza isolates was equal to zero.</p>
+</div>
+</div>
+<div id="add-fitted-values-to-dataset" class="section level2">
+<h2 class="hasAnchor">
+<a href="#add-fitted-values-to-dataset" class="anchor"></a>Add fitted values to dataset</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred_y0 &lt;-<span class="st"> </span>base_pred<span class="op">$</span>fit[,<span class="dv">1</span>] <span class="co">#fitted values</span>
+pred_y0_uci &lt;-<span class="st"> </span>base_pred<span class="op">$</span>fit[,<span class="dv">3</span>] <span class="co">#95% Upper Prediction Interval</span>
+
+flu_ex &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_column</span>(., pred_y0, pred_y0_uci) 
+flu_ex
+<span class="co">#&gt; # A tibble: 259 x 7</span>
+<span class="co">#&gt;    year  week fludeaths  yrweek_dt prop_flupos  pred_y0 pred_y0_uci</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2010    42  6.482143 2010-10-18  0.01331601 6.014791    7.739954</span>
+<span class="co">#&gt; 2  2010    43  6.605505 2010-10-25  0.01928211 6.144519    7.863546</span>
+<span class="co">#&gt; 3  2010    44  6.779817 2010-11-01  0.01726122 6.277639    7.991443</span>
+<span class="co">#&gt; 4  2010    45  6.581818 2010-11-08  0.02305556 6.412491    8.121950</span>
+<span class="co">#&gt; # ... with 255 more rows</span></code></pre></div>
+<p><img src="04-modserf_files/figure-html/unnamed-chunk-9-1.png" width="672"><strong>Observed Deaths</strong> - No. of influenza / pneumonia deaths per 100,000 people.<br><strong>Predicted Deaths</strong> - A fit of the cyclical regression model, (one Fourier term).<br><strong>95% PI</strong> - 95% Upper Prediction Interval</p>
+<p>This model differs from the original Serfling regressions because of it’s use of influenza virology to generate a counterfactual vs. using an off-season secular trend.</p>
+</div>
+<div id="compute-attributable-mortality" class="section level2">
+<h2 class="hasAnchor">
+<a href="#compute-attributable-mortality" class="anchor"></a>Compute attributable mortality</h2>
+<div id="excess-mortality" class="section level3">
+<h3 class="hasAnchor">
+<a href="#excess-mortality" class="anchor"></a>Excess mortality</h3>
+<p>You can either report the deaths in excess of the 95% prediction interval, which are sometimes described as epidemics or severe periods of influenza morbidity and mortality.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">excess =</span> <span class="kw">if_else</span>((fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_uci)<span class="op">&gt;</span><span class="dv">0</span>, 
+                          fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_uci, <span class="dv">0</span>))
+flu_ex
+<span class="co">#&gt; Source: local data frame [259 x 8]</span>
+<span class="co">#&gt; Groups: &lt;by row&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 259 x 8</span>
+<span class="co">#&gt;    year  week fludeaths  yrweek_dt prop_flupos  pred_y0 pred_y0_uci excess</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2010    42  6.482143 2010-10-18  0.01331601 6.014791    7.739954      0</span>
+<span class="co">#&gt; 2  2010    43  6.605505 2010-10-25  0.01928211 6.144519    7.863546      0</span>
+<span class="co">#&gt; 3  2010    44  6.779817 2010-11-01  0.01726122 6.277639    7.991443      0</span>
+<span class="co">#&gt; 4  2010    45  6.581818 2010-11-08  0.02305556 6.412491    8.121950      0</span>
+<span class="co">#&gt; # ... with 255 more rows</span></code></pre></div>
+<p><img src="04-modserf_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
+</div>
+<div id="attributable-influenza-mortality" class="section level3">
+<h3 class="hasAnchor">
+<a href="#attributable-influenza-mortality" class="anchor"></a>Attributable influenza mortality</h3>
+<p>Alternatively, you can simply take the excess deaths above the predicted line and report these as deaths attributable to influenza. Since they are in excess of the predicted deaths in the absence of influenza (i.e. no influenza positive isolates).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">excess =</span> <span class="kw">if_else</span>((fludeaths <span class="op">-</span><span class="st"> </span>pred_y0)<span class="op">&gt;</span><span class="dv">0</span>, 
+                          fludeaths <span class="op">-</span><span class="st"> </span>pred_y0, <span class="dv">0</span>))
+flu_ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, excess)
+<span class="co">#&gt; Source: local data frame [259 x 3]</span>
+<span class="co">#&gt; Groups: &lt;by row&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 259 x 3</span>
+<span class="co">#&gt;    year  week    excess</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2010    42 0.4673520</span>
+<span class="co">#&gt; 2  2010    43 0.4609859</span>
+<span class="co">#&gt; 3  2010    44 0.5021775</span>
+<span class="co">#&gt; 4  2010    45 0.1693275</span>
+<span class="co">#&gt; # ... with 255 more rows</span></code></pre></div>
+<p><img src="04-modserf_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
+</div>
+</div>
+<div id="examples-with-mflu" class="section level2">
+<h2 class="hasAnchor">
+<a href="#examples-with-mflu" class="anchor"></a>Examples with mflu()</h2>
+<div id="original-serfling-model" class="section level3">
+<h3 class="hasAnchor">
+<a href="#original-serfling-model" class="anchor"></a>original serfling model</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex  
+
+flu_ex_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(flu_ex, <span class="dt">method=</span><span class="st">"serfling"</span>, 
+                   <span class="dt">outc=</span><span class="st">"fludeaths"</span>, <span class="dt">time=</span><span class="st">"yrweek_dt"</span>, <span class="dt">epi=</span><span class="st">"epi"</span>)
+
+flu_ex_mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, fludeaths, pred_y0, pred_y0_serf)</code></pre></div>
+</div>
+<div id="virology-based-model" class="section level3">
+<h3 class="hasAnchor">
+<a href="#virology-based-model" class="anchor"></a>Virology-based model</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex  
+
+flu_ex_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(flu_ex, <span class="dt">method=</span><span class="st">"virology"</span>, 
+                   <span class="dt">outc=</span><span class="st">"fludeaths"</span>, <span class="dt">time=</span><span class="st">"yrweek_dt"</span>, <span class="dt">lab=</span><span class="st">"prop_flupos"</span>)
+
+flu_ex_mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, fludeaths, pred_y0, pred_y0_uci)</code></pre></div>
+</div>
+<div id="other-options" class="section level3">
+<h3 class="hasAnchor">
+<a href="#other-options" class="anchor"></a>Other options</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Without polynomial terms
+flu_ex_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(flu_ex, <span class="dt">method=</span><span class="st">"virology"</span>, 
+                   <span class="dt">outc=</span><span class="st">"fludeaths"</span>, <span class="dt">time=</span><span class="st">"yrweek_dt"</span>, <span class="dt">lab=</span><span class="st">"prop_flupos"</span>,
+                   <span class="dt">poly=</span>F)
+
+## Epidemic period specified (serfling model only)
+flu_ex_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(flu_ex, <span class="dt">method=</span><span class="st">"serfling"</span>, 
+                   <span class="dt">outc=</span><span class="st">"fludeaths"</span>, <span class="dt">time=</span><span class="st">"yrweek_dt"</span>, <span class="dt">epi=</span><span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">20</span>)
+                   )</code></pre></div>
+</div>
+</div>
+</div>
+<div id="references" class="section level1">
+<h1 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sessioninfo<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/sessioninfo/topics/session_info">session_info</a></span>()
+<span class="co">#&gt; - Session info ----------------------------------------------------------</span>
+<span class="co">#&gt;  setting  value                       </span>
+<span class="co">#&gt;  version  R version 3.4.2 (2017-09-28)</span>
+<span class="co">#&gt;  os       Windows 10 x64              </span>
+<span class="co">#&gt;  system   x86_64, mingw32             </span>
+<span class="co">#&gt;  ui       RTerm                       </span>
+<span class="co">#&gt;  language (EN)                        </span>
+<span class="co">#&gt;  collate  English_United States.1252  </span>
+<span class="co">#&gt;  tz       America/New_York            </span>
+<span class="co">#&gt;  date     2017-12-14                  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; - Packages --------------------------------------------------------------</span>
+<span class="co">#&gt;  package     * version    date       source                            </span>
+<span class="co">#&gt;  assertthat    0.2.0      2017-04-11 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  backports     1.1.2      2017-12-13 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  bindr         0.1        2016-11-13 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  bindrcpp    * 0.2        2017-06-17 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  clisymbols    1.2.0      2017-05-21 CRAN (R 3.4.3)                    </span>
+<span class="co">#&gt;  colorspace    1.3-2      2016-12-14 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  digest        0.6.12     2017-01-27 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  dplyr       * 0.7.4      2017-09-28 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  evaluate      0.10.1     2017-06-24 CRAN (R 3.4.1)                    </span>
+<span class="co">#&gt;  flumodelr   * 0.0.3.9000 2017-12-14 local                             </span>
+<span class="co">#&gt;  ggplot2     * 2.2.1      2016-12-30 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  glue          1.2.0      2017-10-29 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  gtable        0.2.0      2016-02-26 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  htmltools     0.3.6      2017-04-28 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  knitr         1.17       2017-08-10 CRAN (R 3.4.1)                    </span>
+<span class="co">#&gt;  labeling      0.3        2014-08-23 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  lazyeval      0.2.1      2017-10-29 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  lubridate   * 1.7.1      2017-11-03 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  magrittr      1.5        2014-11-22 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  munsell       0.4.3      2016-02-13 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  pkgconfig     2.0.1      2017-03-21 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  plyr          1.8.4      2016-06-08 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  R6            2.2.2      2017-06-17 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  Rcpp          0.12.14    2017-11-23 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  rlang         0.1.4.9000 2017-12-14 Github (tidyverse/rlang@5ebcf24)  </span>
+<span class="co">#&gt;  rmarkdown     1.8        2017-11-17 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  rprojroot     1.2        2017-01-16 CRAN (R 3.4.1)                    </span>
+<span class="co">#&gt;  scales      * 0.5.0      2017-08-24 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  sessioninfo   1.0.1.9000 2017-12-14 Github (r-lib/sessioninfo@c871d01)</span>
+<span class="co">#&gt;  stringi       1.1.6      2017-11-17 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  stringr       1.2.0      2017-02-18 CRAN (R 3.4.0)                    </span>
+<span class="co">#&gt;  tibble      * 1.3.4      2017-08-22 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  withr         2.1.0      2017-11-01 CRAN (R 3.4.2)                    </span>
+<span class="co">#&gt;  yaml          2.1.16     2017-12-12 CRAN (R 3.4.3)</span></code></pre></div>
 </div>
 </div>
   </div>
@@ -109,7 +355,17 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+<li>
+<a href="#modern-applications-of-serfling-models">Modern Applications of Serfling Models</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#virology-data">Virology data</a></li>
+      <li><a href="#mflu">mflu()</a></li>
+      <li><a href="#general-estimation-procedure-performed-by-mflu">General Estimation Procedure (performed by <code>mflu()</code>)</a></li>
+      <li><a href="#add-fitted-values-to-dataset">Add fitted values to dataset</a></li>
+      <li><a href="#compute-attributable-mortality">Compute attributable mortality</a></li>
+      <li><a href="#examples-with-mflu">Examples with mflu()</a></li>
+      </ul>
+</li>
+      <li><a href="#references">References</a></li>
       </ul>
 </div>
       </div>
