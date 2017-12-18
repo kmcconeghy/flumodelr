@@ -21,7 +21,7 @@ if (first_time==T) {
 
 ## Build
 devtools::document()
-devtools::check()
+devtools::check()n
 devtools::build()
 devtools::test()
 pkgdown::build_site()

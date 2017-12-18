@@ -23,6 +23,29 @@ This package relies heavily on the suite of packages and programming termed "Tid
 # Usage  
 The primary goal of this package is to provide a toolkit for researchers who wish to estimate the attributable proportion of an outcome due to influenza morbidity and mortality. Conceptually this is achieved through estimating a baseline rate of the outcome in the absence of influenza, then using a measure of influenza endemicity to identify the marginal rate due to influenza morbidity. The particular measure of influenza endemicity and outcome being modelled can be arbitrarily specified by the user.  
 
+# Simple Example  
+```{r, echo=F, warning=F}
+library(flumodelr)
+library(tidyverse)
+```
+
+### Use Example Date
+```{r }
+flu_ex <- flumodelr::flu_ex
+flu_ex
+```
+
+### Fit Traditional Serfling Model
+```{r }
+flu_fit <- serflm(flu_ex, outc = "fludeaths", time = "yrweek_dt")
+```
+
+Assumes epidemic influenza period of Sept. - May.  Fits a cyclical trend line, y0, along with an upper limit, y0_ul.  
+
+```{r }
+flu_fit %>% select (year, week, fludeaths, y0, y0_ul)
+```
+
 # Vignettes  
 Several companion documents have been written to assist interested readers with the background and use of the package. We suggest you start here:
 [Introduction to flumodelr](https://kmcconeghy.github.io/flumodelr/index.html) or if the package is installed:  
