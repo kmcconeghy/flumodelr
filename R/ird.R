@@ -11,10 +11,6 @@
 #' a numeric type variable in dataframe data which is the measure 
 #' of disease morbidity / mortality
 #' 
-#' @param epi A character string of length=1, identifies 
-#' a logical type variable in dataframe data which indicates epidemic
-#' vs non-epidemic periods  
-#' 
 #' @param time A character string of length=1, identifies 
 #' a numeric/integer class variable in dataframe which corresponds 
 #' to a unit of time, must be unique (i.e. non-repeating)  
@@ -27,9 +23,13 @@
 #' week number of the start of the respiratory season.
 #' The default value is 27. This corresponds with the beginning of July.
 #' 
-#' @param viral A numeric class variable, must specify the
+#' @param viral A character string of length=1, identifies
+#' a numeric type variable in dataframe data which is the measure
+#' of viral activity. 
+#' 
+#' @param high A numeric class variable, must specify the
 #' proportion of positive isolates for a week to be considered of
-#' "high viral activity" 
+#' "high viral activity". The default value is 0.10. 
 #'   
 #' @param fluStart A numeric/integer class variable, must specify the
 #' week number of the start of the influenza season. The default 
@@ -46,8 +46,8 @@
 #' @examples
 #' require(flumodelr)
 #' flu_ex <- flumodelr::flu_ex
-#' fit <- serflm(data=flu_ex, 
-#'               flu = "fludeaths", epi="epi", 
+#' fit <- ird(data=flu_ex, 
+#'               flu = "fludeaths", viral="prop_flupos", 
 #'               time="yrweek_dt")
 #'               
 #' summary(fit)
@@ -63,10 +63,11 @@ ird <- function(data=NULL,
                 flu=NULL, 
                 epi=NULL, 
                 time=NULL,
-                t.interval="wofy"
-                respStart=27
-                viral=0.1
-                fluStart=40
+                viral=NULL,
+                t.interval="wofy",
+                respStart=27,
+                high=0.1,
+                fluStart=40,
                 fluStop=18
                 ) {
   cat("incidence rate-difference model \n",
@@ -128,13 +129,31 @@ ird <- function(data=NULL,
     
  
     #build model formula
-
     
+    #find respiratory seasons
+    findseason <- function (calyear, calweek, respStart=27){
+      if (calweek >= respStart) {return(calyear)} else {return(calyear-1)}
+    }
 
+    flu_ex$season <- mapply(findseason, flu_ex$year,flu_ex$week)
+    
   #compute rate differences  
-
   
+    #find high versus low viral activity periods
+    findhigh <- function (prop, high=0.1){
+      return(prop >= high)
+    }
+  
+    flu_ex$high <- mapply(findhigh, flu_ex$prop_flupos)
+    
+    #find influenza versus summer baseline period
+    findflu <- function (calweek, fluStart=40, fluStop=18){
+      (calweek >=fluStart | calweek <=fluStop)
+    }
+    
+    flu_ex$fluseason <- mapply(findflu, flu_ex$week)
+    
   #return results
-
+  return(data)
   
 }
