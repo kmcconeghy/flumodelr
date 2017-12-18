@@ -61,7 +61,6 @@
 #' 
 ird <- function(data=NULL, 
                 flu=NULL, 
-                epi=NULL, 
                 time=NULL,
                 viral=NULL,
                 t.interval="wofy",
@@ -92,18 +91,7 @@ ird <- function(data=NULL,
         stop("flu variable not type numeric, see ?serflm")
       }
     
-    #epidemic period variable exists and valid  
-      if (is.na(epi)==T) {
-        stop("epi variable not specified, must specify epidemic periods, see ?serflm")
-      }
-      if (epi %in% names(data)==F) {
-        stop("epi variable not named in data object, see ?serflm")
-      }
-      if (is.logical(data[[epi]])==F) {
-        stop("epi variable not type logical, must be T/F or 0/1, see ?serflm")
-      }
-  
-    #time variable
+       #time variable
       if (is.na(time)==T) {
         stop("time variable not specified, must specify, see ?serflm")
       }
