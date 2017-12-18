@@ -30,7 +30,7 @@
 #' @examples
 #' require(flumodelr)
 #' flu_ex <- flumodelr::flu_ex
-#' fit <- serflm(data=flu_ex, outc = "fludeaths", time="yrweek_dt")
+#' flu_fit <- serflm(flu_ex, outc = "fludeaths", time = "yrweek_dt")  
 #'               
 #' summary(fit)
 #' 
