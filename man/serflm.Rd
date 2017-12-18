@@ -17,8 +17,7 @@ of disease morbidity / mortality}
 
 \item{epi}{either a character string of length=1 (e.g. '"epi")',
 identifying a logical type variable in dataframe data which indicates epidemic
-vs non-epidemic periods, or a vector of length=2 which identifies
-periods of epidemicity, e.g. 'c(40,20)'.}
+vs non-epidemic periods, or if unspecified will default to Sept - May.}
 
 \item{time}{A character string of length=1, identifies
 a numeric/integer class variable in dataframe which corresponds
@@ -29,7 +28,8 @@ unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
 or month/years ("mofy"), days/years("dofy")}
 }
 \value{
-an object of class data.frame (input dataframe + fitted values)
+an object of class data.frame, input + y0 (fitted values), y0_ul
+the upper serfling threshold
 }
 \description{
 Performs a cyclical linear regression model,
@@ -38,7 +38,7 @@ or 'serfling' model
 \examples{
 require(flumodelr)
 flu_ex <- flumodelr::flu_ex
-fit <- serflm(data=flu_ex, outc = "fludeaths", epi="epi", time="yrweek_dt")
+fit <- serflm(data=flu_ex, outc = "fludeaths", time="yrweek_dt")
               
 summary(fit)
 

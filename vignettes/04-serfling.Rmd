@@ -284,8 +284,11 @@ flu_ex <- flu_ex %>%
   mutate(epi = if_else(month(yrweek_dt)>=10 | month(yrweek_dt)<=5, T, F))  
 
 ##fit serfling model
-flu_ex_pred <- serflm(data=flu_ex, 
+flu_fit <- serflm(data=flu_ex, 
                       outc="fludeaths", epi="epi", time="yrweek_dt")
+```
+```{r }
+flu_fit
 ```
 
 ## Criticisms of this approach  
