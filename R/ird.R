@@ -23,15 +23,23 @@
 #' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
 #' or month/years ("mofy"), days/years("dofy")  
 #' 
-#' @param t.respStart A character string, must specify whether 
-#' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
-#' or month/years ("mofy"), days/years("dofy")  
+#' @param respStart A numeric/integer class variable, must specify the 
+#' week number of the start of the respiratory season.
+#' The default value is 27. This corresponds with the beginning of July.
+#' 
+#' @param viral A numeric class variable, must specify the
+#' proportion of positive isolates for a week to be considered of
+#' "high viral activity" 
 #'   
-#' @param t.respStop A character string, must specify whether 
-#' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
-#' or month/years ("mofy"), days/years("dofy")  
+#' @param fluStart A numeric/integer class variable, must specify the
+#' week number of the start of the influenza season. The default 
+#' value is 40. This corresponds with the beginning of October.
+#' 
+#' @param fluStop A numeric/integer class variable, must specify the
+#' week number of the start of the influenza season. The default 
+#' value is 18. This corresponds with the end of April.
 #'   
-#' @return dataframe
+#' @return an object of class data.frame
 #' 
 #' @export
 #' 
@@ -45,14 +53,23 @@
 #' summary(fit)
 #' 
 #' @references 
-#' Serfling RE. Methods for current statistical analysis of 
-#' excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 
-#' 78(6): 494 - 506.  
-#' /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/} 
+#' Thompson WW, Weintraub E, Dhankhar P, Cheng PY, Brammer L, 
+#' Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza‐associated 
+#' deaths made using four different methods. Influenza and other 
+#' respiratory viruses. 2009 Jan 1;3(1):37-49.
+#' /url{http://onlinelibrary.wiley.com/doi/10.1111/j.1750-2659.2009.00073.x/full} 
 #' 
-ird <- function(data=NULL, flu=NULL, epi=NULL, time=NULL, 
-                   t.interval="wofy") {
-  cat("Periseasonal Adjustment Model \n",
+ird <- function(data=NULL, 
+                flu=NULL, 
+                epi=NULL, 
+                time=NULL,
+                t.interval="wofy"
+                respStart=27
+                viral=0.1
+                fluStart=40
+                fluStop=18
+                ) {
+  cat("incidence rate-difference model \n",
       paste0(rep("=", 60), collapse=""), "\n")
   
   #internal objects  
@@ -114,7 +131,7 @@ ird <- function(data=NULL, flu=NULL, epi=NULL, time=NULL,
 
     
 
-  #compute rate with peri-seasonal adjustment  
+  #compute rate differences  
 
   
   #return results

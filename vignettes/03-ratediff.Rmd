@@ -28,25 +28,25 @@ library(tibble)
 flu_ex <- flumodelr::flu_ex
 ```
 
+## Introduction to incidence rate-difference models
+
+Incidence rate-difference models are among the first to estimate influenza-associated hospitalizations and
+deaths [@Izurieta2000]. In these models incidence rates in periods with low viral activity are substracted from incidence rates in periods with high viral activity. This difference in incicence rate is assumed to be influenza attributable.
+
 ## Virology data  
+To determine periods with high and low viral activity, researchers use data on the percent of isolates positive with influenza viral types. This is publically available in many cases, see `?nrevss`. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings.   
 
-In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases see `?nrevss`. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of high flu activity can be used to inform spikes in influenza activity, increasing confidence that deaths are influenza related and estimated influenza morbidity and mortality.  
+## Definition of periods: default values
+We followed Thompson [@Thompson2009] and defined the respiratory season to start at the beginning of July (week 27) of each calendar year. Within a respiratory season we defined four periods:
 
-## Definition of the Peri- and Summer-season
-
-Incidence rate-difference models have been used frequently to estimate influenza-associated hospitalizations and
-deaths. We followed Thompson [@Thompson2009] and defined five periods for each respiratory season: (i) a period when ‡10% of specimens tested were positive for influenza, (ii) a period when ‡15% of specimens were positive, (iii) a peri-season baseline period when <10% of specimens were positive, (iv) a peri-season baseline period when <15% of specimens were positive, and (v) a summer-season baseline period. The summer-season baseline period is defined as the weeks from July through September at the beginning of each season and May and June at the end of each season when there is little influenza activity.
-
-## Peri-season excess mortality rate
-The peri-season excess mortality rate is defined as the difference in the average weekly mortality rates between
-an influenza period and a peri-season period for a particular respiratory season. 
-
-## Summer-season excess mortality rate
-The summer-season excess mortality rate is defined as the difference in the average weekly rates between an influenza period and a summer-season period.
+(a) a high viral activity period consisting of weeks when at least 10% of specimens are positive, 
+(b) a peri-season baseline period consisting of weeks when less than 10% of specimens were positive, and;
+(c) an influenza season defined as the weeks from October (week 40) through April (week 18),
+(d) a summer-season baseline period defined as the weeks from July (week 27) through September (week 39) at the beginning of each respiratory season and May (week 19) and June (week 26) at the end of each respiratory season when there is little viral activity.
 
 ## Annual excess numbers
-Weekly excess mortality rates will be converted to annual excess numbers of deaths by using the number of weeks
-that were above an epidemic threshold, and available US census data: 
+Weekly excess outcome rates will be converted to annual excess numbers of outcomes by using the number of weeks
+that were above an epidemic threshold, and available US census data:
 
 annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (population).
 
