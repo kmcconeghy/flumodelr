@@ -46,9 +46,7 @@
 #' @examples
 #' require(flumodelr)
 #' flu_ex <- flumodelr::flu_ex
-#' fit <- ird(data=flu_ex, 
-#'               flu = "fludeaths", viral="prop_flupos", 
-#'               time="yrweek_dt")
+#' fit <- ird(data=flu_ex, flu = "fludeaths", viral="prop_flupos", time="yrweek_dt")
 #'               
 #' summary(fit)
 #' 
@@ -109,7 +107,6 @@ ird <- function(data=NULL,
     
   #parameters  
   cat("Setting regression parameters...\n")
-    cat(" 'epi' variable is:", epi, "\n")
     cat(" 'time' variable is:", time, "\n")
     
     t_interval <- t.intervals[t.interval]
