@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>flumodelr: Introduction • flumodelr</title>
+<title>Incidence rate-difference models • flumodelr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
@@ -84,8 +84,8 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>flumodelr: Introduction</h1>
-                        <h4 class="author">Kevin W. McConeghy</h4>
+      <h1>Incidence rate-difference models</h1>
+                        <h4 class="author">Rob van Aalst</h4>
             
             <h4 class="date">2017-12-19</h4>
           </div>
@@ -93,21 +93,41 @@
     
     
 <div class="contents">
-<p>Welcome to flumodelr! This program was written as a companion to academic work performed by researchers at Brown University in collaboration with Sanofi-Pasteur. The primary objective was to streamline and formalize published work on estimating attributable influenza cases. We drew from many sources which are acknowledged and cited throughout in the development of this package.</p>
-<div id="introduction" class="section level2">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex</code></pre></div>
+<div id="virology-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This vignette is a short introduction to the package for interested readers. In following vignettes describe in detail:</p>
-<ol style="list-style-type: decimal">
-<li><p>Publicly available data used to develop and test this software.<br><a href="https://kmcconeghy.github.io/flumodelr/articles/02-data.html">Data</a></p></li>
-<li><p>Explanation of original Serfling Model.<br><a href="https://kmcconeghy.github.io/flumodelr/articles/03-serfling.html">Serfling Background</a></p></li>
-<li><p>Explanation of modern implementation of Serfling Model.<br><a href="https://kmcconeghy.github.io/flumodelr/articles/04-modserf.html">Modern Serfling Applications</a></p></li>
-</ol>
+<a href="#virology-data" class="anchor"></a>Virology data</h2>
+<p>In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases see <code><a href="../reference/nrevss.html">?nrevss</a></code>. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of high flu activity can be used to inform spikes in influenza activity, increasing confidence that deaths are influenza related and estimated influenza morbidity and mortality.</p>
 </div>
-<div id="contacting-authors" class="section level2">
+<div id="definition-of-the-peri--and-summer-season" class="section level2">
 <h2 class="hasAnchor">
-<a href="#contacting-authors" class="anchor"></a>Contacting authors</h2>
-<p>The primary author of the package was Kevin W. McConeghy. Several other researchers including Andrew Zullo, Rob van Aalst, Vincent Mor, Stefan Gravenstein provided statistical consultation, clinical insight and institutional support.</p>
+<a href="#definition-of-the-peri--and-summer-season" class="anchor"></a>Definition of the Peri- and Summer-season</h2>
+<p>Incidence rate-difference models have been used frequently to estimate influenza-associated hospitalizations and deaths. We followed Thompson <span class="citation">(Thompson WW 2009)</span> and defined five periods for each respiratory season: (i) a period when ‡10% of specimens tested were positive for influenza, (ii) a period when ‡15% of specimens were positive, (iii) a peri-season baseline period when &lt;10% of specimens were positive, (iv) a peri-season baseline period when &lt;15% of specimens were positive, and (v) a summer-season baseline period. The summer-season baseline period is defined as the weeks from July through September at the beginning of each season and May and June at the end of each season when there is little influenza activity.</p>
+</div>
+<div id="peri-season-excess-mortality-rate" class="section level2">
+<h2 class="hasAnchor">
+<a href="#peri-season-excess-mortality-rate" class="anchor"></a>Peri-season excess mortality rate</h2>
+<p>The peri-season excess mortality rate is defined as the difference in the average weekly mortality rates between an influenza period and a peri-season period for a particular respiratory season.</p>
+</div>
+<div id="summer-season-excess-mortality-rate" class="section level2">
+<h2 class="hasAnchor">
+<a href="#summer-season-excess-mortality-rate" class="anchor"></a>Summer-season excess mortality rate</h2>
+<p>The summer-season excess mortality rate is defined as the difference in the average weekly rates between an influenza period and a summer-season period.</p>
+</div>
+<div id="annual-excess-numbers" class="section level2">
+<h2 class="hasAnchor">
+<a href="#annual-excess-numbers" class="anchor"></a>Annual excess numbers</h2>
+<p>Weekly excess mortality rates will be converted to annual excess numbers of deaths by using the number of weeks that were above an epidemic threshold, and available US census data:</p>
+<p>annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (population).</p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+<div id="refs" class="references">
+<div id="ref-Thompson2009">
+<p>Thompson WW, Dhankar PY, Weintraub E. 2009. “Estimates of Us Influenza-Associated Deaths Made Using Four Different Methods.” <em>Influenza Other Respir Viruses</em> 3(1): 37–49.</p>
+</div>
+</div>
 </div>
 </div>
   </div>
@@ -117,8 +137,12 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#introduction">Introduction</a></li>
-      <li><a href="#contacting-authors">Contacting authors</a></li>
+<li><a href="#virology-data">Virology data</a></li>
+      <li><a href="#definition-of-the-peri--and-summer-season">Definition of the Peri- and Summer-season</a></li>
+      <li><a href="#peri-season-excess-mortality-rate">Peri-season excess mortality rate</a></li>
+      <li><a href="#summer-season-excess-mortality-rate">Summer-season excess mortality rate</a></li>
+      <li><a href="#annual-excess-numbers">Annual excess numbers</a></li>
+      <li><a href="#references">References</a></li>
       </ul>
 </div>
       </div>

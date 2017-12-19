@@ -51,10 +51,13 @@
       <a href="articles/02-data.html">flumodelr: Data</a>
     </li>
     <li>
-      <a href="articles/03-serfling.html">Serfling Model Background</a>
+      <a href="articles/03-ratediff.html">Incidence rate-difference models</a>
     </li>
     <li>
-      <a href="articles/04-modserf.html">Modified Serfling Models</a>
+      <a href="articles/04-serfling.html">Serfling Model Background</a>
+    </li>
+    <li>
+      <a href="articles/05-modserf.html">Modified Serfling Models</a>
     </li>
   </ul>
 </li>
@@ -111,6 +114,59 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <h1 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h1>
 <p>The primary goal of this package is to provide a toolkit for researchers who wish to estimate the attributable proportion of an outcome due to influenza morbidity and mortality. Conceptually this is achieved through estimating a baseline rate of the outcome in the absence of influenza, then using a measure of influenza endemicity to identify the marginal rate due to influenza morbidity. The particular measure of influenza endemicity and outcome being modelled can be arbitrarily specified by the user.</p>
+</div>
+<div id="simple-example" class="section level1">
+<h1 class="hasAnchor">
+<a href="#simple-example" class="anchor"></a>Simple Example</h1>
+<div id="example-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#example-data" class="anchor"></a>Example data</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex
+flu_ex</code></pre></div>
+<pre><code>## # A tibble: 259 x 5
+##     year  week fludeaths  yrweek_dt prop_flupos
+##    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;
+##  1  2010    42  6.482143 2010-10-18  0.01331601
+##  2  2010    43  6.605505 2010-10-25  0.01928211
+##  3  2010    44  6.779817 2010-11-01  0.01726122
+##  4  2010    45  6.581818 2010-11-08  0.02305556
+##  5  2010    46  6.727273 2010-11-15  0.03270312
+##  6  2010    47  4.867925 2010-11-22  0.03991131
+##  7  2010    48  7.236364 2010-11-29  0.06905426
+##  8  2010    49  8.141509 2010-12-06  0.08373102
+##  9  2010    50  7.351351 2010-12-13  0.08634223
+## 10  2010    51  6.481818 2010-12-20  0.12969283
+## # ... with 249 more rows</code></pre>
+</div>
+<div id="fit-traditional-serfling-model" class="section level3">
+<h3 class="hasAnchor">
+<a href="#fit-traditional-serfling-model" class="anchor"></a>Fit Traditional Serfling Model</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit &lt;-<span class="st"> </span>flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/serflm">serflm</a></span>(flu_ex, <span class="dt">outc =</span> fludeaths, <span class="dt">time =</span> yrweek_dt)</code></pre></div>
+<p>Assumes epidemic influenza period of Sept. - May. Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span> (year, week, fludeaths, y0, y0_ul)</code></pre></div>
+<pre><code>## # A tibble: 259 x 5
+##     year  week fludeaths       y0    y0_ul
+##    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1  2010    42  6.482143 6.325176 7.419003
+##  2  2010    43  6.605505 6.415187 7.509014
+##  3  2010    44  6.779817 6.507871 7.601698
+##  4  2010    45  6.581818 6.601823 7.695650
+##  5  2010    46  6.727273 6.695621 7.789449
+##  6  2010    47  4.867925 6.787845 7.881672
+##  7  2010    48  7.236364 6.877097 7.970925
+##  8  2010    49  8.141509 6.962024 8.055851
+##  9  2010    50  7.351351 7.041334 8.135162
+## 10  2010    51  6.481818 7.113819 8.207647
+## # ... with 249 more rows</code></pre>
+</div>
+<div id="influenza-time-series-plot" class="section level3">
+<h3 class="hasAnchor">
+<a href="#influenza-time-series-plot" class="anchor"></a>Influenza Time-Series Plot</h3>
+<p>An convenience function for plotting the above fit lines.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/fluplot">fluplot</a></span>(flu_fit, <span class="dt">xvar=</span>yrweek_dt, fludeaths, y0, y0_ul,
+                    <span class="dt">ylab=</span><span class="st">"Mortality per 100,000"</span>, <span class="dt">title=</span><span class="st">"Serfling Model"</span>)</code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
+</div>
 </div>
 <div id="vignettes" class="section level1">
 <h1 class="hasAnchor">
