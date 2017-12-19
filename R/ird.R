@@ -123,7 +123,7 @@ ird <- function(data=NULL,
       if (calweek >= respStart) {return(calyear)} else {return(calyear-1)}
     }
 
-    flu_ex$season <- mapply(findseason, flu_ex$year,flu_ex$week)
+    data$season <- mapply(findseason, data$year,data$week)
     
   #compute rate differences  
   
@@ -132,14 +132,14 @@ ird <- function(data=NULL,
       return(prop >= high)
     }
   
-    flu_ex$high <- mapply(findhigh, flu_ex$prop_flupos)
+    data$high <- mapply(findhigh, data$prop_flupos)
     
     #find influenza versus summer baseline period
     findflu <- function (calweek, fluStart=40, fluStop=18){
       (calweek >=fluStart | calweek <=fluStop)
     }
     
-    flu_ex$fluseason <- mapply(findflu, flu_ex$week)
+    data$fluseason <- mapply(findflu, data$week)
     
   #return results
   return(data)
