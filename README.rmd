@@ -24,12 +24,12 @@ This package relies heavily on the suite of packages and programming termed "Tid
 The primary goal of this package is to provide a toolkit for researchers who wish to estimate the attributable proportion of an outcome due to influenza morbidity and mortality. Conceptually this is achieved through estimating a baseline rate of the outcome in the absence of influenza, then using a measure of influenza endemicity to identify the marginal rate due to influenza morbidity. The particular measure of influenza endemicity and outcome being modelled can be arbitrarily specified by the user.  
 
 # Simple Example  
-```{r, echo=F, warning=F}
-library(flumodelr)
-library(tidyverse)
+```{r, include=F}
+library(flumodelr, quietly = T, warn.conflicts = F)
+library(tidyverse, quietly = T, warn.conflicts = F)
 ```
 
-### Use Example Date
+### Example data  
 ```{r }
 flu_ex <- flumodelr::flu_ex
 flu_ex
@@ -37,13 +37,20 @@ flu_ex
 
 ### Fit Traditional Serfling Model
 ```{r }
-flu_fit <- serflm(flu_ex, outc = "fludeaths", time = "yrweek_dt")
+flu_fit <- flumodelr::serflm(flu_ex, outc = fludeaths, time = yrweek_dt)
 ```
 
-Assumes epidemic influenza period of Sept. - May.  Fits a cyclical trend line, y0, along with an upper limit, y0_ul.  
+Assumes epidemic influenza period of Sept. - May.  Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.  
 
 ```{r }
 flu_fit %>% select (year, week, fludeaths, y0, y0_ul)
+```
+
+### Influenza Time-Series Plot  
+An convenience function for plotting the above fit lines.  
+```{r }
+flumodelr::fluplot(flu_fit, xvar=yrweek_dt, fludeaths, y0, y0_ul,
+                    ylab="Mortality per 100,000", title="Serfling Model")
 ```
 
 # Vignettes  
@@ -57,7 +64,7 @@ devtools::vignette("01-Introduction", "flumodelr")
 This package is in the early stages of development. Many features may change in a short amount of time.  
 
 # Future Goals for flumodelr  
-The current objective is to successfully recreate the basic Serfling model. 
+The basic Serfling model is now functional. Current efforts are focused on modern virology models and comparing results to other researchers.  
 
 We hope to increase the number of modelling options periodically including, bayesian estimation, advancing forecasting, and machine learning.  
 

@@ -16,12 +16,10 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 options(tibble.print_min = 4L, tibble.print_max = 4L)
-library(dplyr)
-library(ggplot2)
+library(tidyverse)
 library(lubridate)
 library(scales)
 library(flumodelr)
-library(tibble)
 ```
 
 The primary method paper was a 1963 paper published by Robert Serfling working for the Centers for Disease Control and Prevention.  
@@ -278,17 +276,17 @@ ggplot(df_epi, aes(x=yrweek_dt)) +
 ## serflm() function
 ```{r }
 ##The following command completes the above steps 
-
-##specify an epidemic period
-flu_ex <- flu_ex %>%
-  mutate(epi = if_else(month(yrweek_dt)>=10 | month(yrweek_dt)<=5, T, F))  
-
 ##fit serfling model
-flu_fit <- serflm(data=flu_ex, 
-                      outc="fludeaths", epi="epi", time="yrweek_dt")
+flu_fit <- serflm(data=flu_ex, outc=fludeaths, time=yrweek_dt)
 ```
 ```{r }
 flu_fit
+```
+
+### Plot function fluplot  
+```{r }
+fluplot(flu_fit, xvar=yrweek_dt, fludeaths, y0, y0_ul,
+                    ylab="Mortality per 100,000", title="Serfling Model")
 ```
 
 ## Criticisms of this approach  

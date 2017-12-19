@@ -1,24 +1,21 @@
 Package: flumodelr
 Title: An R Package for Estimating Attributable Influenza Morbidity and Mortality
 Description: The primary goal of this package is to provide a toolkit for researchers who wish to estimate the proportion of a particular outcome which is due to influenza. Conceptually this is achieved through estimating a baseline rate of the outcome across seasons, then using a measure of influenza endemicity to identify the marginal rate due to influenza morbidity. The particular measure of influenza endemicity and outcome being modelled can be arbitrarily specified by the user.
-Version: 0.0.3.9000
+Version: 0.0.4.9000
 Date: 2017-11-30
 Authors@R: c(person(given = "Kevin W.", family = "McConeghy", role = c("aut", "cre", "cph"), email = "kevin_mcconeghy@brown.edu"), person(given = "Rob", family = "Van Aalst", role = c("aut", "cph")), person(given = "Andrew", family = "Zullo", role = c("aut", "cph")), person(given = "Nina", family="joyce", role=c("aut", "cph")))
 Maintainer: Kevin W. McConeghy <kevin_mcconeghy@brown.edu>
 URL: https://github.com/kmcconeghy/flumodelr
 Depends: R (>= 3.4.2),
   tidyverse, 
-  lubridate (>= 1.6.0)
+  lubridate (>= 1.6.0),
+  scales(>= 0.5.0)
 Imports: dplyr (>= 0.7.4),
     tidyr(>= 0.7.2),
     broom (>= 0.4.2),
     magrittr (>= 1.5.0),
-    lubridate (>= 1.6.0),
-    ggplot2 (>= 2.2.1),
-    tidyverse,
     forecast (>= 8.2.0)
-Suggests: testthat,
-    devtools,
+Suggests:
     knitr,
     microbenchmark,
     XML,
@@ -27,7 +24,6 @@ Suggests: testthat,
     digest,
     xtable,
     rmarkdown,
-    scales,
     roxygen2 (>= 6.0.0)
 LazyData: true
 LazyDataCompression: xz

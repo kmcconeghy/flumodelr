@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>serflm: Fit a Serling Model on Time Series Data — serflm â€¢ flumodelr</title>
+<title>ird: Perform incidence rate-difference models — ird â€¢ flumodelr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -107,16 +107,17 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>serflm: Fit a Serling Model on Time Series Data</h1>
+    <h1>ird: Perform incidence rate-difference models</h1>
     </div>
 
     
-    <p>Performs a cyclical linear regression model,
-or 'serfling' model</p>
+    <p>Calculates the rate difference between influenza season
+and peri-influenza season, or between influenza season and
+summer season</p>
     
 
-    <pre class="usage"><span class='fu'>serflm</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>epi</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>t.interval</span> <span class='kw'>=</span> <span class='fl'>52</span>, <span class='kw'>echo</span> <span class='kw'>=</span> <span class='no'>F</span>)</pre>
+    <pre class="usage"><span class='fu'>ird</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>flu</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>epi</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>t.interval</span> <span class='kw'>=</span> <span class='st'>"wofy"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -127,35 +128,46 @@ or 'serfling' model</p>
 epidemic indicator, and measure of influenza morbidity</p></td>
     </tr>
     <tr>
-      <th>outc</th>
-      <td><p>an unquoted name of a column in data which corresponds to
-the outcome variable of interest</p></td>
+      <th>flu</th>
+      <td><p>A character string of length=1, identifies
+a numeric type variable in dataframe data which is the measure
+of disease morbidity / mortality</p></td>
     </tr>
     <tr>
       <th>epi</th>
-      <td><p>an unquoted name of a column in data object (e.g. epi)
-or if null will default to Sept - May.</p></td>
+      <td><p>A character string of length=1, identifies
+a logical type variable in dataframe data which indicates epidemic
+vs non-epidemic periods</p></td>
     </tr>
     <tr>
       <th>time</th>
-      <td><p>an unquoted name of a column in data object, must be
+      <td><p>A character string of length=1, identifies
 a numeric/integer class variable in dataframe which corresponds
 to a unit of time, must be unique (i.e. non-repeating)</p></td>
     </tr>
     <tr>
       <th>t.interval</th>
-      <td><p>a numeric vector indicating period length, i.e. 52 weeks in year</p></td>
+      <td><p>A character string, must specify whether
+unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
+or month/years ("mofy"), days/years("dofy")</p></td>
     </tr>
     <tr>
-      <th>echo</th>
-      <td><p>A logical parameter, if T. Will print variables used in model.</p></td>
+      <th>t.respStart</th>
+      <td><p>A character string, must specify whether
+unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
+or month/years ("mofy"), days/years("dofy")</p></td>
+    </tr>
+    <tr>
+      <th>t.respStop</th>
+      <td><p>A character string, must specify whether
+unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
+or month/years ("mofy"), days/years("dofy")</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an object of class data.frame, input + y0 (fitted values), y0_ul
-the upper serfling threshold</p>
+    <p>dataframe</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -168,21 +180,30 @@ excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun;
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
 <span class='no'>flu_ex</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/flu_ex'>flu_ex</a></span>
-<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>serflm</span>(<span class='no'>flu_ex</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>)</div><div class='output co'>#&gt; Cyclical Regression Model 
-#&gt;  ============================================================ 
-#&gt; Setting regression parameters...
-#&gt;  'epi' variable is: epi 
-#&gt;  'time' variable is: yrweek_dt 
-#&gt;   time period is: 52 </div><div class='input'>
-<span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 8
-#&gt;    year  week fludeaths  yrweek_dt prop_flupos   epi       y0    y0_ul
-#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;lgl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1  2010    42  6.482143 2010-10-18  0.01331601  TRUE 6.325176 7.419003
-#&gt; 2  2010    43  6.605505 2010-10-25  0.01928211  TRUE 6.415187 7.509014
-#&gt; 3  2010    44  6.779817 2010-11-01  0.01726122  TRUE 6.507871 7.601698
-#&gt; 4  2010    45  6.581818 2010-11-08  0.02305556  TRUE 6.601823 7.695650
-#&gt; 5  2010    46  6.727273 2010-11-15  0.03270312  TRUE 6.695621 7.789449
-#&gt; 6  2010    47  4.867925 2010-11-22  0.03991131  TRUE 6.787845 7.881672</div><div class='input'>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='serflm.html'>serflm</a></span>(<span class='kw'>data</span><span class='kw'>=</span><span class='no'>flu_ex</span>,
+              <span class='kw'>flu</span> <span class='kw'>=</span> <span class='st'>"fludeaths"</span>, <span class='kw'>epi</span><span class='kw'>=</span><span class='st'>"epi"</span>,
+              <span class='kw'>time</span><span class='kw'>=</span><span class='st'>"yrweek_dt"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in serflm(data = flu_ex, flu = "fludeaths", epi = "epi", time = "yrweek_dt"): unused argument (flu = "fludeaths")</span></div><div class='input'>
+<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;       year           week         fludeaths        yrweek_dt         
+#&gt;  Min.   :2010   Min.   : 1.00   Min.   : 4.083   Min.   :2010-10-18  
+#&gt;  1st Qu.:2012   1st Qu.:14.00   1st Qu.: 5.368   1st Qu.:2012-01-12  
+#&gt;  Median :2013   Median :27.00   Median : 6.203   Median :2013-04-22  
+#&gt;  Mean   :2013   Mean   :26.59   Mean   : 6.524   Mean   :2013-04-15  
+#&gt;  3rd Qu.:2014   3rd Qu.:39.50   3rd Qu.: 7.296   3rd Qu.:2014-07-17  
+#&gt;  Max.   :2015   Max.   :52.00   Max.   :11.808   Max.   :2015-10-12  
+#&gt;   prop_flupos           week2           theta             sin_f1       
+#&gt;  Min.   :0.001087   Min.   :  1.0   Min.   :0.03846   Min.   :-1.0000  
+#&gt;  1st Qu.:0.021758   1st Qu.: 65.5   1st Qu.:2.51923   1st Qu.:-0.7058  
+#&gt;  Median :0.057316   Median :130.0   Median :5.00000   Median : 0.0000  
+#&gt;  Mean   :0.099052   Mean   :130.0   Mean   :5.00000   Mean   : 0.0000  
+#&gt;  3rd Qu.:0.154002   3rd Qu.:194.5   3rd Qu.:7.48077   3rd Qu.: 0.7058  
+#&gt;  Max.   :0.383560   Max.   :259.0   Max.   :9.96154   Max.   : 1.0000  
+#&gt;      cos_f1              pred_y     
+#&gt;  Min.   :-1.000000   Min.   :4.557  
+#&gt;  1st Qu.:-0.705817   1st Qu.:5.402  
+#&gt;  Median : 0.000000   Median :6.578  
+#&gt;  Mean   :-0.003861   Mean   :6.524  
+#&gt;  3rd Qu.: 0.663123   3rd Qu.:7.640  
+#&gt;  Max.   : 1.000000   Max.   :8.453  </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

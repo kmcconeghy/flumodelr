@@ -5,27 +5,25 @@
 \title{serflm: Fit a Serling Model on Time Series Data}
 \usage{
 serflm(data = NULL, outc = NULL, epi = NULL, time = NULL,
-  t.interval = "wofy")
+  t.interval = 52, echo = F)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
 epidemic indicator, and measure of influenza morbidity}
 
-\item{outc}{A character string of length=1, identifies
-a numeric type variable in dataframe data which is the measure
-of disease morbidity / mortality}
+\item{outc}{an unquoted name of a column in data which corresponds to
+the outcome variable of interest}
 
-\item{epi}{either a character string of length=1 (e.g. '"epi")',
-identifying a logical type variable in dataframe data which indicates epidemic
-vs non-epidemic periods, or if unspecified will default to Sept - May.}
+\item{epi}{an unquoted name of a column in data object (e.g. epi)
+or if null will default to Sept - May.}
 
-\item{time}{A character string of length=1, identifies
+\item{time}{an unquoted name of a column in data object, must be
 a numeric/integer class variable in dataframe which corresponds
 to a unit of time, must be unique (i.e. non-repeating)}
 
-\item{t.interval}{A character string, must specify whether
-unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
-or month/years ("mofy"), days/years("dofy")}
+\item{t.interval}{a numeric vector indicating period length, i.e. 52 weeks in year}
+
+\item{echo}{A logical parameter, if T. Will print variables used in model.}
 }
 \value{
 an object of class data.frame, input + y0 (fitted values), y0_ul
@@ -38,9 +36,9 @@ or 'serfling' model
 \examples{
 require(flumodelr)
 flu_ex <- flumodelr::flu_ex
-fit <- serflm(data=flu_ex, outc = "fludeaths", time="yrweek_dt")
+flu_fit <- serflm(flu_ex, outc = fludeaths, time = yrweek_dt)  
               
-summary(fit)
+head(flu_fit)
 
 }
 \references{
