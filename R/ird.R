@@ -51,8 +51,10 @@
 #' require(flumodelr)
 #' flu_ex <- flumodelr::flu_ex
 #' flu_fit <- ird(data=flu_ex, flu = "fludeaths", viral="prop_flupos", time="yrweek_dt")
+#' flu_rates <- rb(flu_fit,"fludeaths")
 #'               
 #' summary(fit)
+#' flu_rates
 #' 
 #' @references 
 #' Thompson WW, Weintraub E, Dhankhar P, Cheng PY, Brammer L, 

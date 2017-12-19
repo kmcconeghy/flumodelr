@@ -4,7 +4,7 @@ author: "Rob van Aalst"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{flumodelr: 05-Incidence rate-difference}
+  %\VignetteIndexEntry{flumodelr: 03-Incidence rate-difference}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: flumodelr.bib
@@ -54,8 +54,8 @@ annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (
 
 ```{r, echo=F, results='as.is', fig.width=7.0}
 flu_fit <- ird(data=flu_ex, flu = "fludeaths", viral="prop_flupos", time="yrweek_dt")
-flu_rates<-rb(flu_fit,"fludeaths")
-gr(flu_rates)
+flu_rates <- rb(data=flu_fit, flu = "fludeaths")
+gr(data=flu_rates)
 
 ```
 
