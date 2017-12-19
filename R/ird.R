@@ -4,6 +4,10 @@
 #' and peri-influenza season, or between influenza season and
 #' summer season
 #' 
+#' @usage ird (data=NULL, flu=NULL, time=NULL, viral=NULL, 
+#'             t.interval="wofy", respStart=27, high=0.1, fluStart=40,
+#'             fluStop=18)
+#' 
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
 #' 
@@ -46,7 +50,7 @@
 #' @examples
 #' require(flumodelr)
 #' flu_ex <- flumodelr::flu_ex
-#' fit <- ird(data=flu_ex, flu = "fludeaths", viral="prop_flupos", time="yrweek_dt")
+#' flu_fit <- ird(data=flu_ex, flu = "fludeaths", viral="prop_flupos", time="yrweek_dt")
 #'               
 #' summary(fit)
 #' 
@@ -67,6 +71,7 @@ ird <- function(data=NULL,
                 fluStart=40,
                 fluStop=18
                 ) {
+  require(dplyr)
   cat("incidence rate-difference model \n",
       paste0(rep("=", 60), collapse=""), "\n")
   
@@ -106,12 +111,12 @@ ird <- function(data=NULL,
   data <- data %>% arrange(., !!ntime)
     
   #parameters  
-  cat("Setting regression parameters...\n")
+  cat("Setting ird parameters...\n")
     cat(" 'time' variable is:", time, "\n")
     
     t_interval <- t.intervals[t.interval]
     cat("  time interval is:", t_interval, "\n")
-    
+    cat("  flu argument is:", flu, "\n")
  
     #build model formula
     
@@ -142,3 +147,36 @@ ird <- function(data=NULL,
   return(data)
   
 }
+
+rb <- function(data, flu){ #calculate the rates for each of the periods
+  
+  #prepare arguments to work in dplr
+  require(rlang)
+  flu_sym <- sym(flu)
+  
+  #parameters 
+cat("Setting rb parameters...\n")
+  cat("  flu argument is:", flu_sym, "\n")
+  
+  #sum the outcomes
+  highrates <- data %>% group_by(season, high) %>% summarize(out_high = sum(!!flu_sym))
+  flurates <- data %>% group_by(season, fluseason) %>% summarize(out_flu = sum(!!flu_sym))
+  
+  #join the tables
+  flu_rates <- flurates %>% left_join(highrates, by = c("fluseason"="high", "season"))
+  names(flu_rates) <- c("season","high_act",paste0(flu,"_fluseason"),paste0(flu,"_viral_act"))
+  levels(flu_rates$high_act) <- c(TRUE,FALSE)
+  return(flu_rates)
+}
+
+gr <- function(data){
+  require(ggplot2)
+  
+  ggplot(data, aes(x = season, y = fludeaths_fluseason, fill=high_act))+
+    geom_bar(stat="identity", position = position_dodge(), colour="black")
+  
+}
+
+
+
+               
