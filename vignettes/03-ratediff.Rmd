@@ -31,10 +31,10 @@ flu_ex <- flumodelr::flu_ex
 ## Introduction to incidence rate-difference models
 
 Incidence rate-difference models are among the first to estimate influenza-associated hospitalizations and
-deaths [@Izurieta2000]. In these models incidence rates in periods with low viral activity are substracted from incidence rates in periods with high viral activity. This difference in incicence rate is assumed to be influenza attributable.
+deaths [@Izurieta2000]. In these models incidence rates in periods with low viral activity are substracted from incidence rates in periods with high viral activity. This difference in incidence rate is assumed to be influenza attributable.
 
 ## Virology data  
-To determine periods with high and low viral activity, researchers use data on the percent of isolates positive with influenza viral types. This is publically available in many cases, see `?nrevss`. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings.   
+To determine periods with high and low viral activity, researchers often use laboratory confirmed influenza data or the percent of isolates positive with influenza viral types. This is publically available in many cases, see `?nrevss` for US surveillance data. The data describes the proportion of isolates tested positive for a certain viral type, which may be obtained from participating hospital and outpatient settings.   
 
 ## Definition of periods: default values
 We followed Thompson [@Thompson2009] and defined the respiratory season to start at the beginning of July (week 27) of each calendar year. Within a respiratory season we defined four periods:
@@ -43,6 +43,8 @@ We followed Thompson [@Thompson2009] and defined the respiratory season to start
 (b) a peri-season baseline period consisting of weeks when less than 10% of specimens were positive, and;
 (c) an influenza season defined as the weeks from October (week 40) through April (week 18),
 (d) a summer-season baseline period defined as the weeks from July (week 27) through September (week 39) at the beginning of each respiratory season and May (week 19) and June (week 26) at the end of each respiratory season when there is little viral activity.
+
+Options c and d can be used in the absense of laboratory confirmed influenza surveillance data to define high and low viral activity periods.
 
 ## Annual excess numbers
 Weekly excess outcome rates will be converted to annual excess numbers of outcomes by using the number of weeks
