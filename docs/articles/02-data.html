@@ -166,6 +166,74 @@ ilinet
 <span class="co">#&gt; 4 Arkansas  2010    40 0.696056      18        15     2586</span>
 <span class="co">#&gt; # ... with 19,552 more rows</span></code></pre></div>
 </div>
+<div id="mmwr-weeks" class="section level2">
+<h2 class="hasAnchor">
+<a href="#mmwr-weeks" class="anchor"></a>MMWR Weeks</h2>
+<p>The MMWR Week is a unique definition used by the CDC. This definition is born out in the <code><a href="../reference/cdc122city.html">?cdc122city</a></code> dataset.</p>
+<p>The following explanation of the definition was obtained from: <a href="https://wwwn.cdc.gov/nndss/document/MMWR_Week_overview.pdf" class="uri">https://wwwn.cdc.gov/nndss/document/MMWR_Week_overview.pdf</a></p>
+<blockquote>
+<p>“The MMWR week is the week of the epidemiologic year for which the National Notifiable Diseases Surveillance System (NNDSS) disease report is assigned by the reporting local or state health department for the purposes of MMWR disease incidence reporting and publishing. Values for MMWR week range from 1 to 53, although most years consist of 52 weeks.”</p>
+</blockquote>
+<p>CDC business rules for assigning MMWR week:</p>
+<blockquote>
+<p>“The first day of any MMWR week is Sunday. MMWR week numbering is sequential beginning with 1 and incrementing with each week to a maximum of 52 or 53. MMWR week #1 of an MMWR year is the first week of the year that has at least four days in the calendar year.”</p>
+</blockquote>
+<p>A given example, if Jan. 1 occurs on a Sunday, Monday, Tuesday or Wednesday, the calendar week that includes January 1 would be MMWR week #1. If January 1 occurs on a Thursday, Friday, or Saturday, the calendar week that includes January 1 would be the last MMWR week of the previous year (#52 or #53). Because of this rule, December 29, 30, and 31 could potentially fall into MMWR week #1 of the following MMWR year.</p>
+<p>All <code><a href="../reference/ilinet.html">?ilinet</a></code> , <code><a href="../reference/cdc122city.html">?cdc122city</a></code> and <code><a href="../reference/nrevss.html">?nrevss</a></code> datasets are imported in their raw CDC format. It is the perogative of the user to determine how best to treat the CDC MMWR week definition. However, we illustrate below how the above description was used to compute a first day of week, date variable for the example dataset <code><a href="../reference/flu_ex.html">?flu_ex</a></code>.</p>
+<p>Alternative package which addresses this:</p>
+<p>Xiahong Zhao (2016). EpiWeek: Conversion Between Epidemiological Weeks and Calendar Dates. R package version 1.1. <a href="https://CRAN.R-project.org/package=EpiWeek" class="uri">https://CRAN.R-project.org/package=EpiWeek</a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"EpiWeek"</span>)</code></pre></div>
+<p>Also see <code>?epiweek()</code></p>
+</div>
+<div id="using-the-cdc122-cities-as-example" class="section level2">
+<h2 class="hasAnchor">
+<a href="#using-the-cdc122-cities-as-example" class="anchor"></a>Using the CDC122 Cities as Example</h2>
+<p>Code adapted from <code>EpiWeek</code> package.</p>
+<div id="conversion-function" class="section level4">
+<h4 class="hasAnchor">
+<a href="#conversion-function" class="anchor"></a>Conversion function</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lubridate) <span class="co">#For working with dates  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'lubridate'</span>
+<span class="co">#&gt; The following object is masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     date</span>
+EpiWeekToDates &lt;-<span class="st"> </span><span class="cf">function</span>(year, weeknum) {
+  
+  <span class="co">#Compute 4th day in January</span>
+    jan4 &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="kw">paste</span>(year, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dt">sep=</span><span class="st">"-"</span>))
+  
+  <span class="co">#Compute day of week</span>
+    DofW &lt;-<span class="st"> </span><span class="kw">wday</span>(jan4, <span class="dt">week_start =</span> <span class="dv">7</span>)<span class="op">-</span><span class="dv">1</span> <span class="co">#Sunday start</span>
+    <span class="co">#The -1 is  correction for how wday() counts days  </span>
+    
+  <span class="co">#If Jan 4th was Sun, starting week date is 01/04/xxxx</span>
+    startweek &lt;-<span class="st"> </span><span class="kw">if_else</span>(DofW <span class="op">==</span><span class="st"> </span><span class="dv">7</span>, jan4, (jan4 <span class="op">-</span><span class="st"> </span>(DofW)))
+ 
+  <span class="co">#First Date of Week</span>
+    d0 =<span class="st"> </span>startweek <span class="op">+</span><span class="st"> </span>(weeknum <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="dv">7</span>
+  
+  <span class="co">#Last Date of Week</span>
+    d1 =<span class="st"> </span>startweek <span class="op">+</span><span class="st"> </span>(weeknum <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="dv">7</span> <span class="op">+</span><span class="st"> </span><span class="dv">6</span> 
+  
+  <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">d0 =</span> <span class="kw">ymd</span>(d0), <span class="dt">d1 =</span> <span class="kw">ymd</span>(d1)))
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span>cdc122 <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">FirstDateOfWeek =</span> <span class="kw">EpiWeekToDates</span>(year, week)[[<span class="dv">1</span>]])
+
+example <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, FirstDateOfWeek) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">distinct</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(year<span class="op">&gt;</span><span class="dv">2010</span>)
+<span class="co">#&gt; # A tibble: 300 x 3</span>
+<span class="co">#&gt;    year  week FirstDateOfWeek</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;          &lt;date&gt;</span>
+<span class="co">#&gt; 1  2011     1      2011-01-02</span>
+<span class="co">#&gt; 2  2011     2      2011-01-09</span>
+<span class="co">#&gt; 3  2011     3      2011-01-16</span>
+<span class="co">#&gt; 4  2011     4      2011-01-23</span>
+<span class="co">#&gt; # ... with 296 more rows</span></code></pre></div>
+</div>
+</div>
 </div>
 </div>
   </div>
@@ -188,6 +256,8 @@ ilinet
       <li>
 <a href="#ilinet">ILINet</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#cdc-website-description-1">CDC Website Description</a></li>
+      <li><a href="#mmwr-weeks">MMWR Weeks</a></li>
+      <li><a href="#using-the-cdc122-cities-as-example">Using the CDC122 Cities as Example</a></li>
       </ul>
 </li>
       </ul>

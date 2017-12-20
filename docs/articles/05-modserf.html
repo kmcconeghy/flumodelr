@@ -117,14 +117,14 @@
 <a href="#influenza-data" class="anchor"></a>Influenza data</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex
 flu_ex
-<span class="co">#&gt; # A tibble: 259 x 5</span>
+<span class="co">#&gt; # A tibble: 261 x 5</span>
 <span class="co">#&gt;    year  week fludeaths  yrweek_dt prop_flupos</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42  6.482143 2010-10-18  0.01331601</span>
-<span class="co">#&gt; 2  2010    43  6.605505 2010-10-25  0.01928211</span>
-<span class="co">#&gt; 3  2010    44  6.779817 2010-11-01  0.01726122</span>
-<span class="co">#&gt; 4  2010    45  6.581818 2010-11-08  0.02305556</span>
-<span class="co">#&gt; # ... with 255 more rows</span></code></pre></div>
+<span class="co">#&gt; 1  2010    42  6.482143 2010-10-17  0.01331601</span>
+<span class="co">#&gt; 2  2010    43  6.605505 2010-10-24  0.01928211</span>
+<span class="co">#&gt; 3  2010    44  6.779817 2010-10-31  0.01726122</span>
+<span class="co">#&gt; 4  2010    45  6.581818 2010-11-07  0.02305556</span>
+<span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 </div>
 </div>
 <div id="general-estimation-procedure-performed-by-mflu" class="section level2">
@@ -162,24 +162,24 @@ flu_ex
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Residuals:</span>
 <span class="co">#&gt;     Min      1Q  Median      3Q     Max </span>
-<span class="co">#&gt; -3.2838 -0.3355  0.0066  0.3841  3.3789 </span>
+<span class="co">#&gt; -3.1986 -0.3454  0.0171  0.4002  3.3774 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Coefficients:</span>
 <span class="co">#&gt;               Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">#&gt; (Intercept)  6.409e+00  2.881e-01  22.243  &lt; 2e-16 ***</span>
-<span class="co">#&gt; week2        2.047e-02  1.443e-02   1.419   0.1573    </span>
-<span class="co">#&gt; week_2      -5.326e-04  2.250e-04  -2.367   0.0187 *  </span>
-<span class="co">#&gt; week_3       3.310e-06  1.298e-06   2.551   0.0113 *  </span>
-<span class="co">#&gt; week_4      -6.166e-09  2.474e-09  -2.493   0.0133 *  </span>
-<span class="co">#&gt; prop_flupos  5.500e+00  8.153e-01   6.746 1.04e-10 ***</span>
-<span class="co">#&gt; sin_f1       8.380e-01  1.044e-01   8.030 3.78e-14 ***</span>
-<span class="co">#&gt; cos_f1      -5.186e-01  8.989e-02  -5.770 2.33e-08 ***</span>
+<span class="co">#&gt; (Intercept)  6.546e+00  2.916e-01  22.446  &lt; 2e-16 ***</span>
+<span class="co">#&gt; week2        1.342e-02  1.449e-02   0.926   0.3553    </span>
+<span class="co">#&gt; week_2      -4.035e-04  2.245e-04  -1.797   0.0735 .  </span>
+<span class="co">#&gt; week_3       2.512e-06  1.286e-06   1.954   0.0518 .  </span>
+<span class="co">#&gt; week_4      -4.601e-09  2.433e-09  -1.891   0.0597 .  </span>
+<span class="co">#&gt; prop_flupos  5.068e+00  8.335e-01   6.080 4.41e-09 ***</span>
+<span class="co">#&gt; sin_f1       8.317e-01  1.058e-01   7.864 1.07e-13 ***</span>
+<span class="co">#&gt; cos_f1      -6.454e-01  9.509e-02  -6.787 8.09e-11 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Residual standard error: 0.8346 on 251 degrees of freedom</span>
-<span class="co">#&gt; Multiple R-squared:  0.6945, Adjusted R-squared:  0.686 </span>
-<span class="co">#&gt; F-statistic: 81.53 on 7 and 251 DF,  p-value: &lt; 2.2e-16</span></code></pre></div>
+<span class="co">#&gt; Residual standard error: 0.8443 on 253 degrees of freedom</span>
+<span class="co">#&gt; Multiple R-squared:  0.6933, Adjusted R-squared:  0.6848 </span>
+<span class="co">#&gt; F-statistic: 81.71 on 7 and 253 DF,  p-value: &lt; 2.2e-16</span></code></pre></div>
 </div>
 <div id="predict-outcome-values-assuming-no-influenza-activity" class="section level3">
 <h3 class="hasAnchor">
@@ -201,14 +201,14 @@ pred_y0_uci &lt;-<span class="st"> </span>base_pred<span class="op">$</span>fit[
 flu_ex &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_column</span>(., pred_y0, pred_y0_uci) 
 flu_ex
-<span class="co">#&gt; # A tibble: 259 x 7</span>
+<span class="co">#&gt; # A tibble: 261 x 7</span>
 <span class="co">#&gt;    year  week fludeaths  yrweek_dt prop_flupos  pred_y0 pred_y0_uci</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42  6.482143 2010-10-18  0.01331601 6.014791    7.739954</span>
-<span class="co">#&gt; 2  2010    43  6.605505 2010-10-25  0.01928211 6.144519    7.863546</span>
-<span class="co">#&gt; 3  2010    44  6.779817 2010-11-01  0.01726122 6.277639    7.991443</span>
-<span class="co">#&gt; 4  2010    45  6.581818 2010-11-08  0.02305556 6.412491    8.121950</span>
-<span class="co">#&gt; # ... with 255 more rows</span></code></pre></div>
+<span class="co">#&gt; 1  2010    42  6.482143 2010-10-17  0.01331601 6.018417    7.762487</span>
+<span class="co">#&gt; 2  2010    43  6.605505 2010-10-24  0.01928211 6.143481    7.881316</span>
+<span class="co">#&gt; 3  2010    44  6.779817 2010-10-31  0.01726122 6.274003    8.006539</span>
+<span class="co">#&gt; 4  2010    45  6.581818 2010-11-07  0.02305556 6.408261    8.136408</span>
+<span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p><img src="05-modserf_files/figure-html/unnamed-chunk-9-1.png" width="672"><strong>Observed Deaths</strong> - No. of influenza / pneumonia deaths per 100,000 people.<br><strong>Predicted Deaths</strong> - A fit of the cyclical regression model, (one Fourier term).<br><strong>95% PI</strong> - 95% Upper Prediction Interval</p>
 <p>This model differs from the original Serfling regressions because of it’s use of influenza virology to generate a counterfactual vs. using an off-season secular trend.</p>
 </div>
@@ -224,17 +224,17 @@ flu_ex
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">excess =</span> <span class="kw">if_else</span>((fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_uci)<span class="op">&gt;</span><span class="dv">0</span>, 
                           fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_uci, <span class="dv">0</span>))
 flu_ex
-<span class="co">#&gt; Source: local data frame [259 x 8]</span>
+<span class="co">#&gt; Source: local data frame [261 x 8]</span>
 <span class="co">#&gt; Groups: &lt;by row&gt;</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; # A tibble: 259 x 8</span>
+<span class="co">#&gt; # A tibble: 261 x 8</span>
 <span class="co">#&gt;    year  week fludeaths  yrweek_dt prop_flupos  pred_y0 pred_y0_uci excess</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42  6.482143 2010-10-18  0.01331601 6.014791    7.739954      0</span>
-<span class="co">#&gt; 2  2010    43  6.605505 2010-10-25  0.01928211 6.144519    7.863546      0</span>
-<span class="co">#&gt; 3  2010    44  6.779817 2010-11-01  0.01726122 6.277639    7.991443      0</span>
-<span class="co">#&gt; 4  2010    45  6.581818 2010-11-08  0.02305556 6.412491    8.121950      0</span>
-<span class="co">#&gt; # ... with 255 more rows</span></code></pre></div>
+<span class="co">#&gt; 1  2010    42  6.482143 2010-10-17  0.01331601 6.018417    7.762487      0</span>
+<span class="co">#&gt; 2  2010    43  6.605505 2010-10-24  0.01928211 6.143481    7.881316      0</span>
+<span class="co">#&gt; 3  2010    44  6.779817 2010-10-31  0.01726122 6.274003    8.006539      0</span>
+<span class="co">#&gt; 4  2010    45  6.581818 2010-11-07  0.02305556 6.408261    8.136408      0</span>
+<span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p><img src="05-modserf_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
 </div>
 <div id="attributable-influenza-mortality" class="section level3">
@@ -246,17 +246,17 @@ flu_ex
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">excess =</span> <span class="kw">if_else</span>((fludeaths <span class="op">-</span><span class="st"> </span>pred_y0)<span class="op">&gt;</span><span class="dv">0</span>, 
                           fludeaths <span class="op">-</span><span class="st"> </span>pred_y0, <span class="dv">0</span>))
 flu_ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, excess)
-<span class="co">#&gt; Source: local data frame [259 x 3]</span>
+<span class="co">#&gt; Source: local data frame [261 x 3]</span>
 <span class="co">#&gt; Groups: &lt;by row&gt;</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; # A tibble: 259 x 3</span>
+<span class="co">#&gt; # A tibble: 261 x 3</span>
 <span class="co">#&gt;    year  week    excess</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42 0.4673520</span>
-<span class="co">#&gt; 2  2010    43 0.4609859</span>
-<span class="co">#&gt; 3  2010    44 0.5021775</span>
-<span class="co">#&gt; 4  2010    45 0.1693275</span>
-<span class="co">#&gt; # ... with 255 more rows</span></code></pre></div>
+<span class="co">#&gt; 1  2010    42 0.4637254</span>
+<span class="co">#&gt; 2  2010    43 0.4620234</span>
+<span class="co">#&gt; 3  2010    44 0.5058136</span>
+<span class="co">#&gt; 4  2010    45 0.1735571</span>
+<span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p><img src="05-modserf_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
 </div>
 </div>
@@ -326,7 +326,7 @@ flu_ex_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(flu_ex, <s
 <span class="co">#&gt;  colorspace    1.3-2      2016-12-14 CRAN (R 3.4.0)                     </span>
 <span class="co">#&gt;  crayon        1.3.4      2017-10-27 Github (r-lib/crayon@b5221ab)      </span>
 <span class="co">#&gt;  digest        0.6.13     2017-12-14 CRAN (R 3.4.3)                     </span>
-<span class="co">#&gt;  dplyr       * 0.7.4      2017-09-28 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  dplyr       * 0.7.4.9000 2017-12-20 Github (hadley/dplyr@85e31dd)      </span>
 <span class="co">#&gt;  evaluate      0.10.1     2017-06-24 CRAN (R 3.4.1)                     </span>
 <span class="co">#&gt;  flumodelr   * 0.0.4.9000 2017-12-20 local                              </span>
 <span class="co">#&gt;  forcats     * 0.2.0      2017-01-23 CRAN (R 3.4.2)                     </span>
@@ -358,7 +358,7 @@ flu_ex_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(flu_ex, <s
 <span class="co">#&gt;  readr       * 1.1.1      2017-05-16 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  readxl        1.0.0      2017-04-18 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  reshape2      1.4.3      2017-12-11 CRAN (R 3.4.3)                     </span>
-<span class="co">#&gt;  rlang         0.1.4.9000 2017-12-14 Github (tidyverse/rlang@5ebcf24)   </span>
+<span class="co">#&gt;  rlang         0.1.4.9000 2017-12-20 Github (tidyverse/rlang@cc7587c)   </span>
 <span class="co">#&gt;  rmarkdown     1.8        2017-11-17 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  rprojroot     1.2        2017-01-16 CRAN (R 3.4.1)                     </span>
 <span class="co">#&gt;  rstudioapi    0.7.0-9000 2017-12-14 Github (rstudio/rstudioapi@335f257)</span>
@@ -369,6 +369,7 @@ flu_ex_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(flu_ex, <s
 <span class="co">#&gt;  stringr     * 1.2.0      2017-02-18 CRAN (R 3.4.0)                     </span>
 <span class="co">#&gt;  tibble      * 1.3.4      2017-08-22 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  tidyr       * 0.7.2      2017-10-16 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  tidyselect    0.2.3      2017-11-06 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  tidyverse   * 1.2.1      2017-11-14 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  withr         2.1.0      2017-11-01 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  xml2          1.1.1      2017-01-24 CRAN (R 3.4.1)                     </span>

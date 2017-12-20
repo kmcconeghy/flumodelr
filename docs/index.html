@@ -123,20 +123,20 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <a href="#example-data" class="anchor"></a>Example data</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex
 flu_ex</code></pre></div>
-<pre><code>## # A tibble: 259 x 5
+<pre><code>## # A tibble: 261 x 5
 ##     year  week fludeaths  yrweek_dt prop_flupos
 ##    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;
-##  1  2010    42  6.482143 2010-10-18  0.01331601
-##  2  2010    43  6.605505 2010-10-25  0.01928211
-##  3  2010    44  6.779817 2010-11-01  0.01726122
-##  4  2010    45  6.581818 2010-11-08  0.02305556
-##  5  2010    46  6.727273 2010-11-15  0.03270312
-##  6  2010    47  4.867925 2010-11-22  0.03991131
-##  7  2010    48  7.236364 2010-11-29  0.06905426
-##  8  2010    49  8.141509 2010-12-06  0.08373102
-##  9  2010    50  7.351351 2010-12-13  0.08634223
-## 10  2010    51  6.481818 2010-12-20  0.12969283
-## # ... with 249 more rows</code></pre>
+##  1  2010    42  6.482143 2010-10-17  0.01331601
+##  2  2010    43  6.605505 2010-10-24  0.01928211
+##  3  2010    44  6.779817 2010-10-31  0.01726122
+##  4  2010    45  6.581818 2010-11-07  0.02305556
+##  5  2010    46  6.727273 2010-11-14  0.03270312
+##  6  2010    47  4.867925 2010-11-21  0.03991131
+##  7  2010    48  7.236364 2010-11-28  0.06905426
+##  8  2010    49  8.141509 2010-12-05  0.08373102
+##  9  2010    50  7.351351 2010-12-12  0.08634223
+## 10  2010    51  6.481818 2010-12-19  0.12969283
+## # ... with 251 more rows</code></pre>
 </div>
 <div id="fit-traditional-serfling-model" class="section level3">
 <h3 class="hasAnchor">
@@ -144,20 +144,20 @@ flu_ex</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit &lt;-<span class="st"> </span>flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/serflm">serflm</a></span>(flu_ex, <span class="dt">outc =</span> fludeaths, <span class="dt">time =</span> yrweek_dt)</code></pre></div>
 <p>Assumes epidemic influenza period of Sept. - May. Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span> (year, week, fludeaths, y0, y0_ul)</code></pre></div>
-<pre><code>## # A tibble: 259 x 5
+<pre><code>## # A tibble: 261 x 5
 ##     year  week fludeaths       y0    y0_ul
 ##    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-##  1  2010    42  6.482143 6.325176 7.419003
-##  2  2010    43  6.605505 6.415187 7.509014
-##  3  2010    44  6.779817 6.507871 7.601698
-##  4  2010    45  6.581818 6.601823 7.695650
-##  5  2010    46  6.727273 6.695621 7.789449
-##  6  2010    47  4.867925 6.787845 7.881672
-##  7  2010    48  7.236364 6.877097 7.970925
-##  8  2010    49  8.141509 6.962024 8.055851
-##  9  2010    50  7.351351 7.041334 8.135162
-## 10  2010    51  6.481818 7.113819 8.207647
-## # ... with 249 more rows</code></pre>
+##  1  2010    42  6.482143 6.230634 7.374343
+##  2  2010    43  6.605505 6.321874 7.465583
+##  3  2010    44  6.779817 6.417597 7.561306
+##  4  2010    45  6.581818 6.516356 7.660066
+##  5  2010    46  6.727273 6.616661 7.760370
+##  6  2010    47  4.867925 6.716996 7.860705
+##  7  2010    48  7.236364 6.815847 7.959557
+##  8  2010    49  8.141509 6.911723 8.055433
+##  9  2010    50  7.351351 7.003173 8.146883
+## 10  2010    51  6.481818 7.088813 8.232522
+## # ... with 251 more rows</code></pre>
 </div>
 <div id="influenza-time-series-plot" class="section level3">
 <h3 class="hasAnchor">
