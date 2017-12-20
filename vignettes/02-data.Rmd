@@ -58,3 +58,76 @@ ilinet <- (flumodelr::ilinet)
 dim(ilinet)
 ilinet
 ```
+
+## MMWR Weeks  
+
+The MMWR Week is a unique definition used by the CDC. This definition is born out in the `?cdc122city` dataset.  
+
+The following explanation of the definition was obtained from: https://wwwn.cdc.gov/nndss/document/MMWR_Week_overview.pdf  
+
+> "The MMWR week is the week of the epidemiologic year for which the National 
+> Notifiable Diseases Surveillance System (NNDSS) disease report is assigned 
+> by the reporting local or state health department for the purposes 
+> of MMWR disease incidence reporting and publishing. Values for MMWR week 
+> range from 1 to 53, although most years consist of 52 weeks."
+
+CDC business rules for assigning MMWR week:  
+
+> "The first day of any MMWR week is Sunday. MMWR week numbering is 
+> sequential beginning with 1 and incrementing with each week to a 
+> maximum of 52 or 53. MMWR week #1 of an MMWR year is the first week 
+> of the year that has at least four days in the calendar year." 
+
+A given example, if Jan. 1 occurs on a Sunday, Monday, Tuesday or Wednesday, the calendar week that includes January 1 would be MMWR week #1. If January 1
+occurs on a Thursday, Friday, or Saturday, the calendar week that includes January 1 would be the last MMWR week of the previous year (#52 or #53). Because of this rule, December 29, 30, and 31 could potentially fall into
+MMWR week #1 of the following MMWR year.  
+
+All `?ilinet` , `?cdc122city` and `?nrevss` datasets are imported in their raw CDC format. It is the perogative of the user to determine how best to treat the CDC MMWR week definition. However, we illustrate below how the above description was used to compute a first day of week, date variable for the example dataset `?flu_ex`.  
+
+Alternative package which addresses this:  
+
+Xiahong Zhao (2016). EpiWeek: Conversion Between Epidemiological Weeks
+and Calendar Dates. R package version 1.1. https://CRAN.R-project.org/package=EpiWeek
+  
+```{r, eval=F}
+install.packages("EpiWeek")
+```
+
+Also see `?epiweek()`  
+
+## Using the CDC122 Cities as Example  
+Code adapted from `EpiWeek` package.  
+
+#### Conversion function  
+```{r }
+library(lubridate) #For working with dates  
+EpiWeekToDates <- function(year, weeknum) {
+  
+  #Compute 4th day in January
+    jan4 <- ymd(paste(year, 1, 4, sep="-"))
+  
+  #Compute day of week
+    DofW <- wday(jan4, week_start = 7)-1 #Sunday start
+    #The -1 is  correction for how wday() counts days  
+    
+  #If Jan 4th was Sun, starting week date is 01/04/xxxx
+    startweek <- if_else(DofW == 7, jan4, (jan4 - (DofW)))
+ 
+  #First Date of Week
+    d0 = startweek + (weeknum - 1) * 7
+  
+  #Last Date of Week
+    d1 = startweek + (weeknum - 1) * 7 + 6 
+  
+  return(list(d0 = ymd(d0), d1 = ymd(d1)))
+}
+```
+
+```{r }
+example <- cdc122 %>%
+  mutate(FirstDateOfWeek = EpiWeekToDates(year, week)[[1]])
+
+example %>% select(year, week, FirstDateOfWeek) %>% 
+  distinct() %>% 
+  filter(year>2010)
+```

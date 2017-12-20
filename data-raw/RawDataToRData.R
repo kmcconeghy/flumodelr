@@ -1,5 +1,5 @@
 setwd("~/GitHub/flumodelr/data-raw")
-library('dplyr')
+library('tidyverse')
 library('readr')
 library('devtools')
 library('lubridate')
@@ -73,6 +73,27 @@ head(df.ILI)
     summary(cdc122city)
     #--Save for package
     use_data(cdc122city, overwrite = T)
+    library(lubridate) #For working with dates  
+    EpiWeekToDates <- function(year, weeknum) {
+      
+      #Compute 4th day in January
+      jan4 <- ymd(paste(year, 1, 4, sep="-"))
+      
+      #Compute day of week
+      DofW <- wday(jan4, week_start = 7)-1 #Sunday start
+      #The -1 is  correction for how wday() counts days  
+      
+      #If Jan 4th was Sun, starting week date is 01/04/xxxx
+      startweek <- if_else(DofW == 7, jan4, (jan4 - (DofW)))
+      
+      #First Date of Week
+      d0 = startweek + (weeknum - 1) * 7
+      
+      #Last Date of Week
+      d1 = startweek + (weeknum - 1) * 7 + 6 
+      
+      return(list(d0 = ymd(d0), d1 = ymd(d1)))
+    }
     
 #--Make example time-series object  
   nrevss2 <- nrevss %>%
@@ -81,15 +102,14 @@ head(df.ILI)
       summarize(spec_tot = sum(spec_tot, na.rm=T),
                 spec_pos = sum(spec_pos, na.rm=T),
                 prop_flupos = spec_pos / spec_tot) %>%
-    mutate(yrweek_dt = as.POSIXct(paste0(year, "-", week, "-", "1"), format = "%Y-%U-%u"),
-           yrweek_dt = as_date(yrweek_dt) + dweeks(2)) #Add 2 weeks for delay
-                
+    mutate(yrweek_dt = EpiWeekToDates(year, week)[[1]],
+           yrweek_dt = yrweek_dt + dweeks(2)) #Add 2 weeks for delay
+  
     flu_ex <- cdc122city %>%
       arrange(year, week) %>%
       group_by(year, week) %>%
       summarize(fludeaths = mean(deaths_pnaflu, na.rm=T)) %>%
-      mutate(yrweek_dt = as.POSIXct(paste0(year, "-", week, "-", "1"), format = "%Y-%U-%u"),
-             yrweek_dt = as_date(yrweek_dt)) %>%
+      mutate(yrweek_dt = EpiWeekToDates(year, week)[[1]]) %>%
       na.omit() %>% #drop missing
       ungroup() %>%
       inner_join(., nrevss2[,c('yrweek_dt', 'prop_flupos')], 
