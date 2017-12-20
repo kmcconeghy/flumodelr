@@ -87,43 +87,57 @@
       <h1>Incidence rate-difference models</h1>
                         <h4 class="author">Rob van Aalst</h4>
             
-            <h4 class="date">2017-12-19</h4>
+            <h4 class="date">2017-12-20</h4>
           </div>
 
     
     
 <div class="contents">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex</code></pre></div>
+<div id="introduction-to-incidence-rate-difference-models" class="section level2">
+<h2 class="hasAnchor">
+<a href="#introduction-to-incidence-rate-difference-models" class="anchor"></a>Introduction to incidence rate-difference models</h2>
+<p>Incidence rate-difference models are among the first to estimate influenza-associated hospitalizations and deaths <span class="citation">(Izurieta HS 2000)</span>. In these models incidence rates in periods with low viral activity are substracted from incidence rates in periods with high viral activity. This difference in incidence rate is assumed to be influenza attributable.</p>
+</div>
 <div id="virology-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#virology-data" class="anchor"></a>Virology data</h2>
-<p>In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases see <code><a href="../reference/nrevss.html">?nrevss</a></code>. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of high flu activity can be used to inform spikes in influenza activity, increasing confidence that deaths are influenza related and estimated influenza morbidity and mortality.</p>
+<p>To determine periods with high and low viral activity, researchers often use laboratory confirmed influenza data or the percent of isolates positive with influenza viral types. This is publically available in many cases, see <code><a href="../reference/nrevss.html">?nrevss</a></code> for US surveillance data. The data describes the proportion of isolates tested positive for a certain viral type, which may be obtained from participating hospital and outpatient settings.</p>
 </div>
-<div id="definition-of-the-peri--and-summer-season" class="section level2">
+<div id="definition-of-periods-default-values" class="section level2">
 <h2 class="hasAnchor">
-<a href="#definition-of-the-peri--and-summer-season" class="anchor"></a>Definition of the Peri- and Summer-season</h2>
-<p>Incidence rate-difference models have been used frequently to estimate influenza-associated hospitalizations and deaths. We followed Thompson <span class="citation">(Thompson WW 2009)</span> and defined five periods for each respiratory season: (i) a period when ‡10% of specimens tested were positive for influenza, (ii) a period when ‡15% of specimens were positive, (iii) a peri-season baseline period when &lt;10% of specimens were positive, (iv) a peri-season baseline period when &lt;15% of specimens were positive, and (v) a summer-season baseline period. The summer-season baseline period is defined as the weeks from July through September at the beginning of each season and May and June at the end of each season when there is little influenza activity.</p>
-</div>
-<div id="peri-season-excess-mortality-rate" class="section level2">
-<h2 class="hasAnchor">
-<a href="#peri-season-excess-mortality-rate" class="anchor"></a>Peri-season excess mortality rate</h2>
-<p>The peri-season excess mortality rate is defined as the difference in the average weekly mortality rates between an influenza period and a peri-season period for a particular respiratory season.</p>
-</div>
-<div id="summer-season-excess-mortality-rate" class="section level2">
-<h2 class="hasAnchor">
-<a href="#summer-season-excess-mortality-rate" class="anchor"></a>Summer-season excess mortality rate</h2>
-<p>The summer-season excess mortality rate is defined as the difference in the average weekly rates between an influenza period and a summer-season period.</p>
+<a href="#definition-of-periods-default-values" class="anchor"></a>Definition of periods: default values</h2>
+<p>We followed Thompson <span class="citation">(Thompson WW 2009)</span> and defined the respiratory season to start at the beginning of July (week 27) of each calendar year. Within a respiratory season we defined four periods:</p>
+<ol style="list-style-type: lower-alpha">
+<li>a high viral activity period consisting of weeks when at least 10% of specimens are positive,</li>
+<li>a peri-season baseline period consisting of weeks when less than 10% of specimens were positive, and;</li>
+<li>an influenza season defined as the weeks from October (week 40) through April (week 18),</li>
+<li>a summer-season baseline period defined as the weeks from July (week 27) through September (week 39) at the beginning of each respiratory season and May (week 19) and June (week 26) at the end of each respiratory season when there is little viral activity.</li>
+</ol>
+<p>Options c and d can be used in the absense of laboratory confirmed influenza surveillance data to define high and low viral activity periods.</p>
 </div>
 <div id="annual-excess-numbers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#annual-excess-numbers" class="anchor"></a>Annual excess numbers</h2>
-<p>Weekly excess mortality rates will be converted to annual excess numbers of deaths by using the number of weeks that were above an epidemic threshold, and available US census data:</p>
+<p>Weekly excess outcome rates will be converted to annual excess numbers of outcomes by using the number of weeks that were above an epidemic threshold, and available US census data:</p>
 <p>annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (population).</p>
+<pre><code>#&gt; incidence rate-difference model 
+#&gt;  ============================================================ 
+#&gt; Setting ird parameters...
+#&gt;  'time' variable is: yrweek_dt 
+#&gt;   time interval is: 52 
+#&gt;   flu argument is: fludeaths
+#&gt; Setting rb parameters...
+#&gt;   flu argument is: fludeaths</code></pre>
+<p><img src="03-ratediff_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
+<div id="ref-Izurieta2000">
+<p>Izurieta HS, Kramarz P, Thompson WW. 2000. “Influenza and the Rates of Hospitalization for Respiratory Disease Among Infants and Young Children.” <em>N Engl J Med</em> 342: 232–39.</p>
+</div>
 <div id="ref-Thompson2009">
 <p>Thompson WW, Dhankar PY, Weintraub E. 2009. “Estimates of Us Influenza-Associated Deaths Made Using Four Different Methods.” <em>Influenza Other Respir Viruses</em> 3(1): 37–49.</p>
 </div>
@@ -137,10 +151,9 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#virology-data">Virology data</a></li>
-      <li><a href="#definition-of-the-peri--and-summer-season">Definition of the Peri- and Summer-season</a></li>
-      <li><a href="#peri-season-excess-mortality-rate">Peri-season excess mortality rate</a></li>
-      <li><a href="#summer-season-excess-mortality-rate">Summer-season excess mortality rate</a></li>
+<li><a href="#introduction-to-incidence-rate-difference-models">Introduction to incidence rate-difference models</a></li>
+      <li><a href="#virology-data">Virology data</a></li>
+      <li><a href="#definition-of-periods-default-values">Definition of periods: default values</a></li>
       <li><a href="#annual-excess-numbers">Annual excess numbers</a></li>
       <li><a href="#references">References</a></li>
       </ul>

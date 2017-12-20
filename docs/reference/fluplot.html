@@ -168,9 +168,9 @@ vector of length=3.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
 <span class='no'>flu_ex</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/flu_ex'>flu_ex</a></span>
-<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='serflm.html'>serflm</a></span>(<span class='no'>flu_ex</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='st'>"fludeaths"</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='st'>"yrweek_dt"</span>)</div><div class='output co'>#&gt; Cyclical Regression Model 
-#&gt;  ============================================================ </div><div class='output co'>#&gt; <span class='error'>Error in mutate_impl(.data, dots): Evaluation error: character string is not in a standard unambiguous format.</span></div><div class='input'>
-<span class='fu'>fluplot</span>(<span class='no'>flu_fit</span>, <span class='kw'>x</span><span class='kw'>=</span><span class='st'>"yrweek_dt"</span>, <span class='kw'>y</span><span class='kw'>=</span><span class='st'>"fludeaths"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in fluplot(flu_fit, x = "yrweek_dt", y = "fludeaths"): argument 3 matches multiple formal arguments</span></div><div class='input'>
+<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='serflm.html'>serflm</a></span>(<span class='no'>flu_ex</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>)
+
+<span class='fu'>fluplot</span>(<span class='no'>flu_fit</span>, <span class='kw'>xvar</span><span class='kw'>=</span><span class='no'>yrweek_dt</span>, <span class='kw'>yvar</span><span class='kw'>=</span><span class='no'>fludeaths</span>)</div><div class='img'><img src='fluplot-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

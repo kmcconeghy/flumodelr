@@ -170,8 +170,6 @@ ggplot(df_epi, aes(x=yrweek_dt)) +
 ##The following command completes the above steps 
 ##fit serfling model
 flu_fit <- serflm(data=flu_ex, outc=fludeaths, time=yrweek_dt)
-
-## ------------------------------------------------------------------------
 flu_fit
 
 ## ------------------------------------------------------------------------

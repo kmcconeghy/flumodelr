@@ -1,4 +1,4 @@
-library(testthat, quietly = T)
-library(flumodelr, quietly = T)
+library(testthat)
+library(flumodelr)
 
 test_check("flumodelr")

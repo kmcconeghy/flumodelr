@@ -4,8 +4,9 @@
 \alias{ird}
 \title{ird: Perform incidence rate-difference models}
 \usage{
-ird(data = NULL, flu = NULL, epi = NULL, time = NULL,
-  t.interval = "wofy")
+ird (data=NULL, flu=NULL, time=NULL, viral=NULL, 
+            t.interval="wofy", respStart=27, high=0.1, fluStart=40,
+            fluStop=18)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
@@ -15,28 +16,36 @@ epidemic indicator, and measure of influenza morbidity}
 a numeric type variable in dataframe data which is the measure
 of disease morbidity / mortality}
 
-\item{epi}{A character string of length=1, identifies
-a logical type variable in dataframe data which indicates epidemic
-vs non-epidemic periods}
-
 \item{time}{A character string of length=1, identifies
 a numeric/integer class variable in dataframe which corresponds
 to a unit of time, must be unique (i.e. non-repeating)}
+
+\item{viral}{A character string of length=1, identifies
+a numeric type variable in dataframe data which is the measure
+of viral activity.}
 
 \item{t.interval}{A character string, must specify whether
 unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
 or month/years ("mofy"), days/years("dofy")}
 
-\item{t.respStart}{A character string, must specify whether
-unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
-or month/years ("mofy"), days/years("dofy")}
+\item{respStart}{A numeric/integer class variable, must specify the
+week number of the start of the respiratory season.
+The default value is 27. This corresponds with the beginning of July.}
 
-\item{t.respStop}{A character string, must specify whether
-unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
-or month/years ("mofy"), days/years("dofy")}
+\item{high}{A numeric class variable, must specify the
+proportion of positive isolates for a week to be considered of
+"high viral activity". The default value is 0.10.}
+
+\item{fluStart}{A numeric/integer class variable, must specify the
+week number of the start of the influenza season. The default
+value is 40. This corresponds with the beginning of October.}
+
+\item{fluStop}{A numeric/integer class variable, must specify the
+week number of the start of the influenza season. The default
+value is 18. This corresponds with the end of April.}
 }
 \value{
-dataframe
+an object of class data.frame
 }
 \description{
 Calculates the rate difference between influenza season
@@ -46,16 +55,16 @@ summer season
 \examples{
 require(flumodelr)
 flu_ex <- flumodelr::flu_ex
-fit <- serflm(data=flu_ex, 
-              flu = "fludeaths", epi="epi", 
-              time="yrweek_dt")
+flu_fit <- ird(data=flu_ex, flu = "fludeaths", viral="prop_flupos", time="yrweek_dt")
+flu_rates <- rb(flu_fit,"fludeaths")
               
-summary(fit)
+flu_rates
 
 }
 \references{
-Serfling RE. Methods for current statistical analysis of
-excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun;
-78(6): 494 - 506.
-/url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/}
+Thompson WW, Weintraub E, Dhankhar P, Cheng PY, Brammer L,
+Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza‐associated
+deaths made using four different methods. Influenza and other
+respiratory viruses. 2009 Jan 1;3(1):37-49.
+/url{http://onlinelibrary.wiley.com/doi/10.1111/j.1750-2659.2009.00073.x/full}
 }

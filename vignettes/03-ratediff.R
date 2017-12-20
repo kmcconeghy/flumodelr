@@ -15,5 +15,7 @@ library(tibble)
 flu_ex <- flumodelr::flu_ex
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
-
+flu_fit <- ird(data=flu_ex, flu = "fludeaths", viral="prop_flupos", time="yrweek_dt")
+flu_rates <- rb(data=flu_fit, flu = "fludeaths")
+gr(data=flu_rates)
 

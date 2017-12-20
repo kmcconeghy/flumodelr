@@ -30,9 +30,9 @@
 #' @examples
 #' require(flumodelr)
 #' flu_ex <- flumodelr::flu_ex
-#' flu_fit <- serflm(flu_ex, outc = "fludeaths", time = "yrweek_dt")  
+#' flu_fit <- serflm(flu_ex, outc = fludeaths, time = yrweek_dt)  
 #'               
-#' fluplot(flu_fit, x="yrweek_dt", y="fludeaths")
+#' fluplot(flu_fit, xvar=yrweek_dt, yvar=fludeaths)
 #' 
  
 fluplot <- function(data=NULL, xvar=NULL, yvar=NULL, 
@@ -71,7 +71,8 @@ fluplot <- function(data=NULL, xvar=NULL, yvar=NULL,
                           values = col_vals) +
       scale_linetype_manual("Line", breaks=def.names,
                             values = linetype_vals) +
-      scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+      scale_x_date(date_breaks="1 year",
+                   labels = scales::date_format("%Y"), 
                    expand=c(0, .9)) 
   
   #final touches

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Rob van Aalst" />
 
-<meta name="date" content="2017-12-18" />
+<meta name="date" content="2017-12-19" />
 
 <title>Incidence rate-difference models</title>
 
@@ -70,35 +70,50 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Incidence rate-difference models</h1>
 <h4 class="author"><em>Rob van Aalst</em></h4>
-<h4 class="date"><em>2017-12-18</em></h4>
+<h4 class="date"><em>2017-12-19</em></h4>
 
 
 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex</code></pre></div>
+<div id="introduction-to-incidence-rate-difference-models" class="section level2">
+<h2>Introduction to incidence rate-difference models</h2>
+<p>Incidence rate-difference models are among the first to estimate influenza-associated hospitalizations and deaths <span class="citation">(Izurieta HS 2000)</span>. In these models incidence rates in periods with low viral activity are substracted from incidence rates in periods with high viral activity. This difference in incidence rate is assumed to be influenza attributable.</p>
+</div>
 <div id="virology-data" class="section level2">
 <h2>Virology data</h2>
-<p>In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases see <code>?nrevss</code>. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of high flu activity can be used to inform spikes in influenza activity, increasing confidence that deaths are influenza related and estimated influenza morbidity and mortality.</p>
+<p>To determine periods with high and low viral activity, researchers often use laboratory confirmed influenza data or the percent of isolates positive with influenza viral types. This is publically available in many cases, see <code>?nrevss</code> for US surveillance data. The data describes the proportion of isolates tested positive for a certain viral type, which may be obtained from participating hospital and outpatient settings.</p>
 </div>
-<div id="definition-of-the-peri--and-summer-season" class="section level2">
-<h2>Definition of the Peri- and Summer-season</h2>
-<p>Incidence rate-difference models have been used frequently to estimate influenza-associated hospitalizations and deaths. We followed Thompson <span class="citation">(Thompson WW 2009)</span> and defined five periods for each respiratory season: (i) a period when ‡10% of specimens tested were positive for influenza, (ii) a period when ‡15% of specimens were positive, (iii) a peri-season baseline period when &lt;10% of specimens were positive, (iv) a peri-season baseline period when &lt;15% of specimens were positive, and (v) a summer-season baseline period. The summer-season baseline period is defined as the weeks from July through September at the beginning of each season and May and June at the end of each season when there is little influenza activity.</p>
-</div>
-<div id="peri-season-excess-mortality-rate" class="section level2">
-<h2>Peri-season excess mortality rate</h2>
-<p>The peri-season excess mortality rate is defined as the difference in the average weekly mortality rates between an influenza period and a peri-season period for a particular respiratory season.</p>
-</div>
-<div id="summer-season-excess-mortality-rate" class="section level2">
-<h2>Summer-season excess mortality rate</h2>
-<p>The summer-season excess mortality rate is defined as the difference in the average weekly rates between an influenza period and a summer-season period.</p>
+<div id="definition-of-periods-default-values" class="section level2">
+<h2>Definition of periods: default values</h2>
+<p>We followed Thompson <span class="citation">(Thompson WW 2009)</span> and defined the respiratory season to start at the beginning of July (week 27) of each calendar year. Within a respiratory season we defined four periods:</p>
+<ol style="list-style-type: lower-alpha">
+<li>a high viral activity period consisting of weeks when at least 10% of specimens are positive,</li>
+<li>a peri-season baseline period consisting of weeks when less than 10% of specimens were positive, and;</li>
+<li>an influenza season defined as the weeks from October (week 40) through April (week 18),</li>
+<li>a summer-season baseline period defined as the weeks from July (week 27) through September (week 39) at the beginning of each respiratory season and May (week 19) and June (week 26) at the end of each respiratory season when there is little viral activity.</li>
+</ol>
+<p>Options c and d can be used in the absense of laboratory confirmed influenza surveillance data to define high and low viral activity periods.</p>
 </div>
 <div id="annual-excess-numbers" class="section level2">
 <h2>Annual excess numbers</h2>
-<p>Weekly excess mortality rates will be converted to annual excess numbers of deaths by using the number of weeks that were above an epidemic threshold, and available US census data:</p>
+<p>Weekly excess outcome rates will be converted to annual excess numbers of outcomes by using the number of weeks that were above an epidemic threshold, and available US census data:</p>
 <p>annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (population).</p>
+<pre><code>#&gt; incidence rate-difference model 
+#&gt;  ============================================================ 
+#&gt; Setting ird parameters...
+#&gt;  'time' variable is: yrweek_dt 
+#&gt;   time interval is: 52 
+#&gt;   flu argument is: fludeaths
+#&gt; Setting rb parameters...
+#&gt;   flu argument is: fludeaths</code></pre>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
 <div id="refs" class="references">
+<div id="ref-Izurieta2000">
+<p>Izurieta HS, Kramarz P, Thompson WW. 2000. “Influenza and the Rates of Hospitalization for Respiratory Disease Among Infants and Young Children.” <em>N Engl J Med</em> 342: 232–39.</p>
+</div>
 <div id="ref-Thompson2009">
 <p>Thompson WW, Dhankar PY, Weintraub E. 2009. “Estimates of Us Influenza-Associated Deaths Made Using Four Different Methods.” <em>Influenza Other Respir Viruses</em> 3(1): 37–49.</p>
 </div>

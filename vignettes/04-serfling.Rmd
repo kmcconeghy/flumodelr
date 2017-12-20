@@ -278,8 +278,6 @@ ggplot(df_epi, aes(x=yrweek_dt)) +
 ##The following command completes the above steps 
 ##fit serfling model
 flu_fit <- serflm(data=flu_ex, outc=fludeaths, time=yrweek_dt)
-```
-```{r }
 flu_fit
 ```
 
@@ -302,3 +300,5 @@ The historical Serfling model should be considered as important background and a
  * The selected threshold for what constitutes "excess" is somewhat arbitrary. The original Serfling paper describes 1.64 standard deviations for 2 or more weeks as criteria. Recent papers have used the 95% prediction interval.   
  
 # References  
+
+sessioninfo::session_info()

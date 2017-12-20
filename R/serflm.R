@@ -52,13 +52,13 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
       #write epi object as name
       if (is.null(epi)) {
         data <- data %>%
-          mutate(epi = if_else(month(!!time_eq)>=10 | month(!!time_eq)<=5, 
+          dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | month(!!time_eq)<=5, 
                                              T, F))  
         epi <- "epi"
         epi_eq <- quo(epi)
       } else {epi_eq <- enquo(epi)}
   
-  data <- data %>% arrange(., !!time_eq)
+  data <- data %>% dplyr::arrange(., !!time_eq)
     
   #parameters  
   if (echo==T) {
@@ -68,7 +68,7 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
       cat("  time period is:", t.interval, "\n")
   }
     data <- data %>%
-        mutate(t_unit = row_number(),
+        dplyr::mutate(t_unit = row_number(),
                theta = 2*t_unit/t.interval,
                sin_f1 = sinpi(theta),
                cos_f1 = cospi(theta))
@@ -79,7 +79,7 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
   
   #compute baseline regression  
     base_fit <- data %>%
-      filter(!! epi_eq ==F) %>%
+      dplyr::filter(!! epi_eq ==F) %>%
       lm(flu.form, data=., na.action = na.exclude)  
     
   ## Fitted values + prediction interval
@@ -89,8 +89,8 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
     y0_ul <- y0 + 1.64*sd(y0) 
     
     data <- data %>%
-      add_column(., y0, y0_ul) %>%
-      select(-t_unit, -theta, -sin_f1, -cos_f1)
+      tibble::add_column(., y0, y0_ul) %>%
+      dplyr::select(-t_unit, -theta, -sin_f1, -cos_f1)
     
     #return results
     return(data)

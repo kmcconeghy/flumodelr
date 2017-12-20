@@ -53,7 +53,6 @@
 #' flu_fit <- ird(data=flu_ex, flu = "fludeaths", viral="prop_flupos", time="yrweek_dt")
 #' flu_rates <- rb(flu_fit,"fludeaths")
 #'               
-#' summary(fit)
 #' flu_rates
 #' 
 #' @references 
@@ -73,7 +72,6 @@ ird <- function(data=NULL,
                 fluStart=40,
                 fluStop=18
                 ) {
-  require(dplyr)
   cat("incidence rate-difference model \n",
       paste0(rep("=", 60), collapse=""), "\n")
   
@@ -149,12 +147,10 @@ ird <- function(data=NULL,
   return(data)
   
 }
-
+#' @export  
 rb <- function(data, flu){ #calculate the rates for each of the periods
-  
   #prepare arguments to work in dplr
-  require(rlang)
-  flu_sym <- sym(flu)
+  flu_sym <- rlang::sym(flu)
   
   #parameters 
 cat("Setting rb parameters...\n")
@@ -171,12 +167,10 @@ cat("Setting rb parameters...\n")
   return(flu_rates)
 }
 
+#' @export  
 gr <- function(data){
-  require(ggplot2)
-  
   ggplot(data, aes(x = season, y = fludeaths_fluseason, fill=high_act))+
     geom_bar(stat="identity", position = position_dodge(), colour="black")
-  
 }
 
 

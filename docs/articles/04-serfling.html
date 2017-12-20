@@ -87,7 +87,7 @@
       <h1>Serfling Model Background</h1>
                         <h4 class="author">Kevin W. McConeghy</h4>
             
-            <h4 class="date">2017-12-19</h4>
+            <h4 class="date">2017-12-20</h4>
           </div>
 
     
@@ -290,8 +290,8 @@ df_epi <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">s
 <a href="#serflm-function" class="anchor"></a>serflm() function</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##The following command completes the above steps 
 ##fit serfling model
-flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/serflm.html">serflm</a></span>(<span class="dt">data=</span>flu_ex, <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit
+flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/serflm.html">serflm</a></span>(<span class="dt">data=</span>flu_ex, <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt)
+flu_fit
 <span class="co">#&gt; # A tibble: 259 x 8</span>
 <span class="co">#&gt;    year  week fludeaths  yrweek_dt prop_flupos   epi       y0    y0_ul</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;lgl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
@@ -305,7 +305,7 @@ flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ser
 <a href="#plot-function-fluplot" class="anchor"></a>Plot function fluplot</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fluplot.html">fluplot</a></span>(flu_fit, <span class="dt">xvar=</span>yrweek_dt, fludeaths, y0, y0_ul,
                     <span class="dt">ylab=</span><span class="st">"Mortality per 100,000"</span>, <span class="dt">title=</span><span class="st">"Serfling Model"</span>)</code></pre></div>
-<p><img src="04-serfling_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
+<p><img src="04-serfling_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
 </div>
 </div>
 <div id="criticisms-of-this-approach" class="section level2">
@@ -322,6 +322,7 @@ flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ser
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
+<p>sessioninfo::session_info()</p>
 </div>
 </div>
   </div>

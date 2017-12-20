@@ -4,11 +4,9 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 options(tibble.print_min = 4L, tibble.print_max = 4L)
-library(dplyr)
-library(ggplot2)
+library(flumodelr)
 library(lubridate)
 library(scales)
-library(flumodelr)
 library(tibble)
 
 ## ------------------------------------------------------------------------

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Kevin W. McConeghy" />
 
-<meta name="date" content="2017-12-19" />
+<meta name="date" content="2017-12-20" />
 
 <title>Serfling Model Background</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Serfling Model Background</h1>
 <h4 class="author"><em>Kevin W. McConeghy</em></h4>
-<h4 class="date"><em>2017-12-19</em></h4>
+<h4 class="date"><em>2017-12-20</em></h4>
 
 
 
@@ -263,13 +263,7 @@ df_epi <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##The following command completes the above steps 
 ##fit serfling model
 flu_fit &lt;-<span class="st"> </span><span class="kw">serflm</span>(<span class="dt">data=</span>flu_ex, <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt)
-<span class="co">#&gt; Cyclical Regression Model </span>
-<span class="co">#&gt;  ============================================================ </span>
-<span class="co">#&gt; Setting regression parameters...</span>
-<span class="co">#&gt;  'epi' variable is: epi </span>
-<span class="co">#&gt;  'time' variable is: yrweek_dt </span>
-<span class="co">#&gt;   time period is: 52</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit
+flu_fit
 <span class="co">#&gt; # A tibble: 259 x 8</span>
 <span class="co">#&gt;    year  week fludeaths  yrweek_dt prop_flupos   epi       y0    y0_ul</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;lgl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
@@ -297,6 +291,7 @@ flu_fit &lt;-<span class="st"> </span><span class="kw">serflm</span>(<span class
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
+<p>sessioninfo::session_info()</p>
 </div>
 
 

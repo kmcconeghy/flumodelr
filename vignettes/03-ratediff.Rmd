@@ -56,7 +56,6 @@ annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (
 flu_fit <- ird(data=flu_ex, flu = "fludeaths", viral="prop_flupos", time="yrweek_dt")
 flu_rates <- rb(data=flu_fit, flu = "fludeaths")
 gr(data=flu_rates)
-
 ```
 
 ## References
