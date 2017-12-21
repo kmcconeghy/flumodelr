@@ -73,7 +73,7 @@ head(df.ILI)
     summary(cdc122city)
     #--Save for package
     use_data(cdc122city, overwrite = T)
-    library(lubridate) #For working with dates  
+
     EpiWeekToDates <- function(year, weeknum) {
       
       #Compute 4th day in January
@@ -108,7 +108,9 @@ head(df.ILI)
     flu_ex <- cdc122city %>%
       arrange(year, week) %>%
       group_by(year, week) %>%
-      summarize(fludeaths = mean(deaths_pnaflu, na.rm=T)) %>%
+      summarize(fludeaths = sum(deaths_pnaflu, na.rm=T),
+                alldeaths = sum(deaths_allcause, na.rm=T),
+                perc_fludeaths = fludeaths/alldeaths*100) %>%
       mutate(yrweek_dt = EpiWeekToDates(year, week)[[1]]) %>%
       na.omit() %>% #drop missing
       ungroup() %>%

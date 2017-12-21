@@ -87,7 +87,7 @@
       <h1>Serfling Model Background</h1>
                         <h4 class="author">Kevin W. McConeghy</h4>
             
-            <h4 class="date">2017-12-20</h4>
+            <h4 class="date">2017-12-21</h4>
           </div>
 
     
@@ -120,7 +120,7 @@ fit &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
          <span class="dt">theta =</span> <span class="dv">2</span><span class="op">*</span>week2<span class="op">/</span><span class="dv">52</span>,
          <span class="dt">sin_f1 =</span> <span class="kw">sinpi</span>(theta),
          <span class="dt">cos_f1 =</span> <span class="kw">cospi</span>(theta),
-         <span class="dt">pred_y =</span> <span class="kw">predict</span>( <span class="kw">lm</span>(fludeaths <span class="op">~</span><span class="st"> </span>
+         <span class="dt">pred_y =</span> <span class="kw">predict</span>( <span class="kw">lm</span>(perc_fludeaths <span class="op">~</span><span class="st"> </span>
 <span class="st">                                </span>week2 <span class="op">+</span><span class="st"> </span>sin_f1 <span class="op">+</span><span class="st"> </span>cos_f1, <span class="dt">data=</span>.)))</code></pre></div>
 <p><img src="04-serfling_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
 <p>A single Fourier term does a reasonable job approximating the secular trend of disease, except notably during severe influenza epidemics. The black solid line represents a single Fourier term.</p>
@@ -162,14 +162,14 @@ fit &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
 <h3 class="hasAnchor">
 <a href="#step-1--formatted-influenza-data" class="anchor"></a>Step 1. Formatted influenza data</h3>
 <p>To compute a traditional Serfling model. The input dataframe must have time vector, indicator for the epidemic period (Oct. - May), and measure of influenza morbidity / mortality to be modeled.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(yrweek_dt, fludeaths)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(yrweek_dt, perc_fludeaths)
 <span class="co">#&gt; # A tibble: 261 x 2</span>
-<span class="co">#&gt;    yrweek_dt fludeaths</span>
-<span class="co">#&gt;       &lt;date&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 2010-10-17  6.482143</span>
-<span class="co">#&gt; 2 2010-10-24  6.605505</span>
-<span class="co">#&gt; 3 2010-10-31  6.779817</span>
-<span class="co">#&gt; 4 2010-11-07  6.581818</span>
+<span class="co">#&gt;    yrweek_dt perc_fludeaths</span>
+<span class="co">#&gt;       &lt;date&gt;          &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 2010-10-17       6.442453</span>
+<span class="co">#&gt; 2 2010-10-24       6.426276</span>
+<span class="co">#&gt; 3 2010-10-31       6.648673</span>
+<span class="co">#&gt; 4 2010-11-07       7.014824</span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p><code><a href="../reference/serflm.html">serflm()</a></code> Will allow you to specify the boundaries for epidemic periods, and then compute the baseline off of non-epidemic timepoints. Additionally you can provide it with a logical variable in the dataset which indicates the epidemic period.</p>
 </div>
@@ -180,15 +180,15 @@ fit &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">epi =</span> <span class="kw">if_else</span>(<span class="kw">month</span>(yrweek_dt)<span class="op">&gt;=</span><span class="dv">10</span> <span class="op">|</span><span class="st"> </span><span class="kw">month</span>(yrweek_dt)<span class="op">&lt;=</span><span class="dv">5</span>, T, F))  
 
 flu_ex <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(year<span class="op">&gt;=</span><span class="dv">2014</span>)
-<span class="co">#&gt; # A tibble: 94 x 6</span>
-<span class="co">#&gt;    year  week fludeaths  yrweek_dt prop_flupos   epi</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;lgl&gt;</span>
-<span class="co">#&gt; 1  2014     1  6.333333 2013-12-29   0.2806884  TRUE</span>
-<span class="co">#&gt; 2  2014     2  8.933333 2014-01-05   0.3110651  TRUE</span>
-<span class="co">#&gt; 3  2014     3  9.829060 2014-01-12   0.2910588  TRUE</span>
-<span class="co">#&gt; 4  2014     4  9.058333 2014-01-19   0.2754467  TRUE</span>
-<span class="co">#&gt; # ... with 90 more rows</span></code></pre></div>
+<span class="st">  </span><span class="kw">filter</span>(year<span class="op">&gt;=</span><span class="dv">2010</span>)
+<span class="co">#&gt; # A tibble: 261 x 8</span>
+<span class="co">#&gt;    year  week fludeaths alldeaths perc_fludeaths  yrweek_dt prop_flupos</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2010    42       726     11269       6.442453 2010-10-17  0.01331601</span>
+<span class="co">#&gt; 2  2010    43       720     11204       6.426276 2010-10-24  0.01928211</span>
+<span class="co">#&gt; 3  2010    44       739     11115       6.648673 2010-10-31  0.01726122</span>
+<span class="co">#&gt; 4  2010    45       724     10321       7.014824 2010-11-07  0.02305556</span>
+<span class="co">#&gt; # ... with 257 more rows, and 1 more variables: epi &lt;lgl&gt;</span></code></pre></div>
 <p>We see that there is now an indicator for Oct - May.</p>
 </div>
 <div id="step-2--fit-predicted-outcome-and-epidemic-threshold" class="section level3">
@@ -203,18 +203,15 @@ flu_ex_serfling &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</sp
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">week2 =</span> <span class="kw">row_number</span>(),
          <span class="dt">theta =</span> <span class="dv">2</span><span class="op">*</span>week2<span class="op">/</span><span class="dv">52</span>,
          <span class="dt">sin_f1 =</span> <span class="kw">sinpi</span>(theta),
-         <span class="dt">cos_f1 =</span> <span class="kw">cospi</span>(theta),
-         <span class="dt">week_2 =</span> week2<span class="op">^</span><span class="dv">2</span>,
-         <span class="dt">week_3 =</span> week2<span class="op">^</span><span class="dv">3</span>,
-         <span class="dt">week_4 =</span> week2<span class="op">^</span><span class="dv">4</span>,
-         <span class="dt">week_5 =</span> week2<span class="op">^</span><span class="dv">5</span>)</code></pre></div>
+         <span class="dt">cos_f1 =</span> <span class="kw">cospi</span>(theta))</code></pre></div>
 </div>
 <div id="step-2b--baseline-cyclical-model" class="section level4">
 <h4 class="hasAnchor">
 <a href="#step-2b--baseline-cyclical-model" class="anchor"></a>Step 2b. Baseline Cyclical model</h4>
+<p>Fit a model using non-epidemic periods, and excluding year 2015. This is the year we are focused on evaluating for excess mortality.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_fit &lt;-<span class="st"> </span>flu_ex_serfling <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">fludeaths =</span> <span class="kw">if_else</span>(epi <span class="op">==</span><span class="st"> </span>T, <span class="ot">NA_real_</span>, fludeaths)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">lm</span>(fludeaths <span class="op">~</span><span class="st"> </span>week2 <span class="op">+</span><span class="st"> </span>week_<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>week_<span class="dv">3</span> <span class="op">+</span><span class="st"> </span>week_<span class="dv">4</span> <span class="op">+</span><span class="st"> </span>sin_f1 <span class="op">+</span><span class="st"> </span>cos_f1, 
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(epi<span class="op">==</span>F <span class="op">&amp;</span><span class="st"> </span>year<span class="op">&lt;</span><span class="dv">2015</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">lm</span>(perc_fludeaths <span class="op">~</span><span class="st"> </span>week2 <span class="op">+</span><span class="st"> </span>sin_f1 <span class="op">+</span><span class="st"> </span>cos_f1, 
      <span class="dt">data=</span>., <span class="dt">na.action =</span> na.exclude)</code></pre></div>
 <p>Fit a model using only non-epidemic periods.</p>
 </div>
@@ -226,86 +223,110 @@ flu_ex_serfling &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</sp
 <blockquote>
 <p>“The epidemic threshold…is placed at a distance of 1.64 standard deviations above the trend line, a level which experience has shown to be useful for distinguishing epidemic increase from random variation.”</p>
 </blockquote>
-<p><code>serflm</code> follows this method, but the modified serfling function allows for more options for threshold prediction.</p>
+<p>The CDC also describes the threshold as:</p>
+<blockquote>
+<p>“The seasonal baseline of P&amp;I deaths is calculated using a periodic regression model that incorporates a robust regression procedure applied to &gt; data from the previous five years. An increase of 1.645 standard deviations &gt; above the seasonal baseline of P&amp;I deaths is considered the ‘epidemic threshold,’ i.e., the point at which the observed proportion of deaths attributed to pneumonia or influenza was significantly higher than would be &gt; expected at that time of the year in the absence of substantial influenza-related mortality.”</p>
+</blockquote>
+<p><code>serflm</code> follows this method, but the modified serfling function allows for more options for threshold prediction. 1.645 standard deviations is equal to the upper limit 90% prediction interval.</p>
 <div id="step-2c--add-predicted-values-to-original-dataset-" class="section level4">
 <h4 class="hasAnchor">
 <a href="#step-2c--add-predicted-values-to-original-dataset-" class="anchor"></a>Step 2c. Add predicted values to original dataset.</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Fitted values + prediction interval
 df_pred &lt;-<span class="st"> </span>flu_ex_serfling <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(year<span class="op">==</span><span class="dv">2014</span> <span class="op">&amp;</span><span class="st"> </span>week<span class="op">&gt;=</span><span class="dv">40</span> <span class="op">|</span><span class="st"> </span>year<span class="op">&gt;</span><span class="dv">2014</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">predict</span>(base_fit, <span class="dt">newdata=</span>., <span class="dt">se.fit=</span><span class="ot">TRUE</span>, 
-          <span class="dt">interval=</span><span class="st">"prediction"</span>, <span class="dt">level=</span><span class="fl">0.95</span>)
+          <span class="dt">interval=</span><span class="st">"prediction"</span>, <span class="dt">level=</span><span class="fl">0.90</span>)
 
 pred_y0 &lt;-<span class="st"> </span>df_pred<span class="op">$</span>fit[,<span class="dv">1</span>] <span class="co">#fitted values</span>
-pred_y0_serf &lt;-<span class="st"> </span>df_pred<span class="op">$</span>fit[,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span><span class="fl">1.64</span><span class="op">*</span><span class="kw">sd</span>(df_pred<span class="op">$</span>fit[,<span class="dv">1</span>]) 
+pred_y0_serf &lt;-<span class="st"> </span>df_pred<span class="op">$</span>fit[,<span class="dv">3</span>] 
 
 df_base &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(year<span class="op">==</span><span class="dv">2014</span> <span class="op">&amp;</span><span class="st"> </span>week<span class="op">&gt;=</span><span class="dv">40</span> <span class="op">|</span><span class="st"> </span>year<span class="op">&gt;</span><span class="dv">2014</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_column</span>(., pred_y0, pred_y0_serf)  
 
-df_base <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, fludeaths, 
+df_base <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, perc_fludeaths, 
                    pred_y0, pred_y0_serf)  
-<span class="co">#&gt; # A tibble: 261 x 5</span>
-<span class="co">#&gt;    year  week fludeaths  pred_y0 pred_y0_serf</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42  6.482143 8.162363     9.741912</span>
-<span class="co">#&gt; 2  2010    43  6.605505 8.208000     9.787549</span>
-<span class="co">#&gt; 3  2010    44  6.779817 8.258536     9.838085</span>
-<span class="co">#&gt; 4  2010    45  6.581818 8.312446     9.891994</span>
-<span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 55 x 5</span>
+<span class="co">#&gt;    year  week perc_fludeaths  pred_y0 pred_y0_serf</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;          &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2014    40       5.504025 5.609397     6.087981</span>
+<span class="co">#&gt; 2  2014    41       5.468132 5.670423     6.159198</span>
+<span class="co">#&gt; 3  2014    42       5.337343 5.737505     6.239463</span>
+<span class="co">#&gt; 4  2014    43       5.515951 5.809601     6.327665</span>
+<span class="co">#&gt; # ... with 51 more rows</span></code></pre></div>
 <p><img src="04-serfling_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
-<p><strong>Observed Deaths</strong> - No. of influenza / pneumonia deaths per 100,000 people.<br><strong>Predicted Deaths</strong> - A fit of the cyclical regression model, (one Fourier term).<br><strong>Serfling Threshold</strong> - The fitted line + 1.64 standard deviations.</p>
+<p><strong>% of Deaths from P&amp;I</strong> - No. of influenza or pneumonia deaths / total number of deaths *100.<br><strong>Expected %</strong> - A fit of the cyclical regression model, (one Fourier term).<br><strong>Epidemic Threshold</strong> - The fitted line + 1.64 standard deviations.</p>
 </div>
 </div>
 <div id="step-3--compute-excess-deaths" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-3--compute-excess-deaths" class="anchor"></a>Step 3. Compute excess deaths</h3>
-<p>The next step is to compute the no. of deaths in excess of the epidemic threshold. In addition to being in excess, Serfling applies a rule that values are counted starting from two consecutive timepoints exceeding the threshold, then stopped after two timepoints below the threshold.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_epi &lt;-<span class="st"> </span>df_base <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">threshold =</span> <span class="kw">if_else</span>(fludeaths <span class="op">&gt;</span><span class="st"> </span>pred_y0_serf, T, F),
-         <span class="dt">epidemic =</span> <span class="kw">if_else</span>(threshold<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span><span class="kw">lead</span>(threshold)<span class="op">==</span>T, T, <span class="ot">NA</span>),
-         <span class="dt">epidemic2 =</span> <span class="kw">if_else</span>(<span class="kw">lag</span>(epidemic)<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span>threshold<span class="op">==</span>T, T, epidemic),
-         <span class="dt">epidemic3 =</span> <span class="kw">if_else</span>(<span class="kw">lag</span>(epidemic2)<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span><span class="kw">lead</span>(threshold)<span class="op">==</span>T, T, epidemic2),
-         <span class="dt">epidemic4 =</span> <span class="kw">if_else</span>(<span class="kw">lag</span>(epidemic3)<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span>threshold<span class="op">==</span>T, T, epidemic3),
-         <span class="dt">epidemic5 =</span> <span class="kw">coalesce</span>(epidemic4, F)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">epidemic =</span> <span class="kw">if_else</span>(<span class="kw">sum</span>(epidemic, epidemic2, epidemic3, 
-                                   epidemic4, epidemic5, <span class="dt">na.rm=</span>T)<span class="op">&gt;</span><span class="dv">0</span>, T, F),
-         <span class="dt">excess =</span> <span class="kw">if_else</span>(epidemic<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span>(fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_serf)<span class="op">&gt;</span><span class="dv">0</span>, fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_serf, <span class="dv">0</span>))
-df_epi <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, threshold, epidemic, excess)
-<span class="co">#&gt; Source: local data frame [261 x 5]</span>
-<span class="co">#&gt; Groups: &lt;by row&gt;</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; # A tibble: 261 x 5</span>
-<span class="co">#&gt;    year  week threshold epidemic excess</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;lgl&gt;    &lt;lgl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42     FALSE    FALSE      0</span>
-<span class="co">#&gt; 2  2010    43     FALSE    FALSE      0</span>
-<span class="co">#&gt; 3  2010    44     FALSE    FALSE      0</span>
-<span class="co">#&gt; 4  2010    45     FALSE    FALSE      0</span>
-<span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
-<p><img src="04-serfling_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
+<p>The next step is to determine the difference in % of deaths in excess of the epidemic threshold.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_excess &lt;-<span class="st"> </span>df_base <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">threshold =</span> <span class="kw">if_else</span>(perc_fludeaths <span class="op">&gt;</span><span class="st"> </span>pred_y0_serf, T, F),
+         <span class="dt">simple_excess =</span> <span class="kw">if_else</span>((perc_fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_serf)<span class="op">&gt;</span><span class="dv">0</span>,
+         perc_fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_serf, <span class="dv">0</span>))</code></pre></div>
+<p>In addition to being in excess, Serfling applies a rule that values are counted starting from two consecutive timepoints exceeding the threshold, then stopped after two timepoints below the threshold. This rule is problematic depending on how the period is programmed, if the unit of observation is more granular (day or week) then the rule will have more false-positives, if less granular (i.e. month) if will have false-negatives.</p>
 </div>
+</div>
+<div id="serfling-consecutive-rule" class="section level2">
+<h2 class="hasAnchor">
+<a href="#serfling-consecutive-rule" class="anchor"></a>Serfling consecutive rule</h2>
+<p>We show how to implement this below, however recommend that it not be used routinely.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Identify consecutive epidemic periods  
+  df_serf_excess &lt;-<span class="st"> </span>df_excess <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">serf_rule =</span> <span class="kw">if_else</span>(threshold<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                                 </span><span class="kw">lead</span>(threshold)<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                                 </span><span class="kw">lag</span>(threshold)<span class="op">==</span>T, T, F))
+##reset beginning and end periods
+  df_serf_excess &lt;-<span class="st"> </span>df_serf_excess <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">serf_rule =</span> <span class="kw">if_else</span>(serf_rule<span class="op">==</span>F <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                                 </span>threshold<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                                 </span><span class="kw">lead</span>(serf_rule)<span class="op">==</span>T, T, serf_rule),
+           <span class="dt">serf_rule =</span> <span class="kw">if_else</span>(serf_rule<span class="op">==</span>F, 
+                               threshold<span class="op">==</span>T <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                               </span><span class="kw">lag</span>(serf_rule)<span class="op">==</span>T, T, serf_rule))
+  
+ ##compute excess deaths
+   df_serf_excess &lt;-<span class="st"> </span>df_serf_excess <span class="op">%&gt;%</span>
+<span class="st">     </span><span class="kw">mutate</span>(<span class="dt">serf_excess =</span> <span class="kw">if_else</span>(serf_rule<span class="op">==</span>T, 
+                                  perc_fludeaths <span class="op">-</span><span class="st"> </span>pred_y0_serf, <span class="dv">0</span>))
+
+
+df_serf_excess <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, threshold, simple_excess, serf_rule, serf_excess)
+<span class="co">#&gt; # A tibble: 55 x 6</span>
+<span class="co">#&gt;    year  week threshold simple_excess serf_rule serf_excess</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;lgl&gt;         &lt;dbl&gt;     &lt;lgl&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2014    40     FALSE             0     FALSE           0</span>
+<span class="co">#&gt; 2  2014    41     FALSE             0     FALSE           0</span>
+<span class="co">#&gt; 3  2014    42     FALSE             0     FALSE           0</span>
+<span class="co">#&gt; 4  2014    43     FALSE             0     FALSE           0</span>
+<span class="co">#&gt; # ... with 51 more rows</span></code></pre></div>
+<p>Note how for weeks 29 and 31, the Serfling rule discounts the excess mortality.</p>
+<p><img src="04-serfling_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
 </div>
 <div id="serflm-function" class="section level2">
 <h2 class="hasAnchor">
 <a href="#serflm-function" class="anchor"></a>serflm() function</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##The following command completes the above steps 
 ##fit serfling model
-flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/serflm.html">serflm</a></span>(<span class="dt">data=</span>flu_ex, <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt)
+flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/serflm.html">serflm</a></span>(<span class="dt">data=</span>flu_ex, <span class="dt">outc=</span>perc_fludeaths, <span class="dt">time=</span>yrweek_dt)
 flu_fit
-<span class="co">#&gt; # A tibble: 261 x 8</span>
-<span class="co">#&gt;    year  week fludeaths  yrweek_dt prop_flupos   epi       y0    y0_ul</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;lgl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42  6.482143 2010-10-17  0.01331601  TRUE 6.230634 7.374343</span>
-<span class="co">#&gt; 2  2010    43  6.605505 2010-10-24  0.01928211  TRUE 6.321874 7.465583</span>
-<span class="co">#&gt; 3  2010    44  6.779817 2010-10-31  0.01726122  TRUE 6.417597 7.561306</span>
-<span class="co">#&gt; 4  2010    45  6.581818 2010-11-07  0.02305556  TRUE 6.516356 7.660066</span>
-<span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 261 x 10</span>
+<span class="co">#&gt;    year  week fludeaths alldeaths perc_fludeaths  yrweek_dt prop_flupos</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2010    42       726     11269       6.442453 2010-10-17  0.01331601</span>
+<span class="co">#&gt; 2  2010    43       720     11204       6.426276 2010-10-24  0.01928211</span>
+<span class="co">#&gt; 3  2010    44       739     11115       6.648673 2010-10-31  0.01726122</span>
+<span class="co">#&gt; 4  2010    45       724     10321       7.014824 2010-11-07  0.02305556</span>
+<span class="co">#&gt; # ... with 257 more rows, and 3 more variables: epi &lt;lgl&gt;, y0 &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   y0_ul &lt;dbl&gt;</span></code></pre></div>
 <div id="plot-function-fluplot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#plot-function-fluplot" class="anchor"></a>Plot function fluplot</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fluplot.html">fluplot</a></span>(flu_fit, <span class="dt">xvar=</span>yrweek_dt, fludeaths, y0, y0_ul,
-                    <span class="dt">ylab=</span><span class="st">"Mortality per 100,000"</span>, <span class="dt">title=</span><span class="st">"Serfling Model"</span>)</code></pre></div>
-<p><img src="04-serfling_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fluplot.html">fluplot</a></span>(flu_fit, <span class="dt">xvar=</span>yrweek_dt, perc_fludeaths, y0, y0_ul,
+                    <span class="dt">ylab=</span><span class="st">"% Deaths from P&amp;I"</span>, <span class="dt">title=</span><span class="st">"Serfling Model"</span>)</code></pre></div>
+<p><img src="04-serfling_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
 </div>
 </div>
 <div id="criticisms-of-this-approach" class="section level2">
@@ -322,7 +343,6 @@ flu_fit
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
-<p>sessioninfo::session_info()</p>
 </div>
 </div>
   </div>
@@ -337,6 +357,7 @@ flu_fit
       <li><a href="#example--fitted-line-one-fourier-term">Example. Fitted line (one Fourier term)</a></li>
       <li><a href="#estimation-approach-for-attributable-or-excess-mortality">Estimation approach for attributable or “excess” mortality</a></li>
       <li><a href="#step-wise-example">Step-wise example</a></li>
+      <li><a href="#serfling-consecutive-rule">Serfling consecutive rule</a></li>
       <li><a href="#serflm-function">serflm() function</a></li>
       <li><a href="#criticisms-of-this-approach">Criticisms of this approach</a></li>
       <li><a href="#references">References</a></li>

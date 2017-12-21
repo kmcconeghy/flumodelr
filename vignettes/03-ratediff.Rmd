@@ -53,8 +53,8 @@ that were above an epidemic threshold, and available US census data:
 annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (population).
 
 ```{r, echo=F, results='as.is', fig.width=7.0}
-flu_fit <- ird(data=flu_ex, flu = "fludeaths", viral="prop_flupos", time="yrweek_dt")
-flu_rates <- rb(data=flu_fit, flu = "fludeaths")
+flu_fit <- ird(data=flu_ex, flu = "perc_fludeaths", viral="prop_flupos", time="yrweek_dt")
+flu_rates <- rb(data=flu_fit, flu = "perc_fludeaths")
 gr(data=flu_rates)
 ```
 

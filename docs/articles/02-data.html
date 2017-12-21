@@ -87,7 +87,7 @@
       <h1>flumodelr: Data</h1>
                         <h4 class="author">Kevin W. McConeghy</h4>
             
-            <h4 class="date">2017-12-20</h4>
+            <h4 class="date">2017-12-21</h4>
           </div>
 
     
@@ -100,11 +100,11 @@
 <div id="description-from-cdc-website" class="section level2">
 <h2 class="hasAnchor">
 <a href="#description-from-cdc-website" class="anchor"></a>Description from CDC website</h2>
-<p>This file contains the complete set of data reported to 122 Cities Mortality Reposting System. The system was retired as of 10/6/2016. While the system was running each week, the vital statistics offices of 122 cities across the United States reported the total number of death certificates processed and the number of those for which pneumonia or influenza was listed as the underlying or contributing cause of death by age group (Under 28 days, 28 days - 1 year, 1-14 years, 15-24 years, 25-44 years, 45-64 years, 65-74 years, 75-84 years, and - 85 years). U:Unavailable. - : No reported cases.* Mortality data in this table were voluntarily reported from 122 cities in the United States, most of which have populations of &gt;100,000. A death is reported by the place of its occurrence and by the week that the death certificate was filed. Fetal deaths are not included. Total includes unknown ages.</p>
-<ul>
-<li>After the system was retired, mortality has been monitoring via a more general mechanism described here:</li>
-</ul>
-<p>National Center for Health Statistics (NCHS) mortality surveillance data – NCHS collects death certificate data from state vital statistics offices for all deaths occurring in the United States. Pneumonia and influenza (P&amp;I) deaths are identified based on ICD-10 multiple cause of death codes. NCHS surveillance data are aggregated by the week of death occurrence and as a result, P&amp;I percentages based on the NCHS surveillance data are released two weeks after the week of death to allow for collection of enough data to produce a stable P&amp;I percentage. The NCHS surveillance data based on P&amp;I percentage for earlier weeks are continually revised and may increase or decrease as new and updated death certificate data are received from the states by NCHS. The seasonal baseline of P&amp;I deaths is calculated using a periodic regression model that incorporates a robust regression procedure applied to data from the previous five years. An increase of 1.645 standard deviations above the seasonal baseline of P&amp;I deaths is considered the “epidemic threshold,” i.e., the point at which the observed proportion of deaths attributed to pneumonia or influenza was significantly higher than would be expected at that time of the year in the absence of substantial influenza-related mortality. <a href="https://www.cdc.gov/flu/weekly/overview.htm" class="uri">https://www.cdc.gov/flu/weekly/overview.htm</a></p>
+<p>This file contains the complete set of data reported to 122 Cities Mortality Reposting System. The system was retired on 10/6/2016. 122 cities across the United States reported the total number of death certificates processed and the number of those for which pneumonia or influenza was listed as the underlying or contributing cause of death by age group. A death is reported by the place of its occurrence and by the week that the death certificate was filed. Fetal deaths are not included. After the system was retired, mortality has been monitored via a more general mechanism described here:</p>
+<blockquote>
+<p>National Center for Health Statistics (NCHS) mortality surveillance data – &gt; NCHS collects death certificate data from state vital statistics offices for &gt; all deaths occurring in the United States. Pneumonia and influenza (P&amp;I) deaths are identified based on ICD-10 multiple cause of death codes. NCHS surveillance data are aggregated by the week of death occurrence and as a result, P&amp;I percentages based on the NCHS surveillance data are released two &gt; weeks after the week of death to allow for collection of enough data to produce a stable P&amp;I percentage. The NCHS surveillance data based on P&amp;I percentage for earlier weeks are continually revised and may increase or decrease as new and updated death certificate data are received from the states by NCHS. The seasonal baseline of P&amp;I deaths is calculated using a periodic regression model that incorporates a robust regression procedure applied to data from the previous five years. An increase of 1.645 standard &gt; deviations above the seasonal baseline of P&amp;I deaths is considered the “epidemic threshold,” i.e., the point at which the observed proportion of deaths attributed to pneumonia or influenza was significantly higher than would be expected at that time of the year in the absence of substantial influenza-related mortality.</p>
+</blockquote>
+<p><a href="https://www.cdc.gov/flu/weekly/overview.htm" class="uri">https://www.cdc.gov/flu/weekly/overview.htm</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cdc122 &lt;-<span class="st"> </span>(flumodelr<span class="op">::</span>cdc122city)  
 <span class="kw">dim</span>(cdc122)
 <span class="co">#&gt; [1] 346342      8</span>
@@ -125,10 +125,16 @@ cdc122
 <div id="cdc-website-description" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cdc-website-description" class="anchor"></a>CDC Website Description</h2>
-<p>Viral Surveillance — Data collection from both the U.S. World Health Organization (WHO) Collaborating Laboratories and National Respiratory and Enteric Virus Surveillance System (NREVSS) laboratories began during the 1997-98 season. The volume of tested specimens has greatly increased during this time due to increased participation and increased testing. During the 1997-98 season 43 state public health laboratories participated in surveillance, and by the 2004-05 season all state public health laboratories were participating in surveillance. The addition of NREVSS data during the 1997-98 season roughly doubled the amount of virologic data reported each week.<br>
-The number of specimens tested and % positive rate vary by region and season based on different testing practices including triaging of specimens by the reporting labs, therefore it is not appropriate to compare the magnitude of positivity rates or the number of positive specimens between regions or seasons.<br>
-The U.S. WHO and NREVSS collaborating laboratories report the total number of respiratory specimens tested and the number positive for influenza types A and B each week to CDC. Most of the U.S. WHO collaborating laboratories also report the influenza A subtype (H1 or H3) of the viruses they have isolated, but the majority of NREVSS laboratories do not report the influenza A subtype.<br>
-For more information on virologic surveillance please visit.<br><a href="http://www.cdc.gov/flu/weekly/overview.htm#Viral" class="uri">http://www.cdc.gov/flu/weekly/overview.htm#Viral</a></p>
+<p>Viral Surveillance — Data collection from both the U.S. World Health Organization (WHO) Collaborating Laboratories and National Respiratory and Enteric Virus Surveillance System (NREVSS) laboratories began during the 1997-98 season. During the 1997-98 season 43 state public health laboratories participated in surveillance, and by the 2004-05 season all state public health laboratories were participating in surveillance.</p>
+<p>The CDC cautions against cross-sectional evaluations:</p>
+<blockquote>
+<p>The number of specimens tested and % positive rate vary by region and season based on different testing practices including triaging of specimens &gt; by the reporting labs, therefore it is not appropriate to compare the magnitude of positivity rates or the number of positive specimens between regions or seasons.</p>
+</blockquote>
+<p>Regarding subtype:</p>
+<blockquote>
+<p>The U.S. WHO and NREVSS collaborating laboratories report the total number &gt; of respiratory specimens tested and the number positive for influenza types &gt; A and B each week to CDC. Most of the U.S. WHO collaborating laboratories also report the influenza A subtype (H1 or H3) of the viruses they have isolated, but the majority of NREVSS laboratories do not report the influenza A subtype.</p>
+</blockquote>
+<p>For more information: <a href="http://www.cdc.gov/flu/weekly/overview.htm#Viral" class="uri">http://www.cdc.gov/flu/weekly/overview.htm#Viral</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nrevss &lt;-<span class="st"> </span>(flumodelr<span class="op">::</span>nrevss)  
 <span class="kw">dim</span>(nrevss)
 <span class="co">#&gt; [1] 14094    12</span>
@@ -150,9 +156,12 @@ nrevss
 <div id="cdc-website-description-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cdc-website-description-1" class="anchor"></a>CDC Website Description</h2>
-<p>Outpatient Illness Surveillance — Information on patient visits to health care providers for influenza-like illness is collected through the U.S. Outpatient Influenza-like Illness Surveillance Network (ILINet). This collaborative effort between CDC, state and local health departments, and health care providers started during the 1997-98 influenza season when approximately 250 providers were enrolled. Enrollment in the system has increased over time and there were &gt;3,000 providers enrolled during the 2010-11 season.<br>
-The number and percent of patients presenting with ILI each week will vary by region and season due to many factors, including having different provider type mixes (children present with higher rates of ILI than adults, and therefore regions with a higher percentage of pediatric practices will have higher numbers of cases). Therefore it is not appropriate to compare the magnitude of the percent of visits due to ILI between regions and seasons.<br>
-Baseline levels are calculated both nationally and for each region. Percentages at or above the baseline level are considered to be elevated.<br><a href="http://www.cdc.gov/flu/weekly/overview.htm#Outpatient" class="uri">http://www.cdc.gov/flu/weekly/overview.htm#Outpatient</a></p>
+<p>Outpatient Illness Surveillance — Information on patient visits to health care providers for influenza-like illness is collected through the U.S. Outpatient Influenza-like Illness Surveillance Network (ILINet).</p>
+<p>CDC cautions regarding cross-sectional comparisons:</p>
+<blockquote>
+<p>The number and percent of patients presenting with ILI each week will vary &gt; by region and season due to many factors, including having different provider type mixes (children present with higher rates of ILI than adults, &gt; and therefore regions with a higher percentage of pediatric practices will have higher numbers of cases). Therefore it is not appropriate to compare the magnitude of the percent of visits due to ILI between regions and seasons.</p>
+</blockquote>
+<p>For more information, see: <a href="http://www.cdc.gov/flu/weekly/overview.htm#Outpatient" class="uri">http://www.cdc.gov/flu/weekly/overview.htm#Outpatient</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ilinet &lt;-<span class="st"> </span>(flumodelr<span class="op">::</span>ilinet)  
 <span class="kw">dim</span>(ilinet)
 <span class="co">#&gt; [1] 19556     7</span>
@@ -178,7 +187,7 @@ ilinet
 <blockquote>
 <p>“The first day of any MMWR week is Sunday. MMWR week numbering is sequential beginning with 1 and incrementing with each week to a maximum of 52 or 53. MMWR week #1 of an MMWR year is the first week of the year that has at least four days in the calendar year.”</p>
 </blockquote>
-<p>A given example, if Jan. 1 occurs on a Sunday, Monday, Tuesday or Wednesday, the calendar week that includes January 1 would be MMWR week #1. If January 1 occurs on a Thursday, Friday, or Saturday, the calendar week that includes January 1 would be the last MMWR week of the previous year (#52 or #53). Because of this rule, December 29, 30, and 31 could potentially fall into MMWR week #1 of the following MMWR year.</p>
+<p>This means if Jan. 1 occurs on a Sunday, Monday, Tuesday or Wednesday, the calendar week that includes Jan. 1 would be MMWR week #1. If Jan 1 occurs on a Thursday, Friday, or Saturday, the calendar week that includes Jan 1 would be the last MMWR week of the previous year (#52 or #53). Because of this rule, December 29, 30, and 31 could potentially fall into MMWR week #1 of the following MMWR year.</p>
 <p>All <code><a href="../reference/ilinet.html">?ilinet</a></code> , <code><a href="../reference/cdc122city.html">?cdc122city</a></code> and <code><a href="../reference/nrevss.html">?nrevss</a></code> datasets are imported in their raw CDC format. It is the perogative of the user to determine how best to treat the CDC MMWR week definition. However, we illustrate below how the above description was used to compute a first day of week, date variable for the example dataset <code><a href="../reference/flu_ex.html">?flu_ex</a></code>.</p>
 <p>Alternative package which addresses this:</p>
 <p>Xiahong Zhao (2016). EpiWeek: Conversion Between Epidemiological Weeks and Calendar Dates. R package version 1.1. <a href="https://CRAN.R-project.org/package=EpiWeek" class="uri">https://CRAN.R-project.org/package=EpiWeek</a></p>

@@ -18,8 +18,8 @@ This vignette is a short introduction to the package for interested readers. In 
 1) Publicly available data used to develop and test this software.  
 [Data](https://kmcconeghy.github.io/flumodelr/articles/02-data.html)  
 
-2) Explanation of original Serfling Model.  
-[Serfling Background](https://kmcconeghy.github.io/flumodelr/articles/03-ratediff.html)  
+2) Simple modeling approach: Risk Difference  
+[Risk Difference](https://kmcconeghy.github.io/flumodelr/articles/03-ratediff.html)  
 
 3) Explanation of original Serfling Model.  
 [Serfling Background](https://kmcconeghy.github.io/flumodelr/articles/04-serfling.html)  

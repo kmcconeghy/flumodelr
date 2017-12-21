@@ -123,19 +123,19 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <a href="#example-data" class="anchor"></a>Example data</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex
 flu_ex</code></pre></div>
-<pre><code>## # A tibble: 261 x 5
-##     year  week fludeaths  yrweek_dt prop_flupos
-##    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;
-##  1  2010    42  6.482143 2010-10-17  0.01331601
-##  2  2010    43  6.605505 2010-10-24  0.01928211
-##  3  2010    44  6.779817 2010-10-31  0.01726122
-##  4  2010    45  6.581818 2010-11-07  0.02305556
-##  5  2010    46  6.727273 2010-11-14  0.03270312
-##  6  2010    47  4.867925 2010-11-21  0.03991131
-##  7  2010    48  7.236364 2010-11-28  0.06905426
-##  8  2010    49  8.141509 2010-12-05  0.08373102
-##  9  2010    50  7.351351 2010-12-12  0.08634223
-## 10  2010    51  6.481818 2010-12-19  0.12969283
+<pre><code>## # A tibble: 261 x 7
+##     year  week fludeaths alldeaths perc_fludeaths  yrweek_dt prop_flupos
+##    &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;
+##  1  2010    42       726     11269       6.442453 2010-10-17  0.01331601
+##  2  2010    43       720     11204       6.426276 2010-10-24  0.01928211
+##  3  2010    44       739     11115       6.648673 2010-10-31  0.01726122
+##  4  2010    45       724     10321       7.014824 2010-11-07  0.02305556
+##  5  2010    46       740     11506       6.431427 2010-11-14  0.03270312
+##  6  2010    47       516      8543       6.040033 2010-11-21  0.03991131
+##  7  2010    48       796     12299       6.472071 2010-11-28  0.06905426
+##  8  2010    49       863     12578       6.861186 2010-12-05  0.08373102
+##  9  2010    50       816     12029       6.783606 2010-12-12  0.08634223
+## 10  2010    51       713      9655       7.384775 2010-12-19  0.12969283
 ## # ... with 251 more rows</code></pre>
 </div>
 <div id="fit-traditional-serfling-model" class="section level3">
@@ -146,17 +146,17 @@ flu_ex</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span> (year, week, fludeaths, y0, y0_ul)</code></pre></div>
 <pre><code>## # A tibble: 261 x 5
 ##     year  week fludeaths       y0    y0_ul
-##    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-##  1  2010    42  6.482143 6.230634 7.374343
-##  2  2010    43  6.605505 6.321874 7.465583
-##  3  2010    44  6.779817 6.417597 7.561306
-##  4  2010    45  6.581818 6.516356 7.660066
-##  5  2010    46  6.727273 6.616661 7.760370
-##  6  2010    47  4.867925 6.716996 7.860705
-##  7  2010    48  7.236364 6.815847 7.959557
-##  8  2010    49  8.141509 6.911723 8.055433
-##  9  2010    50  7.351351 7.003173 8.146883
-## 10  2010    51  6.481818 7.088813 8.232522
+##    &lt;int&gt; &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1  2010    42       726 705.7796 785.9217
+##  2  2010    43       720 718.2133 800.4578
+##  3  2010    44       739 731.2547 815.9659
+##  4  2010    45       724 744.7106 832.2033
+##  5  2010    46       740 758.3818 848.9032
+##  6  2010    47       516 772.0659 865.7820
+##  7  2010    48       796 785.5604 882.5484
+##  8  2010    49       863 798.6653 898.9107
+##  9  2010    50       816 811.1867 914.5842
+## 10  2010    51       713 822.9389 929.2969
 ## # ... with 251 more rows</code></pre>
 </div>
 <div id="influenza-time-series-plot" class="section level3">
@@ -198,7 +198,8 @@ flu_ex</code></pre></div>
 <a href="#authors" class="anchor"></a>Authors</h1>
 <p>Kevin W. McConeghy, Pharm.D, M.S., Brown University School of Public Health, Dept. Health Services Research<br>
 Rob Van Aalst, Sanofi-Pasteur<br>
-Andrew Zullo, Pharm.D., MSc, Ph.D., Brown University School of Public Health, Dept. Health Services Research</p>
+Andrew Zullo, Pharm.D., MSc, Ph.D., Brown University School of Public Health, Dept. Health Services Research<br>
+Nina Joyce, Ph.D., Brown University School of Public Health, Dept. Health Services Research</p>
 </div>
 <div id="acknowledgements" class="section level1">
 <h1 class="hasAnchor">

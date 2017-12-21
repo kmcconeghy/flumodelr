@@ -147,7 +147,7 @@ ggplot(flu_ex, aes(x=yrweek_dt)) +
   ylab("Deaths per 100,000") + 
   theme_light(base_size=16) +
   theme(plot.title = element_text(size=14)) +
-  labs(title="Figure 3. Periods of excess mortality over time")
+  labs(title="Figure 4. Periods of excess mortality over time")
 
 ## ---- eval=F-------------------------------------------------------------
 #  flu_ex <- flumodelr::flu_ex

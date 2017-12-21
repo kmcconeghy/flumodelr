@@ -83,10 +83,12 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
       lm(flu.form, data=., na.action = na.exclude)  
     
   ## Fitted values + prediction interval
-    y0 <- data %>%
-      predict(base_fit, newdata=.)
+    pred <- data %>%
+      predict(base_fit, newdata=., se.fit=TRUE, 
+              interval="prediction", level=0.90)
     
-    y0_ul <- y0 + 1.64*sd(y0) 
+    y0 <- pred$fit[,1] #fitted values
+    y0_ul <- pred$fit[,3] #upper limit
     
     data <- data %>%
       tibble::add_column(., y0, y0_ul) %>%
