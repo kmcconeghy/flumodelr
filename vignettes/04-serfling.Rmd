@@ -4,7 +4,7 @@ author: "Kevin W. McConeghy"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{flumodelr: 03-serfling}
+  %\VignetteIndexEntry{flumodelr: 04-serfling}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: flumodelr.bib

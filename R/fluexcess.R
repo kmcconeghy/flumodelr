@@ -7,7 +7,8 @@
 #' 
 #' @param obsvar named observed outcome variable  
 #' 
-#' @param fitvar named fitted trend variable
+#' @param fitvar named fitted trend variable. Can specify either fit line, or 
+#' upper threshold limit.  
 #' 
 #' @param serfrule Logical, default=F. If T the function will apply the Serfling 
 #' rule which only counts consecutive observations of excess mortality. See 
@@ -24,16 +25,16 @@
 #' df_excess <- (flu_fit, xvar=yrweek_dt, yvar=fludeaths)
 #' 
 
-fluexcess <- function(data=NULL, obsvar=NULL, fitvar=NULL, serfrule=F) {
+fluexcess <- function(data=NULL, obsvar=NULL, fitvar=NULL, def="fit") {
   
   #tidy evaluation  
   obs_eq <- enquo(obsvar)
   fit_eq <- enquo(fitvar)
   
   if (serfrule==F) {
-    data <- data %>%
-      mutate(y_excess = if_else((obs_eq - fit_eq)>0,
-                                obs_eq - fit_eq, 0))
+    data <- mutate(data, y_excess = if_else(((!!obs_eq) - (!!fit_eq))>0,
+                                            (!!obs_eq) - (!!fit_eq), 0)
+    )
   } else if (serfrule==T) {
     
   }
