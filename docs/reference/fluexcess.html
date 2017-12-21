@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • flumodelr</title>
+<title>fluexcess: Compute excess mortality � fluexcess • flumodelr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -37,7 +37,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -105,88 +105,67 @@
       </header>
 
       <div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>
-        Reference
-        <small>version&nbsp;0.0.4.9000</small>
-      </h1>
+    <h1>fluexcess: Compute excess mortality</h1>
     </div>
 
-    <div class="contents">
-      <table class="ref-index">
+    
+    <p>This function takes fitted data from a serflm() or similar
+procedure and computes difference between observed and predicted mortality.</p>
+    
 
-      <colgroup>
-        <col class="alias" />
-        <col class="title" />
-      </colgroup>
+    <pre class="usage"><span class='fu'>fluexcess</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>obsvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fitvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>serfrule</span> <span class='kw'>=</span> <span class='no'>F</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>data</th>
+      <td><p>A dataframe class object, must contain observed, fitted variables</p></td>
+    </tr>
+    <tr>
+      <th>obsvar</th>
+      <td><p>named observed outcome variable</p></td>
+    </tr>
+    <tr>
+      <th>fitvar</th>
+      <td><p>named fitted trend variable</p></td>
+    </tr>
+    <tr>
+      <th>serfrule</th>
+      <td><p>Logical, default=F. If T the function will apply the Serfling
+rule which only counts consecutive observations of excess mortality. See</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-      <tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="cdc122city.html">cdc122city</a></code> </p>
-          </td>
-          <td><p>Deaths in 122 U.S. cities - 1962-2016. 122 Cities Mortality Reporting System.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="flu_ex.html">flu_ex</a></code> </p>
-          </td>
-          <td><p>Sample dataset for examples. Derived from CDC 122 cities dataset.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="fluexcess.html">fluexcess</a></code> </p>
-          </td>
-          <td><p>fluexcess: Compute excess mortality</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="fluplot.html">fluplot</a></code> </p>
-          </td>
-          <td><p>fluplot: Convenience wrapper for standard trend plot</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="ilinet.html">ilinet</a></code> </p>
-          </td>
-          <td><p>CDC Outpatient Influenza Surveillance - ILINET</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="ird.html">ird</a></code> </p>
-          </td>
-          <td><p>ird: Perform incidence rate-difference models</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="nrevss.html">nrevss</a></code> </p>
-          </td>
-          <td><p>CDC WHO NREVSS Laboratory Data</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="serflm.html">serflm</a></code> </p>
-          </td>
-          <td><p>serflm: Fit a Serling Model on Time Series Data</p></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
+    <p>an object of class dataframe</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>require(flumodelr)
+df_ex <- flumodelr::flu_ex
+serf_fit <- serflm(flu_ex, outc = fludeaths, time = yrweek_dt)  
+              
+df_excess <- (flu_fit, xvar=yrweek_dt, yvar=fludeaths)
+
+</div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:5:22: unexpected ','</span>
+#&gt; <span class='error'>4:               </span>
+#&gt; <span class='error'>5: df_excess &lt;- (flu_fit,</span>
+#&gt; <span class='error'>                        ^</span></div></pre>
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
     </ul>
+
   </div>
 </div>
 

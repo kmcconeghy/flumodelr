@@ -5,28 +5,28 @@ knitr::opts_chunk$set(
 )
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 library(flumodelr)
+library(tidyverse)
 library(lubridate)
 library(scales)
-library(tibble)
 
 ## ------------------------------------------------------------------------
 flu_ex <- flumodelr::flu_ex
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
 ggplot(flu_ex, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=fludeaths, colour="Observed Deaths", 
-                linetype="Observed Deaths"), size=0.8) +
+  geom_line(aes(y=perc_fludeaths, colour="% Deaths from P&I", 
+                linetype="% Deaths from P&I"), size=0.8) +
   geom_line(aes(y=prop_flupos*10, colour="No. Positive per 10 isolates", 
                 linetype="No. Positive per 10 isolates"), size=0.8) +
   scale_colour_manual("Line",
-                      breaks=c("Observed Deaths", 
+                      breaks=c("% Deaths from P&I", 
                                  "No. Positive per 10 isolates"),
-                      values = c("Observed Deaths"="#CC0000", 
+                      values = c("% Deaths from P&I"="#CC0000", 
                                  "No. Positive per 10 isolates"="black")) +
   scale_linetype_manual("Line", 
-                        breaks=c("Observed Deaths", 
+                        breaks=c("% Deaths from P&I", 
                                  "No. Positive per 10 isolates"),
-                        values = c("Observed Deaths"=1,
+                        values = c("% Deaths from P&I"=1,
                                    "No. Positive per 10 isolates"=2)) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) +

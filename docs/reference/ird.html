@@ -194,21 +194,21 @@ respiratory viruses. 2009 Jan 1;3(1):37-49.
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
 <span class='no'>flu_ex</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/flu_ex'>flu_ex</a></span>
-<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>ird</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='no'>flu_ex</span>, <span class='kw'>flu</span> <span class='kw'>=</span> <span class='st'>"fludeaths"</span>, <span class='kw'>viral</span><span class='kw'>=</span><span class='st'>"prop_flupos"</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='st'>"yrweek_dt"</span>)</div><div class='output co'>#&gt; incidence rate-difference model 
+<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>ird</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='no'>flu_ex</span>, <span class='kw'>flu</span> <span class='kw'>=</span> <span class='st'>"perc_fludeaths"</span>, <span class='kw'>viral</span><span class='kw'>=</span><span class='st'>"prop_flupos"</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='st'>"yrweek_dt"</span>)</div><div class='output co'>#&gt; incidence rate-difference model 
 #&gt;  ============================================================ 
 #&gt; Setting ird parameters...
 #&gt;  'time' variable is: yrweek_dt 
 #&gt;   time interval is: 52 
-#&gt;   flu argument is: fludeaths </div><div class='input'><span class='no'>flu_rates</span> <span class='kw'>&lt;-</span> <span class='fu'>rb</span>(<span class='no'>flu_fit</span>,<span class='st'>"fludeaths"</span>)</div><div class='output co'>#&gt; Setting rb parameters...
-#&gt;   flu argument is: fludeaths </div><div class='input'>
+#&gt;   flu argument is: perc_fludeaths </div><div class='input'><span class='no'>flu_rates</span> <span class='kw'>&lt;-</span> <span class='fu'>rb</span>(<span class='no'>flu_fit</span>, <span class='st'>"perc_fludeaths"</span>)</div><div class='output co'>#&gt; Setting rb parameters...
+#&gt;   flu argument is: perc_fludeaths </div><div class='input'>
 <span class='no'>flu_rates</span></div><div class='output co'>#&gt; # A tibble: 12 x 4
 #&gt; # Groups:   season [?]
-#&gt;   season high_act fludeaths_fluseason fludeaths_viral_act
-#&gt;    &lt;dbl&gt;    &lt;lgl&gt;               &lt;int&gt;               &lt;int&gt;
-#&gt; 1   2010    FALSE                6155               14452
-#&gt; 2   2010     TRUE               25637               17340
-#&gt; 3   2011    FALSE               13883               25533
-#&gt; 4   2011     TRUE               24221               12571
+#&gt;   season high_act perc_fludeaths_fluseason perc_fludeaths_viral_act
+#&gt;    &lt;dbl&gt;    &lt;lgl&gt;                    &lt;dbl&gt;                    &lt;dbl&gt;
+#&gt; 1   2010    FALSE                 7.003711                 6.832168
+#&gt; 2   2010     TRUE                 7.543621                 8.054639
+#&gt; 3   2011    FALSE                 6.192829                 6.469540
+#&gt; 4   2011     TRUE                 6.963083                 7.062596
 #&gt; # ... with 8 more rows</div><div class='input'>
 </div></pre>
   </div>
