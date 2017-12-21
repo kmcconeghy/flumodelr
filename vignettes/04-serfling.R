@@ -178,7 +178,7 @@ ggplot(df_serf_excess, aes(x=yrweek_dt)) +
 flu_fit <- serflm(data=flu_ex, outc=perc_fludeaths, time=yrweek_dt)
 flu_fit
 
-## ------------------------------------------------------------------------
+## ---- results='as.is', fig.width=7.0-------------------------------------
 fluplot(flu_fit, xvar=yrweek_dt, perc_fludeaths, y0, y0_ul,
                     ylab="% Deaths from P&I", title="Serfling Model")
 

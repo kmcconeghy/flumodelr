@@ -157,8 +157,8 @@ cat("Setting rb parameters...\n")
   cat("  flu argument is:", flu_sym, "\n")
   
   #sum the outcomes
-  highrates <- data %>% group_by(season, high) %>% summarize(out_high = sum(!!flu_sym))
-  flurates <- data %>% group_by(season, fluseason) %>% summarize(out_flu = sum(!!flu_sym))
+  highrates <- data %>% group_by(season, high) %>% summarize(out_high = mean(!!flu_sym))
+  flurates <- data %>% group_by(season, fluseason) %>% summarize(out_flu = mean(!!flu_sym))
   
   #join the tables
   flu_rates <- flurates %>% left_join(highrates, by = c("fluseason"="high", "season"))
@@ -169,7 +169,7 @@ cat("Setting rb parameters...\n")
 
 #' @export  
 gr <- function(data){
-  ggplot(data, aes(x = season, y = fludeaths_fluseason, fill=high_act))+
+  ggplot(data, aes(x = season, y = perc_fludeaths_fluseason, fill=high_act))+
     geom_bar(stat="identity", position = position_dodge(), colour="black")
 }
 

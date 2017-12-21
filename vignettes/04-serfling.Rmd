@@ -305,7 +305,7 @@ flu_fit
 ```
 
 ### Plot function fluplot  
-```{r }
+```{r, results='as.is', fig.width=7.0}
 fluplot(flu_fit, xvar=yrweek_dt, perc_fludeaths, y0, y0_ul,
                     ylab="% Deaths from P&I", title="Serfling Model")
 ```
