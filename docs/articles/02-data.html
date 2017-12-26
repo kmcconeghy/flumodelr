@@ -87,7 +87,7 @@
       <h1>flumodelr: Data</h1>
                         <h4 class="author">Kevin W. McConeghy</h4>
             
-            <h4 class="date">2017-12-21</h4>
+            <h4 class="date">2017-12-26</h4>
           </div>
 
     
@@ -110,13 +110,13 @@
 <span class="co">#&gt; [1] 346342      8</span>
 cdc122
 <span class="co">#&gt; # A tibble: 346,342 x 8</span>
-<span class="co">#&gt;   region state   city  year  week deaths_pnaflu deaths_allcause</span>
-<span class="co">#&gt;    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt;         &lt;int&gt;           &lt;int&gt;</span>
-<span class="co">#&gt; 1      1    MA Boston  1962     1            11             262</span>
-<span class="co">#&gt; 2      1    MA Boston  1962     2            11             270</span>
-<span class="co">#&gt; 3      1    MA Boston  1962     3             5             237</span>
-<span class="co">#&gt; 4      1    MA Boston  1962     4            12             285</span>
-<span class="co">#&gt; # ... with 346,338 more rows, and 1 more variables: deaths_65older &lt;int&gt;</span></code></pre></div>
+<span class="co">#&gt;   region state city    year  week deaths_pnaflu deaths_allcause deaths_65~</span>
+<span class="co">#&gt;    &lt;int&gt; &lt;chr&gt; &lt;chr&gt;  &lt;int&gt; &lt;int&gt;         &lt;int&gt;           &lt;int&gt;      &lt;int&gt;</span>
+<span class="co">#&gt; 1      1 MA    Boston  1962     1            11             262        146</span>
+<span class="co">#&gt; 2      1 MA    Boston  1962     2            11             270        167</span>
+<span class="co">#&gt; 3      1 MA    Boston  1962     3             5             237        142</span>
+<span class="co">#&gt; 4      1 MA    Boston  1962     4            12             285        175</span>
+<span class="co">#&gt; # ... with 346,338 more rows</span></code></pre></div>
 </div>
 </div>
 <div id="nrevss" class="section level1">
@@ -140,14 +140,13 @@ cdc122
 <span class="co">#&gt; [1] 14094    12</span>
 nrevss
 <span class="co">#&gt; # A tibble: 14,094 x 12</span>
-<span class="co">#&gt;      state  year  week spec_tot spec_pos type_A_h1n1 type_A_h1 type_A_h3</span>
-<span class="co">#&gt;      &lt;chr&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;    &lt;dbl&gt;       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;</span>
-<span class="co">#&gt; 1  Alabama  2010    40       54      0.0           0         0         0</span>
-<span class="co">#&gt; 2   Alaska  2010    40       40      0.0           0         0         0</span>
-<span class="co">#&gt; 3  Arizona  2010    40       40      2.5           0         0         1</span>
-<span class="co">#&gt; 4 Arkansas  2010    40       15      0.0           0         0         0</span>
-<span class="co">#&gt; # ... with 14,090 more rows, and 4 more variables: type_A_np &lt;int&gt;,</span>
-<span class="co">#&gt; #   type_A_us &lt;int&gt;, type_B &lt;int&gt;, type_A_h3n2 &lt;int&gt;</span></code></pre></div>
+<span class="co">#&gt;   state   year  week spec~ spec~ type~ type~ type~ type~ type~ type~ type~</span>
+<span class="co">#&gt;   &lt;chr&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span>
+<span class="co">#&gt; 1 Alaba~  2010    40    54  0        0     0     0     0     0     0     0</span>
+<span class="co">#&gt; 2 Alaska  2010    40    40  0        0     0     0     0     0     0     0</span>
+<span class="co">#&gt; 3 Arizo~  2010    40    40  2.50     0     0     1     0     0     0     0</span>
+<span class="co">#&gt; 4 Arkan~  2010    40    15  0        0     0     0     0     0     0     0</span>
+<span class="co">#&gt; # ... with 14,090 more rows</span></code></pre></div>
 </div>
 </div>
 <div id="ilinet" class="section level1">
@@ -167,12 +166,12 @@ nrevss
 <span class="co">#&gt; [1] 19556     7</span>
 ilinet
 <span class="co">#&gt; # A tibble: 19,556 x 7</span>
-<span class="co">#&gt;      state  year  week ili_perc ili_tot providers patients</span>
-<span class="co">#&gt;      &lt;chr&gt; &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;   &lt;int&gt;     &lt;int&gt;    &lt;int&gt;</span>
-<span class="co">#&gt; 1  Alabama  2010    40 2.134770     249        35    11664</span>
-<span class="co">#&gt; 2   Alaska  2010    40 0.875146      15         7     1714</span>
-<span class="co">#&gt; 3  Arizona  2010    40 0.674721     172        49    25492</span>
-<span class="co">#&gt; 4 Arkansas  2010    40 0.696056      18        15     2586</span>
+<span class="co">#&gt;   state     year  week ili_perc ili_tot providers patients</span>
+<span class="co">#&gt;   &lt;chr&gt;    &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;   &lt;int&gt;     &lt;int&gt;    &lt;int&gt;</span>
+<span class="co">#&gt; 1 Alabama   2010    40    2.13      249        35    11664</span>
+<span class="co">#&gt; 2 Alaska    2010    40    0.875      15         7     1714</span>
+<span class="co">#&gt; 3 Arizona   2010    40    0.675     172        49    25492</span>
+<span class="co">#&gt; 4 Arkansas  2010    40    0.696      18        15     2586</span>
 <span class="co">#&gt; # ... with 19,552 more rows</span></code></pre></div>
 </div>
 <div id="mmwr-weeks" class="section level2">
@@ -235,11 +234,11 @@ example <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <span class="st">  </span><span class="kw">filter</span>(year<span class="op">&gt;</span><span class="dv">2010</span>)
 <span class="co">#&gt; # A tibble: 300 x 3</span>
 <span class="co">#&gt;    year  week FirstDateOfWeek</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;          &lt;date&gt;</span>
-<span class="co">#&gt; 1  2011     1      2011-01-02</span>
-<span class="co">#&gt; 2  2011     2      2011-01-09</span>
-<span class="co">#&gt; 3  2011     3      2011-01-16</span>
-<span class="co">#&gt; 4  2011     4      2011-01-23</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;date&gt;         </span>
+<span class="co">#&gt; 1  2011     1 2011-01-02     </span>
+<span class="co">#&gt; 2  2011     2 2011-01-09     </span>
+<span class="co">#&gt; 3  2011     3 2011-01-16     </span>
+<span class="co">#&gt; 4  2011     4 2011-01-23     </span>
 <span class="co">#&gt; # ... with 296 more rows</span></code></pre></div>
 </div>
 </div>

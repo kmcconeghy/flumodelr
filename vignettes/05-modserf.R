@@ -30,7 +30,7 @@ ggplot(flu_ex, aes(x=yrweek_dt)) +
                                    "No. Positive per 10 isolates"=2)) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) +
-  xlab("Year") + 
+  xlab("Year") + ylab("%") +
   theme_light(base_size=16) +
   theme(plot.title = element_text(size=14)) +
   labs(title="Figure 1. Influenza (+) isolates over time")
@@ -55,67 +55,56 @@ flu_ex_mod <- flu_ex_mod %>%
 
 ## ------------------------------------------------------------------------
 base_fit <- flu_ex_mod %>%
-  lm(fludeaths ~ week2 + week_2 + week_3 + week_4 + prop_flupos + sin_f1 + cos_f1, data=., na.action = na.exclude)
+  lm(perc_fludeaths ~ week2 + week_2 + week_3 + week_4 + prop_flupos + sin_f1 + cos_f1, data=., na.action = na.exclude)
 summary(base_fit)
 
 ## ------------------------------------------------------------------------
 base_pred <- flu_ex_mod %>%
   mutate(prop_flupos = 0) %>% #Note setting to zero
   predict(base_fit, newdata=., se.fit=TRUE, 
-          interval="prediction", level=0.95)
+          interval="prediction", level=0.90)
 
 ## ------------------------------------------------------------------------
-pred_y0 <- base_pred$fit[,1] #fitted values
-pred_y0_uci <- base_pred$fit[,3] #95% Upper Prediction Interval
-
-flu_ex <- flu_ex %>%
-  add_column(., pred_y0, pred_y0_uci) 
-flu_ex
+flu_ex_fitted <- flu_ex %>%
+  add_column(., y0=base_pred$fit[,1], y0_ul=base_pred$fit[,3]) 
+flu_ex_fitted
 
 ## ---- echo=F, results='as.is', fig.width=7-------------------------------
-ggplot(flu_ex, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=fludeaths, colour="Observed Deaths", 
-                linetype="Observed Deaths"), size=0.8) +
-  geom_line(aes(y=pred_y0, colour="Predicted Deaths", 
-                linetype="Predicted Deaths"), size=0.8) +
-  geom_line(aes(y=pred_y0_uci, colour="95% PI", 
-                linetype="95% PI"), size=0.8) +
-  scale_colour_manual("Line",
-                      breaks=c("Observed Deaths", 
-                                 "Predicted Deaths", 
-                                 "95% PI"),
-                      values = c("Observed Deaths"="#CC0000", 
-                                 "Predicted Deaths"="black", 
-                                 "95% PI"="black")) +
-  scale_linetype_manual("Line", 
-                        breaks=c("Observed Deaths", 
-                                 "Predicted Deaths", 
-                                 "95% PI"),
-                        values = c("Observed Deaths"=1,
-                                   "Predicted Deaths"=1,
-                                   "95% PI"=2)) +
+#Set up graph labels, line specs
+line_names <- c("% Deaths From P&I", "Expected %", "Epidemic Threshold")
+line_cols <- c("#CC0000", "black", "black")
+line_types <- c(1, 1, 2)
+names(line_cols) <- line_names
+names(line_types) <- line_names
+
+ggplot(flu_ex_fitted, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=perc_fludeaths, colour=line_names[[1]], 
+                linetype=line_names[[1]]), size=0.8) +
+  geom_line(aes(y=y0, colour=line_names[[2]], 
+                linetype=line_names[[2]]), size=0.8) +
+  geom_line(aes(y=y0_ul, colour=line_names[[3]], 
+                linetype=line_names[[3]]), size=0.8) +
+  scale_colour_manual("Line", breaks=line_names, values = line_cols) +
+  scale_linetype_manual("Line",  breaks=line_names, values = line_types) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
   xlab("Year") + 
-  ylab("Deaths per 100,000") + 
+  ylab("% of Deaths from P&I") + 
   theme_light(base_size=14) +
   theme(legend.text=element_text(size=10), 
         plot.title = element_text(size=14)) +
-  labs(title="Figure 2. Pneumonia and Influenza Deaths Over Time",
+  labs(title="Figure 2. Pneumonia and Influenza Mortality",
        caption="Modified Serfling Model") +
   guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
 
 ## ------------------------------------------------------------------------
-flu_ex <- flu_ex %>%
-  rowwise() %>%
-  mutate(excess = if_else((fludeaths - pred_y0_uci)>0, 
-                          fludeaths - pred_y0_uci, 0))
-flu_ex
+df_excess <- fluexcess(flu_ex_fitted, obsvar=perc_fludeaths, fitvar=y0_ul)
+df_excess
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
-ggplot(flu_ex, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=excess, colour="Epidemic mortality"), size=0.8, linetype=2) +
-  geom_line(aes(y=fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
+ggplot(df_excess, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=y_excess, colour="Epidemic mortality"), size=0.8, linetype=2) +
+  geom_line(aes(y=perc_fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
   scale_colour_manual("Line",
@@ -128,23 +117,20 @@ ggplot(flu_ex, aes(x=yrweek_dt)) +
   labs(title="Figure 3. Periods of influenza epidemics over time")
 
 ## ------------------------------------------------------------------------
-flu_ex <- flu_ex %>%
-  rowwise() %>%
-  mutate(excess = if_else((fludeaths - pred_y0)>0, 
-                          fludeaths - pred_y0, 0))
-flu_ex %>% select(year, week, excess)
+df_excess <- fluexcess(flu_ex_fitted, obsvar=perc_fludeaths, fitvar=y0)
+df_excess
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
-ggplot(flu_ex, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=excess, colour="Excess mortality"), size=0.8, linetype=2) +
-  geom_line(aes(y=fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
+ggplot(df_excess, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=y_excess, colour="Excess mortality"), size=0.8, linetype=2) +
+  geom_line(aes(y=perc_fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
   scale_colour_manual("Line",
                       values = c("Excess mortality"="#CC0000", 
                                  "Reported mortality"="black")) +
   xlab("Year") + 
-  ylab("Deaths per 100,000") + 
+  ylab("% Deaths from P&I") + 
   theme_light(base_size=16) +
   theme(plot.title = element_text(size=14)) +
   labs(title="Figure 4. Periods of excess mortality over time")
@@ -155,13 +141,13 @@ ggplot(flu_ex, aes(x=yrweek_dt)) +
 #  flu_ex_mod <- mflu(flu_ex, method="serfling",
 #                     outc="fludeaths", time="yrweek_dt", epi="epi")
 #  
-#  flu_ex_mod %>% select(year, week, fludeaths, pred_y0, pred_y0_serf)
+#  flu_ex_mod %>% select(year, week, fludeaths, y0, y0_ul)
 
 ## ---- eval=F-------------------------------------------------------------
 #  flu_ex <- flumodelr::flu_ex
 #  
-#  flu_ex_mod <- mflu(flu_ex, method="virology",
-#                     outc="fludeaths", time="yrweek_dt", lab="prop_flupos")
+#  flu_ex_mod <- flum(flu_ex, method="virology",
+#                     outc=fludeaths, time=yrweek_dt, lab=prop_flupos)
 #  
 #  flu_ex_mod %>% select(year, week, fludeaths, pred_y0, pred_y0_uci)
 

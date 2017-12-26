@@ -3,6 +3,9 @@
 #' @description Performs a cyclical linear regression model, 
 #' or 'serfling' model
 #'
+#' @usage serflm(data=NULL, outc=NULL, epi=NULL, time=NULL, 
+#'               t.interval=52, echo=F)
+#'               
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
 #' 
@@ -47,17 +50,18 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
     #tidy evaluation  
       outc_eq <- enquo(outc)
       time_eq <- enquo(time)
-      
+      epi_eq <- enquo(epi)
+
     #If no epi variable then, generate automatic period from Sept - May. 
       #write epi object as name
-      if (is.null(epi)) {
+      if (epi_eq==quo(NULL)) {
         data <- data %>%
           dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | month(!!time_eq)<=5, 
                                              T, F))  
         epi <- "epi"
         epi_eq <- quo(epi)
       } else {epi_eq <- enquo(epi)}
-  
+      
   data <- data %>% dplyr::arrange(., !!time_eq)
     
   #parameters  
@@ -72,14 +76,14 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
                theta = 2*t_unit/t.interval,
                sin_f1 = sinpi(theta),
                cos_f1 = cospi(theta))
-    
+
   #build model formula
     flu.form <- as.formula(
       paste0(rlang::quo_text(outc_eq), " ~ ", "t_unit", "+ sin_f1", "+ cos_f1"))
   
   #compute baseline regression  
     base_fit <- data %>%
-      dplyr::filter(!! epi_eq ==F) %>%
+      dplyr::filter(UQ(epi_eq)==F) %>% #Must UQ, !! doesnt work
       lm(flu.form, data=., na.action = na.exclude)  
     
   ## Fitted values + prediction interval

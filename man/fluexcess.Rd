@@ -4,14 +4,16 @@
 \alias{fluexcess}
 \title{fluexcess: Compute excess mortality}
 \usage{
-fluexcess(data = NULL, obsvar = NULL, fitvar = NULL, serfrule = F)
+fluexcess(data = NULL, obsvar = NULL, fitvar = NULL, def = "fit",
+  serfrule = F)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain observed, fitted variables}
 
 \item{obsvar}{named observed outcome variable}
 
-\item{fitvar}{named fitted trend variable}
+\item{fitvar}{named fitted trend variable. Can specify either fit line, or
+upper threshold limit.}
 
 \item{serfrule}{Logical, default=F. If T the function will apply the Serfling
 rule which only counts consecutive observations of excess mortality. See}
@@ -28,6 +30,6 @@ require(flumodelr)
 df_ex <- flumodelr::flu_ex
 serf_fit <- serflm(flu_ex, outc = fludeaths, time = yrweek_dt)  
               
-df_excess <- (flu_fit, xvar=yrweek_dt, yvar=fludeaths)
+df_excess <- fluexcess(flu_fit, xvar=yrweek_dt, yvar=fludeaths)
 
 }

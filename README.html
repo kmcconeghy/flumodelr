@@ -151,18 +151,18 @@ devtools::install_github(&quot;kmcconeghy/flumodelr&quot;)</code></pre>
 <pre class="r"><code>flu_ex &lt;- flumodelr::flu_ex
 flu_ex</code></pre>
 <pre><code>## # A tibble: 261 x 7
-##     year  week fludeaths alldeaths perc_fludeaths  yrweek_dt prop_flupos
-##    &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt;
-##  1  2010    42       726     11269       6.442453 2010-10-17  0.01331601
-##  2  2010    43       720     11204       6.426276 2010-10-24  0.01928211
-##  3  2010    44       739     11115       6.648673 2010-10-31  0.01726122
-##  4  2010    45       724     10321       7.014824 2010-11-07  0.02305556
-##  5  2010    46       740     11506       6.431427 2010-11-14  0.03270312
-##  6  2010    47       516      8543       6.040033 2010-11-21  0.03991131
-##  7  2010    48       796     12299       6.472071 2010-11-28  0.06905426
-##  8  2010    49       863     12578       6.861186 2010-12-05  0.08373102
-##  9  2010    50       816     12029       6.783606 2010-12-12  0.08634223
-## 10  2010    51       713      9655       7.384775 2010-12-19  0.12969283
+##     year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos
+##    &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt;
+##  1  2010    42       726     11269           6.44 2010-10-17      0.0133
+##  2  2010    43       720     11204           6.43 2010-10-24      0.0193
+##  3  2010    44       739     11115           6.65 2010-10-31      0.0173
+##  4  2010    45       724     10321           7.01 2010-11-07      0.0231
+##  5  2010    46       740     11506           6.43 2010-11-14      0.0327
+##  6  2010    47       516      8543           6.04 2010-11-21      0.0399
+##  7  2010    48       796     12299           6.47 2010-11-28      0.0691
+##  8  2010    49       863     12578           6.86 2010-12-05      0.0837
+##  9  2010    50       816     12029           6.78 2010-12-12      0.0863
+## 10  2010    51       713      9655           7.38 2010-12-19      0.130 
 ## # ... with 251 more rows</code></pre>
 </div>
 <div id="fit-traditional-serfling-model" class="section level3">
@@ -171,18 +171,18 @@ flu_ex</code></pre>
 <p>Assumes epidemic influenza period of Sept. - May. Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.</p>
 <pre class="r"><code>flu_fit %&gt;% select (year, week, fludeaths, y0, y0_ul)</code></pre>
 <pre><code>## # A tibble: 261 x 5
-##     year  week fludeaths       y0    y0_ul
-##    &lt;int&gt; &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-##  1  2010    42       726 705.7796 785.9217
-##  2  2010    43       720 718.2133 800.4578
-##  3  2010    44       739 731.2547 815.9659
-##  4  2010    45       724 744.7106 832.2033
-##  5  2010    46       740 758.3818 848.9032
-##  6  2010    47       516 772.0659 865.7820
-##  7  2010    48       796 785.5604 882.5484
-##  8  2010    49       863 798.6653 898.9107
-##  9  2010    50       816 811.1867 914.5842
-## 10  2010    51       713 822.9389 929.2969
+##     year  week fludeaths    y0 y0_ul
+##    &lt;int&gt; &lt;int&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  2010    42       726   706   786
+##  2  2010    43       720   718   800
+##  3  2010    44       739   731   816
+##  4  2010    45       724   745   832
+##  5  2010    46       740   758   849
+##  6  2010    47       516   772   866
+##  7  2010    48       796   786   883
+##  8  2010    49       863   799   899
+##  9  2010    50       816   811   915
+## 10  2010    51       713   823   929
 ## # ... with 251 more rows</code></pre>
 </div>
 <div id="influenza-time-series-plot" class="section level3">
@@ -211,7 +211,7 @@ flu_ex</code></pre>
 <h1>Important References</h1>
 <ol style="list-style-type: decimal">
 <li><p>Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/">Pubmed Link</a></p></li>
-<li><p>Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L, Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated deaths made using four different methods. Influenza Other Respir Viruses. 2009 Jan;3(1):37-49. <a href="https://www.ncbi.nlm.nih.gov/pubmed/19453440">Pubmed Link</a></p></li>
+<li><p>Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L, Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated deaths made using four different methods. Influenza Other Respir Viruses. 2009 Jan;3(1):37-49. /url{<a href="https://www.ncbi.nlm.nih.gov/pubmed/19453440" class="uri">https://www.ncbi.nlm.nih.gov/pubmed/19453440</a>}</p></li>
 </ol>
 </div>
 <div id="authors" class="section level1">

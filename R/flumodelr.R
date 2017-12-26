@@ -10,8 +10,11 @@
 #' 
 #' @section Vignettes:
 #' 
-#' Introduction: A general introduction to package  
-#' Data: A description of example data sources  
+#' flumodelr: 01-Introduction, A general introduction to package  
+#' flumodelr: 02-Data, A description of example data sources  
+#' flumodelr: 03-Incidence rate-difference,
+#' flumodelr: 04-Serfling, Traditional Serfling Model
+#' flumodelr: 05-Modified Serfling, Common applications of Serfling Model
 #' 
 #' @references
 #' Serfling RE. Methods for current statistical analysis of 

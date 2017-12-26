@@ -22,10 +22,10 @@
 #' df_ex <- flumodelr::flu_ex
 #' serf_fit <- serflm(flu_ex, outc = fludeaths, time = yrweek_dt)  
 #'               
-#' df_excess <- (flu_fit, xvar=yrweek_dt, yvar=fludeaths)
+#' df_excess <- fluexcess(flu_fit, xvar=yrweek_dt, yvar=fludeaths)
 #' 
 
-fluexcess <- function(data=NULL, obsvar=NULL, fitvar=NULL, def="fit") {
+fluexcess <- function(data=NULL, obsvar=NULL, fitvar=NULL, def="fit", serfrule=F) {
   
   #tidy evaluation  
   obs_eq <- enquo(obsvar)

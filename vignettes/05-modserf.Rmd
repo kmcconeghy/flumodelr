@@ -110,7 +110,7 @@ base_pred <- flu_ex_mod %>%
           interval="prediction", level=0.90)
 ```
 
-Critically, before predicting observations, we set the measure of our influenza activity, `prop_flupos` to zero. This is telling the program to estimate the influenza activity at each timepoint, assuming that proportion of influenza isolates was equal to zero.  
+Critically, before predicting observations, we set the measure of our influenza activity, `prop_flupos` to zero. This is to estimate the influenza activity at each timepoint, assuming that the proportion of influenza isolates was equal to zero.  
 
 ## Add fitted values to dataset
 ```{r }
@@ -216,8 +216,8 @@ flu_ex_mod %>% select(year, week, fludeaths, y0, y0_ul)
 ```{r , eval=F}
 flu_ex <- flumodelr::flu_ex  
 
-flu_ex_mod <- mflu(flu_ex, method="virology", 
-                   outc="fludeaths", time="yrweek_dt", lab="prop_flupos")
+flu_ex_mod <- flum(flu_ex, method="virology", 
+                   outc=fludeaths, time=yrweek_dt, lab=prop_flupos)
 
 flu_ex_mod %>% select(year, week, fludeaths, pred_y0, pred_y0_uci)
 ```

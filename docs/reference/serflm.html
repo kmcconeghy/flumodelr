@@ -115,8 +115,8 @@
 or 'serfling' model</p>
     
 
-    <pre class="usage"><span class='fu'>serflm</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>epi</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>t.interval</span> <span class='kw'>=</span> <span class='fl'>52</span>, <span class='kw'>echo</span> <span class='kw'>=</span> <span class='no'>F</span>)</pre>
+    <pre class="usage"><span class='fu'>serflm</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>epi</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+              <span class='kw'>t.interval</span><span class='kw'>=</span><span class='fl'>52</span>, <span class='kw'>echo</span><span class='kw'>=</span><span class='no'>F</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -171,13 +171,13 @@ excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun;
 <span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>serflm</span>(<span class='no'>flu_ex</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>)
 
 <span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 10
-#&gt;    year  week fludeaths alldeaths perc_fludeaths  yrweek_dt prop_flupos   epi
-#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;lgl&gt;
-#&gt; 1  2010    42       726     11269       6.442453 2010-10-17  0.01331601  TRUE
-#&gt; 2  2010    43       720     11204       6.426276 2010-10-24  0.01928211  TRUE
-#&gt; 3  2010    44       739     11115       6.648673 2010-10-31  0.01726122  TRUE
-#&gt; 4  2010    45       724     10321       7.014824 2010-11-07  0.02305556  TRUE
-#&gt; # ... with 2 more rows, and 2 more variables: y0 &lt;dbl&gt;, y0_ul &lt;dbl&gt;</div><div class='input'>
+#&gt;    year  week fludeaths alldeaths perc_fl~ yrweek_dt  prop_f~ epi      y0 y0_ul
+#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt; &lt;date&gt;       &lt;dbl&gt; &lt;lgl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1  2010    42       726     11269     6.44 2010-10-17  0.0133 T       706   786
+#&gt; 2  2010    43       720     11204     6.43 2010-10-24  0.0193 T       718   800
+#&gt; 3  2010    44       739     11115     6.65 2010-10-31  0.0173 T       731   816
+#&gt; 4  2010    45       724     10321     7.01 2010-11-07  0.0231 T       745   832
+#&gt; # ... with 2 more rows</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

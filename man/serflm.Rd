@@ -4,8 +4,8 @@
 \alias{serflm}
 \title{serflm: Fit a Serling Model on Time Series Data}
 \usage{
-serflm(data = NULL, outc = NULL, epi = NULL, time = NULL,
-  t.interval = 52, echo = F)
+serflm(data=NULL, outc=NULL, epi=NULL, time=NULL, 
+              t.interval=52, echo=F)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
