@@ -11,6 +11,10 @@ flum(data=NULL, model="serflm", outc=NULL, epi=NULL, time=NULL,
 \item{data}{A dataframe class object, must contain time variable,
 epidemic indicator, and measure of influenza morbidity}
 
+\item{model}{A character of length 1, indicates which model to fit. Options
+include "ird" (see ?ird), "serflm" (see ?serflm), virology model (vignette('05-modserf',
+package = "flumodelr")), "arima" (see ?flurima).}
+
 \item{outc}{an unquoted name of a column in data which corresponds to
 the outcome variable of interest}
 
@@ -29,10 +33,6 @@ description.}
 
 \item{...}{Individual models may need additional parameters, e.g. for
 virology must specify a viral test variable.}
-
-\item{model}{A character of length 1, indicates which model to fit. Options
-include "ird" (see ?ird), "serflm" (see ?serflm), virology model (vignette('05-modserf',
-package = "flumodelr")), "arima" (see ?flurima).}
 }
 \value{
 an object of class data.frame, input + y0 (fitted values), threshold
@@ -44,8 +44,8 @@ model. The output will always be a set of fitted values.
 }
 \examples{
 require(flumodelr)
-flu_ex <- flumodelr::flu_ex
-flu_fit <- flum(flu_ex, model="serflm", outc = fludeaths, time = yrweek_dt)  
+fludta <- flumodelr::fludta
+flu_fit <- flum(fludta, model="serflm", outc = fludeaths, time = yrweek_dt)  
               
 head(flu_fit)
 

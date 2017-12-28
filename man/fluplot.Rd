@@ -38,8 +38,8 @@ own customized graphs as appropriate.
 }
 \examples{
 require(flumodelr)
-flu_ex <- flumodelr::flu_ex
-flu_fit <- serflm(flu_ex, outc = fludeaths, time = yrweek_dt)  
+fludta <- flumodelr::fludta
+flu_fit <- serflm(fludta, outc = fludeaths, time = yrweek_dt)  
               
 fluplot(flu_fit, xvar=yrweek_dt, yvar=fludeaths)
 

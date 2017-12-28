@@ -10,10 +10,10 @@ library(lubridate)
 library(scales)
 
 ## ------------------------------------------------------------------------
-flu_ex <- flumodelr::flu_ex
+fludta <- flumodelr::fludta
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
-ggplot(flu_ex, aes(x=yrweek_dt)) + 
+ggplot(fludta, aes(x=yrweek_dt)) + 
   geom_line(aes(y=perc_fludeaths, colour="% Deaths from P&I", 
                 linetype="% Deaths from P&I"), size=0.8) +
   geom_line(aes(y=prop_flupos*10, colour="No. Positive per 10 isolates", 
@@ -36,38 +36,38 @@ ggplot(flu_ex, aes(x=yrweek_dt)) +
   labs(title="Figure 1. Influenza (+) isolates over time")
 
 ## ------------------------------------------------------------------------
-flu_ex <- flumodelr::flu_ex
-flu_ex
+fludta <- flumodelr::fludta
+fludta
 
 ## ------------------------------------------------------------------------
-flu_ex_mod <- flu_ex %>%
+fludta_mod <- fludta %>%
   mutate(week2 = row_number(),
          theta = 2*week2/52,
          sin_f1 = sinpi(theta),
          cos_f1 = cospi(theta))
 
 ## ------------------------------------------------------------------------
-flu_ex_mod <- flu_ex_mod %>%
+fludta_mod <- fludta_mod %>%
   mutate(week_2 = week2^2,
          week_3 = week2^3,
          week_4 = week2^4,
          week_5 = week2^5)
 
 ## ------------------------------------------------------------------------
-base_fit <- flu_ex_mod %>%
+base_fit <- fludta_mod %>%
   lm(perc_fludeaths ~ week2 + week_2 + week_3 + week_4 + prop_flupos + sin_f1 + cos_f1, data=., na.action = na.exclude)
 summary(base_fit)
 
 ## ------------------------------------------------------------------------
-base_pred <- flu_ex_mod %>%
+base_pred <- fludta_mod %>%
   mutate(prop_flupos = 0) %>% #Note setting to zero
   predict(base_fit, newdata=., se.fit=TRUE, 
           interval="prediction", level=0.90)
 
 ## ------------------------------------------------------------------------
-flu_ex_fitted <- flu_ex %>%
+fludta_fitted <- fludta %>%
   add_column(., y0=base_pred$fit[,1], y0_ul=base_pred$fit[,3]) 
-flu_ex_fitted
+fludta_fitted
 
 ## ---- echo=F, results='as.is', fig.width=7-------------------------------
 #Set up graph labels, line specs
@@ -77,7 +77,7 @@ line_types <- c(1, 1, 2)
 names(line_cols) <- line_names
 names(line_types) <- line_names
 
-ggplot(flu_ex_fitted, aes(x=yrweek_dt)) + 
+ggplot(fludta_fitted, aes(x=yrweek_dt)) + 
   geom_line(aes(y=perc_fludeaths, colour=line_names[[1]], 
                 linetype=line_names[[1]]), size=0.8) +
   geom_line(aes(y=y0, colour=line_names[[2]], 
@@ -98,7 +98,7 @@ ggplot(flu_ex_fitted, aes(x=yrweek_dt)) +
   guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
 
 ## ------------------------------------------------------------------------
-df_excess <- fluexcess(flu_ex_fitted, obsvar=perc_fludeaths, fitvar=y0_ul)
+df_excess <- fluexcess(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0_ul)
 df_excess
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
@@ -117,7 +117,7 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
   labs(title="Figure 3. Periods of influenza epidemics over time")
 
 ## ------------------------------------------------------------------------
-df_excess <- fluexcess(flu_ex_fitted, obsvar=perc_fludeaths, fitvar=y0)
+df_excess <- fluexcess(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0)
 df_excess
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
@@ -136,29 +136,29 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
   labs(title="Figure 4. Periods of excess mortality over time")
 
 ## ---- eval=F-------------------------------------------------------------
-#  flu_ex <- flumodelr::flu_ex
+#  fludta <- flumodelr::fludta
 #  
-#  flu_ex_mod <- mflu(flu_ex, method="serfling",
+#  fludta_mod <- mflu(fludta, method="serfling",
 #                     outc="fludeaths", time="yrweek_dt", epi="epi")
 #  
-#  flu_ex_mod %>% select(year, week, fludeaths, y0, y0_ul)
+#  fludta_mod %>% select(year, week, fludeaths, y0, y0_ul)
 
 ## ---- eval=F-------------------------------------------------------------
-#  flu_ex <- flumodelr::flu_ex
+#  fludta <- flumodelr::fludta
 #  
-#  flu_ex_mod <- flum(flu_ex, method="virology",
+#  fludta_mod <- flum(fludta, method="virology",
 #                     outc=fludeaths, time=yrweek_dt, lab=prop_flupos)
 #  
-#  flu_ex_mod %>% select(year, week, fludeaths, pred_y0, pred_y0_uci)
+#  fludta_mod %>% select(year, week, fludeaths, pred_y0, pred_y0_uci)
 
 ## ---- eval=F-------------------------------------------------------------
 #  ## Without polynomial terms
-#  flu_ex_mod <- mflu(flu_ex, method="virology",
+#  fludta_mod <- mflu(fludta, method="virology",
 #                     outc="fludeaths", time="yrweek_dt", lab="prop_flupos",
 #                     poly=F)
 #  
 #  ## Epidemic period specified (serfling model only)
-#  flu_ex_mod <- mflu(flu_ex, method="serfling",
+#  fludta_mod <- mflu(fludta, method="serfling",
 #                     outc="fludeaths", time="yrweek_dt", epi=c(40, 20)
 #                     )
 

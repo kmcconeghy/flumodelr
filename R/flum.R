@@ -64,7 +64,7 @@ flum <- function(data=NULL, model="serflm",
   
   #If no epi variable then, generate automatic period from Sept - May. 
   #write epi object as name
-  if (is.null(epi)) {
+  if (epi_eq==quo(NULL)) {
     data <- data %>%
       dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | month(!!time_eq)<=5, 
                                   T, F))  
@@ -81,4 +81,10 @@ flum <- function(data=NULL, model="serflm",
     cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
     cat("  time period is:", t.interval, "\n")
   }
+  
+  #build function
+  model <- get(model, mode= "function", envir = parent.frame())
+  
+  if (is.function(model)) 
+    model <- model()
 }

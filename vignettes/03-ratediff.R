@@ -12,10 +12,10 @@ library(flumodelr)
 library(tibble)
 
 ## ------------------------------------------------------------------------
-flu_ex <- flumodelr::flu_ex
+fludta <- flumodelr::fludta
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
-flu_fit <- ird(data=flu_ex, flu = "perc_fludeaths", viral="prop_flupos", time="yrweek_dt")
+flu_fit <- ird(data=fludta, flu = "perc_fludeaths", viral="prop_flupos", time="yrweek_dt")
 flu_rates <- rb(data=flu_fit, flu = "perc_fludeaths")
 gr(data=flu_rates)
 

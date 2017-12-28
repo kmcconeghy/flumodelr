@@ -35,8 +35,8 @@ or 'serfling' model
 }
 \examples{
 require(flumodelr)
-flu_ex <- flumodelr::flu_ex
-flu_fit <- serflm(flu_ex, outc = fludeaths, time = yrweek_dt)  
+fludta <- flumodelr::fludta
+flu_fit <- serflm(fludta, outc = fludeaths, time = yrweek_dt)  
               
 head(flu_fit)
 
