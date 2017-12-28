@@ -56,26 +56,29 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
       #write epi object as name
       if (epi_eq==quo(NULL)) {
         data <- data %>%
-          dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | month(!!time_eq)<=5, 
-                                             T, F))  
+          dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | 
+                                      month(!!time_eq)<=5, 
+                                      T, F))  
         epi <- "epi"
         epi_eq <- quo(epi)
       } else {epi_eq <- enquo(epi)}
-      
-  data <- data %>% dplyr::arrange(., !!time_eq)
     
-  #parameters  
-  if (echo==T) {
-      cat("Setting regression parameters...\n")
-      cat(" 'epi' variable is:", rlang::quo_text(epi_eq), "\n")
-      cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
-      cat("  time period is:", t.interval, "\n")
-  }
-    data <- data %>%
-        dplyr::mutate(t_unit = row_number(),
-               theta = 2*t_unit/t.interval,
-               sin_f1 = sinpi(theta),
-               cos_f1 = cospi(theta))
+    #parameters  
+      if (echo==T) {
+        cat("Setting regression parameters...\n")
+        cat(" 'outc' variable is:", rlang::quo_text(outc_eq), "\n")
+        cat(" 'epi' variable is:", rlang::quo_text(epi_eq), "\n")
+        cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
+        cat("  time period is:", t.interval, "\n")
+      }
+      
+  data <- data %>% dplyr::arrange(., UQ(time_eq))
+    
+  data <- data %>%
+      dplyr::mutate(t_unit = row_number(),
+              theta = 2*t_unit/t.interval,
+              sin_f1 = sinpi(theta),
+              cos_f1 = cospi(theta))
 
   #build model formula
     flu.form <- as.formula(

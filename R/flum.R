@@ -55,12 +55,35 @@ flum <- function(data=NULL, model="serflm",
                  outc=NULL, epi=NULL, time=NULL, 
                  t.interval=52, echo=F, ...) {
   
-  #build function
-  model <- get(model, mode= "function", envir = parent.frame())
+  #tidy evaluation  
+  outc_eq <- enquo(outc)
+  time_eq <- enquo(time)
+  epi_eq <- enquo(epi)
   
+  #If no epi variable then, generate automatic period from Sept - May. 
+  #write epi object as name
+  if (epi_eq==quo(NULL)) {
+    data <- data %>%
+      dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | 
+                                    month(!!time_eq)<=5, 
+                                  T, F))  
+    epi <- "epi"
+    epi_eq <- quo(epi)
+  } else {epi_eq <- enquo(epi)}
+  
+  #pull function
+    model <- match.fun(model)
+  
+  #call
+
+  #fit model using call 'model'
   if (is.function(model)) 
-    fit <- model(data=data, outc=outc, epi=epi, time=time, 
+    outpt <- model(data=data, 
+                              outc=rlang::UQ(outc_eq), 
+                              epi=rlang::UQ(epi_eq), 
+                              time=rlang::UQ(time_eq), 
                    t.interval=t.interval, echo=echo)
   
-  return(model)
+  #return result
+  return(outpt)
 }
