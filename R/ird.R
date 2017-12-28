@@ -4,30 +4,29 @@
 #' and peri-influenza season, or between influenza season and
 #' summer season
 #' 
-#' @usage ird (data=NULL, flu=NULL, time=NULL, viral=NULL, 
-#'             t.interval="wofy", respStart=27, high=0.1, fluStart=40,
+#' @usage ird (data=NULL, outc=NULL, time=NULL, viral=NULL, 
+#'             t.interval=52, respStart=27, high=0.1, fluStart=40,
 #'             fluStop=18)
 #' 
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
 #' 
-#' @param flu A character string of length=1, identifies 
+#' @param outc A named variable in 'data' dataframe, identifies 
 #' a numeric type variable in dataframe data which is the measure 
 #' of disease morbidity / mortality
 #' 
-#' @param time A character string of length=1, identifies 
+#' @param time A named variable in 'data' dataframe, identifies 
 #' a numeric/integer class variable in dataframe which corresponds 
 #' to a unit of time, must be unique (i.e. non-repeating)  
 #' 
-#' @param t.interval A character string, must specify whether 
-#' unit of time cycle is weeks/years ("wofy", i.e. 52 weeks), 
-#' or month/years ("mofy"), days/years("dofy")  
+#' @param t.interval a numeric variable indicating the period length of the 
+#' time variable (i.e. weeks = 52, the default)  
 #' 
 #' @param respStart A numeric/integer class variable, must specify the 
 #' week number of the start of the respiratory season.
 #' The default value is 27. This corresponds with the beginning of July.
 #' 
-#' @param viral A character string of length=1, identifies
+#' @param viral A named variable in 'data' data.frame, identifies
 #' a numeric type variable in dataframe data which is the measure
 #' of viral activity. 
 #' 
@@ -50,8 +49,8 @@
 #' @examples
 #' require(flumodelr)
 #' fludta <- flumodelr::fludta
-#' flu_fit <- ird(data=fludta, flu = "perc_fludeaths", viral="prop_flupos", time="yrweek_dt")
-#' flu_rates <- rb(flu_fit, "perc_fludeaths")
+#' flu_fit <- ird(data=fludta, outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+#' flu_rates <- rb(flu_fit, perc_fludeaths)
 #'               
 #' flu_rates
 #' 
@@ -63,64 +62,51 @@
 #' /url{http://onlinelibrary.wiley.com/doi/10.1111/j.1750-2659.2009.00073.x/full} 
 #' 
 ird <- function(data=NULL, 
-                flu=NULL, 
+                outc=NULL, 
                 time=NULL,
                 viral=NULL,
-                t.interval="wofy",
+                t.interval=52,
                 respStart=27,
                 high=0.1,
                 fluStart=40,
-                fluStop=18
+                fluStop=18,
+                echo=F
                 ) {
-  cat("incidence rate-difference model \n",
-      paste0(rep("=", 60), collapse=""), "\n")
+  #Set-up
+    if (echo==T) { #only print for diagnostic purposes
+    cat("incidence rate-difference model \n",
+        paste0(rep("=", 60), collapse=""), "\n")
+    }
   
-  #internal objects  
-    t.intervals = c("wofy"=52, "mofy"=12, "dofy"=365)
-      
   #sanity checks
-    #df is data.frame
-      if (is.data.frame(data)==F) {
-        stop("Data object is not a data.frame class object")
-      }
-    #flu variable exists and valid  
-      if (is.na(flu)==T) {
-        stop("influenza variable not specified, must specify, see ?serflm")
-      }
-      if (flu %in% names(data)==F) {
-        stop("flu variable not named in data object, see ?serflm")
-      }
-      if (is.numeric(data[[flu]])==F) {
-        stop("flu variable not type numeric, see ?serflm")
-      }
+  #df is data.frame
+    stopifnot(is.data.frame(data)) 
+  
+  #tidy evaluation  
+    outc_eq <- enquo(outc)
+    time_eq <- enquo(time)
+    viral_eq <- enquo(viral)
+  
+    #If no epi variable then, generate automatic period from Sept - May. 
+    #write epi object as name
+    if (viral_eq==quo(NULL)) {
+      viral <- "missing"
+      viral_eq <- quo(viral)
+    } else {viral_eq <- enquo(viral)}
     
-       #time variable
-      if (is.na(time)==T) {
-        stop("time variable not specified, must specify, see ?serflm")
-      }
-      if (time %in% names(data)==F) {
-        stop("time variable not named in data object, see ?serflm")
-      }
-      if (n_distinct(time)!= length(time)) {
-        stop("time variable repeats, should be unique, see ?serflm")
-      }
-      if (t.interval %in% names(t.intervals)==F) {
-        stop("time interval not a valid option, see ?serflm")
-      }
-  ntime <- as.name(time)
-  data <- data %>% arrange(., !!ntime)
-    
+  data <- data %>% dplyr::arrange(., UQ(time_eq))
+  
+  
   #parameters  
-  cat("Setting ird parameters...\n")
-    cat(" 'time' variable is:", time, "\n")
-    
-    t_interval <- t.intervals[t.interval]
-    cat("  time interval is:", t_interval, "\n")
-    cat("  flu argument is:", flu, "\n")
- 
-    #build model formula
-    
-    #find respiratory seasons
+  if (echo==T) { #only print for diagnostic purposes
+    cat("Setting ird parameters...\n")
+    cat(" 'outc' argument is:", rlang::quo_text(outc_eq), "\n")
+    cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
+    cat(" 'viral' variable is:", rlang::quo_text(viral_eq), "\n")
+    cat("  time period is:", t_interval, "\n")
+  }
+  
+  #find respiratory seasons
     findseason <- function (calyear, calweek, respStart=27){
       if (calweek >= respStart) {return(calyear)} else {return(calyear-1)}
     }
@@ -134,7 +120,8 @@ ird <- function(data=NULL,
       return(prop >= high)
     }
   
-    data$high <- mapply(findhigh, data$prop_flupos)
+    #
+    if(viral_eq!="missing") data$high <- mapply(findhigh, data[rlang::quo_text(viral_eq)])
     
     #find influenza versus summer baseline period
     findflu <- function (calweek, fluStart=40, fluStop=18){
@@ -148,21 +135,25 @@ ird <- function(data=NULL,
   
 }
 #' @export  
-rb <- function(data, flu){ #calculate the rates for each of the periods
-  #prepare arguments to work in dplr
-  flu_sym <- rlang::sym(flu)
-  
+rb <- function(data, outc, echo=F){ #calculate the rates for each of the periods
+  #tidy evaluation  
+  outc_eq <- enquo(outc)
+
   #parameters 
-cat("Setting rb parameters...\n")
-  cat("  flu argument is:", flu_sym, "\n")
+  if (echo==T) {
+    cat("Setting rb parameters...\n")
+    cat(" 'outc' argument is:", rlang::quo_text(outc_eq), "\n")
+  }  
   
   #sum the outcomes
-  highrates <- data %>% group_by(season, high) %>% summarize(out_high = mean(!!flu_sym))
-  flurates <- data %>% group_by(season, fluseason) %>% summarize(out_flu = mean(!!flu_sym))
+  highrates <- data %>% group_by(season, high) %>% summarize(out_high = mean(!!outc_eq))
+  flurates <- data %>% group_by(season, fluseason) %>% summarize(out_flu = mean(!!outc_eq))
   
   #join the tables
   flu_rates <- flurates %>% left_join(highrates, by = c("fluseason"="high", "season"))
-  names(flu_rates) <- c("season","high_act",paste0(flu,"_fluseason"),paste0(flu,"_viral_act"))
+  names(flu_rates) <- c("season", "high_act", 
+                        paste0(rlang::quo_text(outc_eq), "_fluseason"), 
+                        paste0(rlang::quo_text(outc_eq),"_viral_act"))
   levels(flu_rates$high_act) <- c(TRUE,FALSE)
   return(flu_rates)
 }

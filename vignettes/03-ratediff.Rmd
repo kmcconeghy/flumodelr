@@ -16,12 +16,10 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 options(tibble.print_min = 4L, tibble.print_max = 4L)
-library(dplyr)
-library(ggplot2)
+library(tidyverse)
 library(lubridate)
 library(scales)
 library(flumodelr)
-library(tibble)
 ```
 
 ```{r}
@@ -52,10 +50,25 @@ that were above an epidemic threshold, and available US census data:
 
 annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (population).
 
-```{r, echo=F, results='as.is', fig.width=7.0}
-flu_fit <- ird(data=fludta, flu = "perc_fludeaths", viral="prop_flupos", time="yrweek_dt")
-flu_rates <- rb(data=flu_fit, flu = "perc_fludeaths")
-gr(data=flu_rates)
+NOTE FOR ROB: I think in the vignette, you should dissect the function for the reader so they can see whats going on. See 04-serfling.Rmd, I dont just run serflm.R, I show step by step how it works.    
+
+
+### Step 1. ird() function
+```{r }
+fludta_mod <- ird(data=fludta, 
+               outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+```
+
+The initial function prepares the dataset to compute differences.  
+
+### Step 2. rb() function  
+```{r }
+fludta_rates <- rb(data=fludta_mod, outc = perc_fludeaths)
+```
+
+### Generate figure  
+```{r }
+gr(data=fludta_rates)
 ```
 
 ## References
