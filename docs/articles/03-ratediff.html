@@ -87,13 +87,13 @@
       <h1>Incidence rate-difference models</h1>
                         <h4 class="author">Rob van Aalst</h4>
             
-            <h4 class="date">2017-12-26</h4>
+            <h4 class="date">2017-12-28</h4>
           </div>
 
     
     
 <div class="contents">
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>fludta</code></pre></div>
 <div id="introduction-to-incidence-rate-difference-models" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction-to-incidence-rate-difference-models" class="anchor"></a>Introduction to incidence rate-difference models</h2>
@@ -121,15 +121,27 @@
 <a href="#annual-excess-numbers" class="anchor"></a>Annual excess numbers</h2>
 <p>Weekly excess outcome rates will be converted to annual excess numbers of outcomes by using the number of weeks that were above an epidemic threshold, and available US census data:</p>
 <p>annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (population).</p>
-<pre><code>#&gt; incidence rate-difference model 
-#&gt;  ============================================================ 
-#&gt; Setting ird parameters...
-#&gt;  'time' variable is: yrweek_dt 
-#&gt;   time interval is: 52 
-#&gt;   flu argument is: perc_fludeaths
-#&gt; Setting rb parameters...
-#&gt;   flu argument is: perc_fludeaths</code></pre>
-<p><img src="03-ratediff_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
+<p>NOTE FOR ROB: I think in the vignette, you should dissect the function for the reader so they can see whats going on. See 04-serfling.Rmd, I dont just run serflm.R, I show step by step how it works.</p>
+<div id="step-1--ird-function" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-1--ird-function" class="anchor"></a>Step 1. ird() function</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta_mod &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ird.html">ird</a></span>(<span class="dt">data=</span>fludta, 
+               <span class="dt">outc =</span> perc_fludeaths, <span class="dt">viral=</span>prop_flupos, <span class="dt">time=</span>yrweek_dt)</code></pre></div>
+<p>The initial function prepares the dataset to compute differences.</p>
+</div>
+<div id="step-2--rb-function" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-2--rb-function" class="anchor"></a>Step 2. rb() function</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta_rates &lt;-<span class="st"> </span><span class="kw">rb</span>(<span class="dt">data=</span>fludta_mod, <span class="dt">outc =</span> perc_fludeaths)
+<span class="co">#&gt; Warning: Column `fluseason`/`high` has different attributes on LHS and RHS</span>
+<span class="co">#&gt; of join</span></code></pre></div>
+</div>
+<div id="generate-figure" class="section level3">
+<h3 class="hasAnchor">
+<a href="#generate-figure" class="anchor"></a>Generate figure</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gr</span>(<span class="dt">data=</span>fludta_rates)</code></pre></div>
+<p><img src="03-ratediff_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+</div>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">

@@ -4,18 +4,21 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 options(tibble.print_min = 4L, tibble.print_max = 4L)
-library(dplyr)
-library(ggplot2)
+library(tidyverse)
 library(lubridate)
 library(scales)
 library(flumodelr)
-library(tibble)
 
 ## ------------------------------------------------------------------------
-flu_ex <- flumodelr::flu_ex
+fludta <- flumodelr::fludta
 
-## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
-flu_fit <- ird(data=flu_ex, flu = "perc_fludeaths", viral="prop_flupos", time="yrweek_dt")
-flu_rates <- rb(data=flu_fit, flu = "perc_fludeaths")
-gr(data=flu_rates)
+## ------------------------------------------------------------------------
+fludta_mod <- ird(data=fludta, 
+               outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+
+## ------------------------------------------------------------------------
+fludta_rates <- rb(data=fludta_mod, outc = perc_fludeaths)
+
+## ------------------------------------------------------------------------
+gr(data=fludta_rates)
 

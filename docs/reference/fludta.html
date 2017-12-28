@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>fluplot: Convenience wrapper for standard trend plot — fluplot â€¢ flumodelr</title>
+<title>Sample dataset for examples. Derived from CDC 122 cities dataset. — fludta â€¢ flumodelr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -107,81 +107,41 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>fluplot: Convenience wrapper for standard trend plot</h1>
+    <h1>Sample dataset for examples. Derived from CDC 122 cities dataset.</h1>
     </div>
 
     
-    <p>This models wraps ggplot2 commands into a standard
-form for making cyclical trend line plots of influenza. Developed
-only for convenience, the authors encourage individuals to make thier
-own customized graphs as appropriate.</p>
+    <p>The dataset is a simple year-week dataset of influenza deaths.</p>
     
 
-    <pre class="usage"><span class='fu'>fluplot</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>xvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>yvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>baseline</span> <span class='kw'>=</span> <span class='no'>y0</span>,
-  <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='no'>y0_ul</span>, <span class='kw'>linenames</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"[OUTCOME]"</span>,
-  <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"[INSERT TITLE]"</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>data</th>
-      <td><p>A dataframe class object, must contain time variable,
-outcome variable</p></td>
-    </tr>
-    <tr>
-      <th>xvar</th>
-      <td><p>x-axis variable, must be date class</p></td>
-    </tr>
-    <tr>
-      <th>yvar</th>
-      <td><p>y-axis, outcome variable</p></td>
-    </tr>
-    <tr>
-      <th>baseline</th>
-      <td><p>second line variable, fitted cyclical trend. Default="y0".</p></td>
-    </tr>
-    <tr>
-      <th>threshold</th>
-      <td><p>third line, upper threshold for cyclical trend. Default="y0_ul".</p></td>
-    </tr>
-    <tr>
-      <th>linenames</th>
-      <td><p>Defaults specified, but can override. Must be character
-vector of length=3.</p></td>
-    </tr>
-    <tr>
-      <th>ylab</th>
-      <td><p>Character vector for Y-axis label</p></td>
-    </tr>
-    <tr>
-      <th>title</th>
-      <td><p>Character vector for Plot Title</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <pre class="usage"><span class='no'>fludta</span></pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>an object of class gg, ggplot.</p>
+    <p>A data frame with 2847 rows and 4 variables:</p><dl class='dl-horizontal'>
+<dt>year</dt><dd><p>observation year, integer</p></dd>
+<dt>week</dt><dd><p>observation week, integer</p></dd>
+<dt>fludeaths</dt><dd><p>No. of deaths attributed to Pneumonia / Influenza</p></dd>
+<dt>alldeaths</dt><dd><p>No. of deaths due to any cause</p></dd>
+<dt>perc_fludeaths</dt><dd><p>fludeaths / alldeaths * 100</p></dd>
+<dt>yrweek_dt</dt><dd><p>year-week-day of rate, Date</p></dd>
+<dt>prop_flupos</dt><dd><p>No. of influenza positive isolates / total no. tested, from NREVSS data, see ?nrevss, the data was linked with the cdc122 data with a 2 week lead to account for delays in reporting</p></dd>
+</dl>
+    
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    <p><a href='https://data.cdc.gov/dataset/Deaths-in-122-U-S-cities-1962-2016-122-Cities-Mort/mr8w-325u'>https://data.cdc.gov/dataset/Deaths-in-122-U-S-cities-1962-2016-122-Cities-Mort/mr8w-325u</a></p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
-<span class='no'>fludta</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
-<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='serflm.html'>serflm</a></span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>)
-
-<span class='fu'>fluplot</span>(<span class='no'>flu_fit</span>, <span class='kw'>xvar</span><span class='kw'>=</span><span class='no'>yrweek_dt</span>, <span class='kw'>yvar</span><span class='kw'>=</span><span class='no'>fludeaths</span>)</div><div class='img'><img src='fluplot-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+      <li><a href="#format">Format</a></li>
+
+      <li><a href="#source">Source</a></li>
+          </ul>
 
   </div>
 </div>

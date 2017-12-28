@@ -10,9 +10,9 @@ library(scales)
 library(flumodelr)
 
 ## ---- echo=F, results='asis', fig.width=7--------------------------------
-flu_ex <- flumodelr::flu_ex
+fludta <- flumodelr::fludta
 
-g1 <- ggplot(flu_ex, aes(x=yrweek_dt, y=perc_fludeaths)) + 
+g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) + 
   geom_line(size=0.8, colour="#CC0000") +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
@@ -24,7 +24,7 @@ g1 <- ggplot(flu_ex, aes(x=yrweek_dt, y=perc_fludeaths)) +
 g1
 
 ## ---- echo=F, results='asis', fig.width=7--------------------------------
-g1 <- ggplot(flu_ex, aes(x=yrweek_dt, y=perc_fludeaths)) + 
+g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) + 
   geom_line(size=0.8, colour="#CC0000") +
   geom_smooth(method='lm') +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
@@ -39,7 +39,7 @@ g1
 
 ## ---- results='as.is', fig.width=7---------------------------------------
 ## Add fourier term
-fit <- flu_ex %>%
+fit <- fludta %>%
   mutate(week2 = row_number(),
          theta = 2*week2/52,
          sin_f1 = sinpi(theta),
@@ -62,32 +62,32 @@ g1 <- ggplot(fit, aes(x=yrweek_dt)) +
 g1
 
 ## ------------------------------------------------------------------------
-flu_ex %>% select(yrweek_dt, perc_fludeaths)
+fludta %>% select(yrweek_dt, perc_fludeaths)
 
 ## ------------------------------------------------------------------------
-flu_ex <- flu_ex %>%
+fludta <- fludta %>%
   mutate(epi = if_else(month(yrweek_dt)>=10 | month(yrweek_dt)<=5, T, F))  
 
-flu_ex %>%
+fludta %>%
   filter(year>=2010)
 
 ## ------------------------------------------------------------------------
 ## Compute fourier terms
-flu_ex_serfling <- flu_ex %>%
+fludta_serfling <- fludta %>%
   mutate(week2 = row_number(),
          theta = 2*week2/52,
          sin_f1 = sinpi(theta),
          cos_f1 = cospi(theta))
 
 ## ------------------------------------------------------------------------
-base_fit <- flu_ex_serfling %>%
+base_fit <- fludta_serfling %>%
   dplyr::filter(epi==F & year<2015) %>%
   lm(perc_fludeaths ~ week2 + sin_f1 + cos_f1, 
      data=., na.action = na.exclude)
 
 ## ------------------------------------------------------------------------
 ## Fitted values + prediction interval
-df_pred <- flu_ex_serfling %>%
+df_pred <- fludta_serfling %>%
   dplyr::filter(year==2014 & week>=40 | year>2014) %>%
   predict(base_fit, newdata=., se.fit=TRUE, 
           interval="prediction", level=0.90)
@@ -95,7 +95,7 @@ df_pred <- flu_ex_serfling %>%
 pred_y0 <- df_pred$fit[,1] #fitted values
 pred_y0_serf <- df_pred$fit[,3] 
 
-df_base <- flu_ex %>%
+df_base <- fludta %>%
   dplyr::filter(year==2014 & week>=40 | year>2014) %>%
   add_column(., pred_y0, pred_y0_serf)  
 
@@ -175,7 +175,7 @@ ggplot(df_serf_excess, aes(x=yrweek_dt)) +
 ## ------------------------------------------------------------------------
 ##The following command completes the above steps 
 ##fit serfling model
-flu_fit <- serflm(data=flu_ex, outc=perc_fludeaths, time=yrweek_dt)
+flu_fit <- serflm(data=fludta, outc=perc_fludeaths, time=yrweek_dt)
 flu_fit
 
 ## ---- results='as.is', fig.width=7.0-------------------------------------

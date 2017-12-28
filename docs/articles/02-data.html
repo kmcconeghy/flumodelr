@@ -87,7 +87,7 @@
       <h1>flumodelr: Data</h1>
                         <h4 class="author">Kevin W. McConeghy</h4>
             
-            <h4 class="date">2017-12-26</h4>
+            <h4 class="date">2017-12-28</h4>
           </div>
 
     
@@ -187,7 +187,7 @@ ilinet
 <p>“The first day of any MMWR week is Sunday. MMWR week numbering is sequential beginning with 1 and incrementing with each week to a maximum of 52 or 53. MMWR week #1 of an MMWR year is the first week of the year that has at least four days in the calendar year.”</p>
 </blockquote>
 <p>This means if Jan. 1 occurs on a Sunday, Monday, Tuesday or Wednesday, the calendar week that includes Jan. 1 would be MMWR week #1. If Jan 1 occurs on a Thursday, Friday, or Saturday, the calendar week that includes Jan 1 would be the last MMWR week of the previous year (#52 or #53). Because of this rule, December 29, 30, and 31 could potentially fall into MMWR week #1 of the following MMWR year.</p>
-<p>All <code><a href="../reference/ilinet.html">?ilinet</a></code> , <code><a href="../reference/cdc122city.html">?cdc122city</a></code> and <code><a href="../reference/nrevss.html">?nrevss</a></code> datasets are imported in their raw CDC format. It is the perogative of the user to determine how best to treat the CDC MMWR week definition. However, we illustrate below how the above description was used to compute a first day of week, date variable for the example dataset <code><a href="../reference/flu_ex.html">?flu_ex</a></code>.</p>
+<p>All <code><a href="../reference/ilinet.html">?ilinet</a></code> , <code><a href="../reference/cdc122city.html">?cdc122city</a></code> and <code><a href="../reference/nrevss.html">?nrevss</a></code> datasets are imported in their raw CDC format. It is the perogative of the user to determine how best to treat the CDC MMWR week definition. However, we illustrate below how the above description was used to compute a first day of week, date variable for the example dataset <code><a href="../reference/fludta.html">?fludta</a></code>.</p>
 <p>Alternative package which addresses this:</p>
 <p>Xiahong Zhao (2016). EpiWeek: Conversion Between Epidemiological Weeks and Calendar Dates. R package version 1.1. <a href="https://CRAN.R-project.org/package=EpiWeek" class="uri">https://CRAN.R-project.org/package=EpiWeek</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"EpiWeek"</span>)</code></pre></div>

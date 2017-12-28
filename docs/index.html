@@ -121,8 +121,8 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <div id="example-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-data" class="anchor"></a>Example data</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>flu_ex
-flu_ex</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>fludta
+fludta</code></pre></div>
 <pre><code>## # A tibble: 261 x 7
 ##     year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos
 ##    &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt;
@@ -141,7 +141,7 @@ flu_ex</code></pre></div>
 <div id="fit-traditional-serfling-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#fit-traditional-serfling-model" class="anchor"></a>Fit Traditional Serfling Model</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit &lt;-<span class="st"> </span>flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/serflm">serflm</a></span>(flu_ex, <span class="dt">outc =</span> fludeaths, <span class="dt">time =</span> yrweek_dt)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit &lt;-<span class="st"> </span>flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/serflm">serflm</a></span>(fludta, <span class="dt">outc =</span> fludeaths, <span class="dt">time =</span> yrweek_dt)</code></pre></div>
 <p>Assumes epidemic influenza period of Sept. - May. Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span> (year, week, fludeaths, y0, y0_ul)</code></pre></div>
 <pre><code>## # A tibble: 261 x 5

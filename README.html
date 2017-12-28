@@ -148,8 +148,8 @@ devtools::install_github(&quot;kmcconeghy/flumodelr&quot;)</code></pre>
 <h1>Simple Example</h1>
 <div id="example-data" class="section level3">
 <h3>Example data</h3>
-<pre class="r"><code>flu_ex &lt;- flumodelr::flu_ex
-flu_ex</code></pre>
+<pre class="r"><code>fludta &lt;- flumodelr::fludta
+fludta</code></pre>
 <pre><code>## # A tibble: 261 x 7
 ##     year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos
 ##    &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt;
@@ -167,7 +167,7 @@ flu_ex</code></pre>
 </div>
 <div id="fit-traditional-serfling-model" class="section level3">
 <h3>Fit Traditional Serfling Model</h3>
-<pre class="r"><code>flu_fit &lt;- flumodelr::serflm(flu_ex, outc = fludeaths, time = yrweek_dt)</code></pre>
+<pre class="r"><code>flu_fit &lt;- flumodelr::serflm(fludta, outc = fludeaths, time = yrweek_dt)</code></pre>
 <p>Assumes epidemic influenza period of Sept. - May. Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.</p>
 <pre class="r"><code>flu_fit %&gt;% select (year, week, fludeaths, y0, y0_ul)</code></pre>
 <pre><code>## # A tibble: 261 x 5

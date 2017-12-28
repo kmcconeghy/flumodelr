@@ -87,7 +87,7 @@
       <h1>Serfling Model Background</h1>
                         <h4 class="author">Kevin W. McConeghy</h4>
             
-            <h4 class="date">2017-12-26</h4>
+            <h4 class="date">2017-12-28</h4>
           </div>
 
     
@@ -115,7 +115,7 @@
 <h2 class="hasAnchor">
 <a href="#example--fitted-line-one-fourier-term" class="anchor"></a>Example. Fitted line (one Fourier term)</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Add fourier term
-fit &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
+fit &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">week2 =</span> <span class="kw">row_number</span>(),
          <span class="dt">theta =</span> <span class="dv">2</span><span class="op">*</span>week2<span class="op">/</span><span class="dv">52</span>,
          <span class="dt">sin_f1 =</span> <span class="kw">sinpi</span>(theta),
@@ -162,7 +162,7 @@ fit &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
 <h3 class="hasAnchor">
 <a href="#step-1--formatted-influenza-data" class="anchor"></a>Step 1. Formatted influenza data</h3>
 <p>To compute a traditional Serfling model. The input dataframe must have time vector, indicator for the epidemic period (Oct. - May), and measure of influenza morbidity / mortality to be modeled.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(yrweek_dt, perc_fludeaths)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(yrweek_dt, perc_fludeaths)
 <span class="co">#&gt; # A tibble: 261 x 2</span>
 <span class="co">#&gt;   yrweek_dt  perc_fludeaths</span>
 <span class="co">#&gt;   &lt;date&gt;              &lt;dbl&gt;</span>
@@ -176,10 +176,10 @@ fit &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
 <div id="example-adding-epidemic-period-indicator" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-adding-epidemic-period-indicator" class="anchor"></a>Example adding epidemic period indicator</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_ex &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">epi =</span> <span class="kw">if_else</span>(<span class="kw">month</span>(yrweek_dt)<span class="op">&gt;=</span><span class="dv">10</span> <span class="op">|</span><span class="st"> </span><span class="kw">month</span>(yrweek_dt)<span class="op">&lt;=</span><span class="dv">5</span>, T, F))  
 
-flu_ex <span class="op">%&gt;%</span>
+fludta <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(year<span class="op">&gt;=</span><span class="dv">2010</span>)
 <span class="co">#&gt; # A tibble: 261 x 8</span>
 <span class="co">#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_fl~ epi  </span>
@@ -199,7 +199,7 @@ flu_ex <span class="op">%&gt;%</span>
 <h4 class="hasAnchor">
 <a href="#step-2a--compute-fourier-terms" class="anchor"></a>Step 2a. Compute fourier terms</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Compute fourier terms
-flu_ex_serfling &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
+fludta_serfling &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">week2 =</span> <span class="kw">row_number</span>(),
          <span class="dt">theta =</span> <span class="dv">2</span><span class="op">*</span>week2<span class="op">/</span><span class="dv">52</span>,
          <span class="dt">sin_f1 =</span> <span class="kw">sinpi</span>(theta),
@@ -209,7 +209,7 @@ flu_ex_serfling &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</sp
 <h4 class="hasAnchor">
 <a href="#step-2b--baseline-cyclical-model" class="anchor"></a>Step 2b. Baseline Cyclical model</h4>
 <p>Fit a model using non-epidemic periods, and excluding year 2015. This is the year we are focused on evaluating for excess mortality.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_fit &lt;-<span class="st"> </span>flu_ex_serfling <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_fit &lt;-<span class="st"> </span>fludta_serfling <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(epi<span class="op">==</span>F <span class="op">&amp;</span><span class="st"> </span>year<span class="op">&lt;</span><span class="dv">2015</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">lm</span>(perc_fludeaths <span class="op">~</span><span class="st"> </span>week2 <span class="op">+</span><span class="st"> </span>sin_f1 <span class="op">+</span><span class="st"> </span>cos_f1, 
      <span class="dt">data=</span>., <span class="dt">na.action =</span> na.exclude)</code></pre></div>
@@ -232,7 +232,7 @@ flu_ex_serfling &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</sp
 <h4 class="hasAnchor">
 <a href="#step-2c--add-predicted-values-to-original-dataset-" class="anchor"></a>Step 2c. Add predicted values to original dataset.</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Fitted values + prediction interval
-df_pred &lt;-<span class="st"> </span>flu_ex_serfling <span class="op">%&gt;%</span>
+df_pred &lt;-<span class="st"> </span>fludta_serfling <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(year<span class="op">==</span><span class="dv">2014</span> <span class="op">&amp;</span><span class="st"> </span>week<span class="op">&gt;=</span><span class="dv">40</span> <span class="op">|</span><span class="st"> </span>year<span class="op">&gt;</span><span class="dv">2014</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">predict</span>(base_fit, <span class="dt">newdata=</span>., <span class="dt">se.fit=</span><span class="ot">TRUE</span>, 
           <span class="dt">interval=</span><span class="st">"prediction"</span>, <span class="dt">level=</span><span class="fl">0.90</span>)
@@ -240,7 +240,7 @@ df_pred &lt;-<span class="st"> </span>flu_ex_serfling <span class="op">%&gt;%</s
 pred_y0 &lt;-<span class="st"> </span>df_pred<span class="op">$</span>fit[,<span class="dv">1</span>] <span class="co">#fitted values</span>
 pred_y0_serf &lt;-<span class="st"> </span>df_pred<span class="op">$</span>fit[,<span class="dv">3</span>] 
 
-df_base &lt;-<span class="st"> </span>flu_ex <span class="op">%&gt;%</span>
+df_base &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(year<span class="op">==</span><span class="dv">2014</span> <span class="op">&amp;</span><span class="st"> </span>week<span class="op">&gt;=</span><span class="dv">40</span> <span class="op">|</span><span class="st"> </span>year<span class="op">&gt;</span><span class="dv">2014</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_column</span>(., pred_y0, pred_y0_serf)  
 
@@ -310,7 +310,7 @@ df_serf_excess <span class="op">%&gt;%</span><span class="st"> </span><span clas
 <a href="#serflm-function" class="anchor"></a>serflm() function</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##The following command completes the above steps 
 ##fit serfling model
-flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/serflm.html">serflm</a></span>(<span class="dt">data=</span>flu_ex, <span class="dt">outc=</span>perc_fludeaths, <span class="dt">time=</span>yrweek_dt)
+flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/serflm.html">serflm</a></span>(<span class="dt">data=</span>fludta, <span class="dt">outc=</span>perc_fludeaths, <span class="dt">time=</span>yrweek_dt)
 flu_fit
 <span class="co">#&gt; # A tibble: 261 x 10</span>
 <span class="co">#&gt;    year  week fludeaths allde~ perc_f~ yrweek_dt  prop_~ epi      y0 y0_ul</span>
