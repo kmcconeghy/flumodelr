@@ -86,6 +86,11 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
       dplyr::filter(UQ(epi_eq)==F) %>% #Must UQ, !! doesnt work
       lm(flu.form, data=., na.action = na.exclude)  
     
+    #parameters  
+    if (echo==T) {
+      print(base_fit)
+    }
+    
   ## Fitted values + prediction interval
     pred <- data %>%
       predict(base_fit, newdata=., se.fit=TRUE, 

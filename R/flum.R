@@ -54,37 +54,13 @@
 flum <- function(data=NULL, model="serflm", 
                  outc=NULL, epi=NULL, time=NULL, 
                  t.interval=52, echo=F, ...) {
-  #sanity checks
-  #df is data.frame
-  stopifnot(is.data.frame(data)) 
-  
-  #tidy evaluation  
-  outc_eq <- enquo(outc)
-  time_eq <- enquo(time)
-  
-  #If no epi variable then, generate automatic period from Sept - May. 
-  #write epi object as name
-  if (epi_eq==quo(NULL)) {
-    data <- data %>%
-      dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | month(!!time_eq)<=5, 
-                                  T, F))  
-    epi <- "epi"
-    epi_eq <- quo(epi)
-  } else {epi_eq <- enquo(epi)}
-  
-  data <- data %>% dplyr::arrange(., !!time_eq)
-  
-  #parameters  
-  if (echo==T) {
-    cat("Setting regression parameters...\n")
-    cat(" 'epi' variable is:", rlang::quo_text(epi_eq), "\n")
-    cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
-    cat("  time period is:", t.interval, "\n")
-  }
   
   #build function
   model <- get(model, mode= "function", envir = parent.frame())
   
   if (is.function(model)) 
-    model <- model()
+    fit <- model(data=data, outc=outc, epi=epi, time=time, 
+                   t.interval=t.interval, echo=echo)
+  
+  return(model)
 }
