@@ -138,10 +138,18 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
 ## ---- eval=F-------------------------------------------------------------
 #  fludta <- flumodelr::fludta
 #  
-#  fludta_mod <- mflu(fludta, method="serfling",
-#                     outc="fludeaths", time="yrweek_dt", epi="epi")
+#  fludta_mod <- flum(fludta, model="ird",
+#                     outc=perc_fludeaths, time=yrweek_dt)
 #  
-#  fludta_mod %>% select(year, week, fludeaths, y0, y0_ul)
+#  fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
+
+## ---- eval=F-------------------------------------------------------------
+#  fludta <- flumodelr::fludta
+#  
+#  fludta_mod <- flum(fludta, method="serflm",
+#                     outc=perc_fludeaths, time=yrweek_dt)
+#  
+#  fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 
 ## ---- eval=F-------------------------------------------------------------
 #  fludta <- flumodelr::fludta
@@ -153,12 +161,12 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
 
 ## ---- eval=F-------------------------------------------------------------
 #  ## Without polynomial terms
-#  fludta_mod <- mflu(fludta, method="virology",
+#  fludta_mod <- flum(fludta, method="virology",
 #                     outc="fludeaths", time="yrweek_dt", lab="prop_flupos",
 #                     poly=F)
 #  
 #  ## Epidemic period specified (serfling model only)
-#  fludta_mod <- mflu(fludta, method="serfling",
+#  fludta_mod <- mflu(fludta, method="serflm",
 #                     outc="fludeaths", time="yrweek_dt", epi=c(40, 20)
 #                     )
 

@@ -4,29 +4,28 @@
 \alias{ird}
 \title{ird: Perform incidence rate-difference models}
 \usage{
-ird (data=NULL, flu=NULL, time=NULL, viral=NULL, 
-            t.interval="wofy", respStart=27, high=0.1, fluStart=40,
+ird (data=NULL, outc=NULL, time=NULL, viral=NULL, 
+            t.interval=52, respStart=27, high=0.1, fluStart=40,
             fluStop=18)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
 epidemic indicator, and measure of influenza morbidity}
 
-\item{flu}{A character string of length=1, identifies
+\item{outc}{A named variable in 'data' dataframe, identifies
 a numeric type variable in dataframe data which is the measure
 of disease morbidity / mortality}
 
-\item{time}{A character string of length=1, identifies
+\item{time}{A named variable in 'data' dataframe, identifies
 a numeric/integer class variable in dataframe which corresponds
 to a unit of time, must be unique (i.e. non-repeating)}
 
-\item{viral}{A character string of length=1, identifies
+\item{viral}{A named variable in 'data' data.frame, identifies
 a numeric type variable in dataframe data which is the measure
 of viral activity.}
 
-\item{t.interval}{A character string, must specify whether
-unit of time cycle is weeks/years ("wofy", i.e. 52 weeks),
-or month/years ("mofy"), days/years("dofy")}
+\item{t.interval}{a numeric variable indicating the period length of the
+time variable (i.e. weeks = 52, the default)}
 
 \item{respStart}{A numeric/integer class variable, must specify the
 week number of the start of the respiratory season.
@@ -55,8 +54,8 @@ summer season
 \examples{
 require(flumodelr)
 fludta <- flumodelr::fludta
-flu_fit <- ird(data=fludta, flu = "perc_fludeaths", viral="prop_flupos", time="yrweek_dt")
-flu_rates <- rb(flu_fit, "perc_fludeaths")
+flu_fit <- ird(data=fludta, outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+flu_rates <- rb(flu_fit, perc_fludeaths)
               
 flu_rates
 
