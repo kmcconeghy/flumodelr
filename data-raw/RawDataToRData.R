@@ -105,7 +105,7 @@ head(df.ILI)
     mutate(yrweek_dt = EpiWeekToDates(year, week)[[1]],
            yrweek_dt = yrweek_dt + dweeks(2)) #Add 2 weeks for delay
   
-    flu_ex <- cdc122city %>%
+    fludta <- cdc122city %>%
       arrange(year, week) %>%
       group_by(year, week) %>%
       summarize(fludeaths = sum(deaths_pnaflu, na.rm=T),
@@ -118,5 +118,5 @@ head(df.ILI)
                  by=c('yrweek_dt')) #visual inspection
 
     #--Save for package
-    use_data(flu_ex, overwrite = T)
+    use_data(fludta, overwrite = T)
     

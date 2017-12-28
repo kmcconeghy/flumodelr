@@ -39,8 +39,8 @@
 #' 
 #' @examples
 #' require(flumodelr)
-#' flu_ex <- flumodelr::flu_ex
-#' flu_fit <- flum(flu_ex, model="serflm", outc = fludeaths, time = yrweek_dt)  
+#' fludta <- flumodelr::fludta
+#' flu_fit <- flum(fludta, model="serflm", outc = fludeaths, time = yrweek_dt)  
 #'               
 #' head(flu_fit)
 #' 
@@ -51,8 +51,9 @@
 #' Influenza Other Respir Viruses. 2009 Jan;3(1):37-49. 
 #' /url{https://www.ncbi.nlm.nih.gov/pubmed/19453440}  
 #' 
-flum <- function(data=NULL, outc=NULL, epi=NULL, time=NULL, 
-                   t.interval=52, echo=F, ...) {
+flum <- function(data=NULL, model="serflm", 
+                 outc=NULL, epi=NULL, time=NULL, 
+                 t.interval=52, echo=F, ...) {
   #sanity checks
   #df is data.frame
   stopifnot(is.data.frame(data)) 

@@ -31,9 +31,9 @@ The paper outlines a strategy for estimating what proportion of deaths are due t
 ## Influenza  
 Critically, it should be understood that influenza epidemics are highly seasonal with spikes in the winter months, commonly January - February. This seasonality leads to a cyclical rate of influenza morbidity and mortality.  
 ```{r, echo=F, results='asis', fig.width=7}
-flu_ex <- flumodelr::flu_ex
+fludta <- flumodelr::fludta
 
-g1 <- ggplot(flu_ex, aes(x=yrweek_dt, y=perc_fludeaths)) + 
+g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) + 
   geom_line(size=0.8, colour="#CC0000") +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
@@ -59,7 +59,7 @@ $$Eq \ 1. \  y = \alpha_0 + \beta_1*t_1 + u$$
 
 Let t, be the unit of time in figure 1 (week = 1, week=2, ...).  The above model is inadequate, and will poorly fit the data (figure) because the secular trend is non-linear.  
 ```{r, echo=F, results='asis', fig.width=7}
-g1 <- ggplot(flu_ex, aes(x=yrweek_dt, y=perc_fludeaths)) + 
+g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) + 
   geom_line(size=0.8, colour="#CC0000") +
   geom_smooth(method='lm') +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
@@ -80,7 +80,7 @@ The original paper used 4-week periods so the period denominator is 13. The wave
 ## Example. Fitted line (one Fourier term)   
 ```{r , results='as.is', fig.width=7}
 ## Add fourier term
-fit <- flu_ex %>%
+fit <- fludta %>%
   mutate(week2 = row_number(),
          theta = 2*week2/52,
          sin_f1 = sinpi(theta),
@@ -134,17 +134,17 @@ It is assumed the influenza epidemic period begins Oct. 1st, and ends May 31st. 
 ### Step 1. Formatted influenza data  
 To compute a traditional Serfling model. The input dataframe must have time vector, indicator for the epidemic period (Oct. - May), and measure of influenza morbidity / mortality to be modeled.  
 ```{r }
-flu_ex %>% select(yrweek_dt, perc_fludeaths)
+fludta %>% select(yrweek_dt, perc_fludeaths)
 ```
 
 ` serflm() ` Will allow you to specify the boundaries for epidemic periods, and then compute the baseline off of non-epidemic timepoints. Additionally you can provide it with a logical variable in the dataset which indicates the epidemic period.  
 
 ### Example adding epidemic period indicator  
 ```{r }
-flu_ex <- flu_ex %>%
+fludta <- fludta %>%
   mutate(epi = if_else(month(yrweek_dt)>=10 | month(yrweek_dt)<=5, T, F))  
 
-flu_ex %>%
+fludta %>%
   filter(year>=2010)
 ```
 We see that there is now an indicator for Oct - May.  
@@ -155,7 +155,7 @@ Here we estimate a model using only non-epidemic period timepoints. The coeffici
 #### Step 2a. Compute fourier terms  
 ```{r }
 ## Compute fourier terms
-flu_ex_serfling <- flu_ex %>%
+fludta_serfling <- fludta %>%
   mutate(week2 = row_number(),
          theta = 2*week2/52,
          sin_f1 = sinpi(theta),
@@ -165,7 +165,7 @@ flu_ex_serfling <- flu_ex %>%
 #### Step 2b. Baseline Cyclical model  
 Fit a model using non-epidemic periods, and excluding year 2015. This is the year we are focused on evaluating for excess mortality.  
 ```{r }
-base_fit <- flu_ex_serfling %>%
+base_fit <- fludta_serfling %>%
   dplyr::filter(epi==F & year<2015) %>%
   lm(perc_fludeaths ~ week2 + sin_f1 + cos_f1, 
      data=., na.action = na.exclude)
@@ -192,7 +192,7 @@ The CDC also describes the threshold as:
 #### Step 2c. Add predicted values to original dataset.  
 ```{r }
 ## Fitted values + prediction interval
-df_pred <- flu_ex_serfling %>%
+df_pred <- fludta_serfling %>%
   dplyr::filter(year==2014 & week>=40 | year>2014) %>%
   predict(base_fit, newdata=., se.fit=TRUE, 
           interval="prediction", level=0.90)
@@ -200,7 +200,7 @@ df_pred <- flu_ex_serfling %>%
 pred_y0 <- df_pred$fit[,1] #fitted values
 pred_y0_serf <- df_pred$fit[,3] 
 
-df_base <- flu_ex %>%
+df_base <- fludta %>%
   dplyr::filter(year==2014 & week>=40 | year>2014) %>%
   add_column(., pred_y0, pred_y0_serf)  
 
@@ -300,7 +300,7 @@ ggplot(df_serf_excess, aes(x=yrweek_dt)) +
 ```{r }
 ##The following command completes the above steps 
 ##fit serfling model
-flu_fit <- serflm(data=flu_ex, outc=perc_fludeaths, time=yrweek_dt)
+flu_fit <- serflm(data=fludta, outc=perc_fludeaths, time=yrweek_dt)
 flu_fit
 ```
 

@@ -19,8 +19,8 @@
 #' 
 #' @examples
 #' require(flumodelr)
-#' df_ex <- flumodelr::flu_ex
-#' serf_fit <- serflm(flu_ex, outc = fludeaths, time = yrweek_dt)  
+#' df <- flumodelr::fludta
+#' serf_fit <- serflm(fludta, outc = fludeaths, time = yrweek_dt)  
 #'               
 #' df_excess <- fluexcess(flu_fit, xvar=yrweek_dt, yvar=fludeaths)
 #' 

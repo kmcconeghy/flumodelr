@@ -31,13 +31,13 @@ library(tidyverse, quietly = T, warn.conflicts = F)
 
 ### Example data  
 ```{r }
-flu_ex <- flumodelr::flu_ex
-flu_ex
+fludta <- flumodelr::fludta
+fludta
 ```
 
 ### Fit Traditional Serfling Model
 ```{r }
-flu_fit <- flumodelr::serflm(flu_ex, outc = fludeaths, time = yrweek_dt)
+flu_fit <- flumodelr::serflm(fludta, outc = fludeaths, time = yrweek_dt)
 ```
 
 Assumes epidemic influenza period of Sept. - May.  Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.  
