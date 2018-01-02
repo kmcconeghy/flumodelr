@@ -37,20 +37,20 @@ fludta
 
 ### Fit Traditional Serfling Model
 ```{r }
-flu_fit <- flumodelr::serflm(fludta, outc = fludeaths, time = yrweek_dt)
+flu_fit <- flumodelr::serflm(fludta, outc = perc_fludeaths, time = yrweek_dt)
 ```
 
 Assumes epidemic influenza period of Sept. - May.  Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.  
 
 ```{r }
-flu_fit %>% select (year, week, fludeaths, y0, y0_ul)
+flu_fit %>% select (year, week, perc_fludeaths, y0, y0_ul)
 ```
 
 ### Influenza Time-Series Plot  
 An convenience function for plotting the above fit lines.  
 ```{r }
-flumodelr::fluplot(flu_fit, xvar=yrweek_dt, fludeaths, y0, y0_ul,
-                    ylab="Mortality per 100,000", title="Serfling Model")
+flumodelr::fluplot(flu_fit, xvar=yrweek_dt, perc_fludeaths, y0, y0_ul,
+                    ylab="% Deaths due to P&I", title="Serfling Model")
 ```
 
 # Vignettes  
