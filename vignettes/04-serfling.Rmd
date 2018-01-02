@@ -182,9 +182,11 @@ By default R's predict.lm will fit a 95% prediction interval. In Serfling's orig
 The CDC also describes the threshold as:
 
 > "The seasonal baseline of P&I deaths is calculated using a periodic 
-> regression model that incorporates a robust regression procedure applied to > data from the previous five years.  An increase of 1.645 standard deviations > above the seasonal baseline of P&I deaths is considered the 'epidemic 
+> regression model that incorporates a robust regression procedure applied to
+> data from the previous five years.  An increase of 1.645 standard deviations > above the seasonal baseline of P&I deaths is considered the 'epidemic 
 > threshold,' i.e., the point at which the observed proportion of deaths 
-> attributed to pneumonia or influenza was significantly higher than would be > expected at that time of the year in the absence of substantial 
+> attributed to pneumonia or influenza was significantly higher than would be
+> expected at that time of the year in the absence of substantial 
 > influenza-related mortality."
 
 ` serflm ` follows this method, but the modified serfling function allows for more options for threshold prediction. 1.645 standard deviations is equal to the upper limit 90% prediction interval.  
