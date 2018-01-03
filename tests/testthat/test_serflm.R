@@ -6,7 +6,7 @@ context("serflm")
 
 test_that("serflm computes correct estimates", {
   
-  d <- flumodelr::flu_ex 
+  d <- flumodelr::fludta 
   d_pred <- serflm(data=d, outc=perc_fludeaths, time=yrweek_dt)
 
   #load data

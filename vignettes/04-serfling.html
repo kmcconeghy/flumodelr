@@ -12,7 +12,7 @@
 
 <meta name="author" content="Kevin W. McConeghy" />
 
-<meta name="date" content="2017-12-28" />
+<meta name="date" content="2018-01-03" />
 
 <title>Serfling Model Background</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Serfling Model Background</h1>
 <h4 class="author"><em>Kevin W. McConeghy</em></h4>
-<h4 class="date"><em>2017-12-28</em></h4>
+<h4 class="date"><em>2018-01-03</em></h4>
 
 
 
@@ -198,7 +198,7 @@ fludta_serfling &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</sp
 </blockquote>
 <p>The CDC also describes the threshold as:</p>
 <blockquote>
-<p>“The seasonal baseline of P&amp;I deaths is calculated using a periodic regression model that incorporates a robust regression procedure applied to &gt; data from the previous five years. An increase of 1.645 standard deviations &gt; above the seasonal baseline of P&amp;I deaths is considered the ‘epidemic threshold,’ i.e., the point at which the observed proportion of deaths attributed to pneumonia or influenza was significantly higher than would be &gt; expected at that time of the year in the absence of substantial influenza-related mortality.”</p>
+<p>“The seasonal baseline of P&amp;I deaths is calculated using a periodic regression model that incorporates a robust regression procedure applied to data from the previous five years. An increase of 1.645 standard deviations &gt; above the seasonal baseline of P&amp;I deaths is considered the ‘epidemic threshold,’ i.e., the point at which the observed proportion of deaths attributed to pneumonia or influenza was significantly higher than would be expected at that time of the year in the absence of substantial influenza-related mortality.”</p>
 </blockquote>
 <p><code>serflm</code> follows this method, but the modified serfling function allows for more options for threshold prediction. 1.645 standard deviations is equal to the upper limit 90% prediction interval.</p>
 <div id="step-2c.-add-predicted-values-to-original-dataset." class="section level4">

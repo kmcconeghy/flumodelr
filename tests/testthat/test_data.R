@@ -1,8 +1,8 @@
 context("Package Data Files")
 
-test_that("flu_ex properly formatted", {
+test_that("fludta properly formatted", {
   #load data
-  d <- flumodelr::flu_ex
+  d <- flumodelr::fludta
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
               "perc_fludeaths", "yrweek_dt", "prop_flupos")
   
@@ -16,8 +16,8 @@ test_that("flu_ex properly formatted", {
   expect_type(d$perc_fludeaths, "double")
   expect_s3_class(d$yrweek_dt, "Date")
   expect_type(d$prop_flupos, "double")
-  expect_that(min(flu_ex$year), equals(2010))
-  expect_that(max(flu_ex$year), equals(2015))
-  expect_that(min(flu_ex$week), equals(1))
-  expect_that(max(flu_ex$week), equals(53))
+  expect_that(min(fludta$year), equals(2010))
+  expect_that(max(fludta$year), equals(2015))
+  expect_that(min(fludta$week), equals(1))
+  expect_that(max(fludta$week), equals(53))
 })
