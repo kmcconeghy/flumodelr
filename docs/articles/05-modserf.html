@@ -87,7 +87,7 @@
       <h1>Modified Serfling Models</h1>
                         <h4 class="author">Kevin W. McConeghy</h4>
             
-            <h4 class="date">2017-12-28</h4>
+            <h4 class="date">2018-01-11</h4>
           </div>
 
     
@@ -101,17 +101,17 @@
 <h2 class="hasAnchor">
 <a href="#virology-data" class="anchor"></a>Virology data</h2>
 <p>In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases, see <code><a href="../reference/nrevss.html">?nrevss</a></code>. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of low flu activity can be used to construct a counterfactual for what the rate of the reported influenza outcome would be in the absence of high influenza activity. Whereas the original model relied on “off-season” data and the Fourier term, virology data gives you a more direct measure. This ultimately provides increased confidence that deaths are influenza related and estimated influenza morbidity and mortality.</p>
-<p>The example dataset for this package, <code>flumodelr::fluex</code> is a combination of the CDC-122 cities dataset, <code><a href="../reference/cdc122city.html">?cdc122city</a></code> and the public virology data <code><a href="../reference/nrevss.html">?nrevss</a></code>. The virology is matched by week, with a lag of 2 weeks to allow for reporting of deaths (i.e. Virology(week_t-2)=Mortality(week_t)).</p>
+<p>The example dataset for this package, <code><a href="http://www.rdocumentation.org/packages/flumodelr/topics/fludta">flumodelr::fludta</a></code> is a combination of the CDC-122 cities dataset, <code><a href="../reference/cdc122city.html">?cdc122city</a></code> and the public virology data <code><a href="../reference/nrevss.html">?nrevss</a></code>. The virology is matched by week, with a lag of 2 weeks to allow for reporting of deaths (i.e. Virology(week_t-2)=Mortality(week_t)).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>fludta</code></pre></div>
 <p><img src="05-modserf_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
 <p>The original model can be modified like so:</p>
 <p><span class="math display">\[Eq \ 1. \  y = \alpha_0 + \beta_1*t + \beta_2*Flu_t + sin(\frac{2 \pi t}{period}) + cos(\frac{2 \pi t}{period}) + u\]</span> Where <em>Flu</em> = no. of isolates positive for influenza / total isolates tested in a given timepoint <em>t</em>. <em>period</em> is a fixed parameter equal to the cycle of the time unit (e.g. 52 weeks in a year).</p>
 <p>Many published examples of this exist <span class="citation">[@Wang2012, @Matias2016]</span>. Some authors include data on the % RSV (+), as well as breakdown influenza by subtype and even include data on weather, humidity etc. Including individual terms for each viral subtype may have advantages as certain types of influenza are associated with more severe outcomes such as hospitalization and death.</p>
 </div>
-<div id="mflu" class="section level2">
+<div id="flum" class="section level2">
 <h2 class="hasAnchor">
-<a href="#mflu" class="anchor"></a>mflu()</h2>
-<p>A general wrapper, <code>mflu()</code>, for modeling time-series data is written for this purpose. This will compute a traditional serfling model, (runs <code><a href="../reference/serflm.html">serflm()</a></code> under the hood), a smoothed model (adds polynomial terms), a model which allows for virology data, and other options explored below.</p>
+<a href="#flum" class="anchor"></a>flum()</h2>
+<p>A general wrapper, <code>mflu()</code>, for modeling time-series data is written for this purpose. This will compute a traditional serfling model or other generalized linear models, (runs <code><a href="../reference/fluglm.html">fluglm()</a></code> under the hood), a smoothed model (adds polynomial terms), a model which allows for virology data, and other options explored below.</p>
 <div id="influenza-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#influenza-data" class="anchor"></a>Influenza data</h3>
@@ -217,10 +217,10 @@ fludta_fitted
 <h3 class="hasAnchor">
 <a href="#excess-mortality" class="anchor"></a>Excess mortality</h3>
 <p>You can either report the deaths in excess of the 95% prediction interval, which are sometimes described as epidemics or severe periods of influenza morbidity and mortality.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_excess &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fluexcess.html">fluexcess</a></span>(fludta_fitted, <span class="dt">obsvar=</span>perc_fludeaths, <span class="dt">fitvar=</span>y0_ul)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_excess &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fludiff.html">fludiff</a></span>(fludta_fitted, <span class="dt">obsvar=</span>perc_fludeaths, <span class="dt">fitvar=</span>y0_ul)
 df_excess
 <span class="co">#&gt; # A tibble: 261 x 10</span>
-<span class="co">#&gt;    year  week fludeaths allde~ perc_f~ yrweek_dt  prop_~    y0 y0_ul y_ex~</span>
+<span class="co">#&gt;    year  week fludeaths allde~ perc_f~ yrweek_dt  prop_~    y0 y0_ul y_di~</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;  &lt;int&gt;   &lt;dbl&gt; &lt;date&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  2010    42       726  11269    6.44 2010-10-17 0.0133  6.19  7.00     0</span>
 <span class="co">#&gt; 2  2010    43       720  11204    6.43 2010-10-24 0.0193  6.27  7.08     0</span>
@@ -233,10 +233,10 @@ df_excess
 <h3 class="hasAnchor">
 <a href="#attributable-influenza-mortality" class="anchor"></a>Attributable influenza mortality</h3>
 <p>Alternatively, you can simply take the excess deaths above the predicted line and report these as deaths attributable to influenza. Since they are in excess of the predicted deaths in the absence of influenza (i.e. no influenza positive isolates).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_excess &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fluexcess.html">fluexcess</a></span>(fludta_fitted, <span class="dt">obsvar=</span>perc_fludeaths, <span class="dt">fitvar=</span>y0)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_excess &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fludiff.html">fludiff</a></span>(fludta_fitted, <span class="dt">obsvar=</span>perc_fludeaths, <span class="dt">fitvar=</span>y0)
 df_excess
 <span class="co">#&gt; # A tibble: 261 x 10</span>
-<span class="co">#&gt;    year  week fludeaths allde~ perc_f~ yrweek_dt  prop_~    y0 y0_ul y_ex~</span>
+<span class="co">#&gt;    year  week fludeaths allde~ perc_f~ yrweek_dt  prop_~    y0 y0_ul y_di~</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;  &lt;int&gt;   &lt;dbl&gt; &lt;date&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  2010    42       726  11269    6.44 2010-10-17 0.0133  6.19  7.00 0.251</span>
 <span class="co">#&gt; 2  2010    43       720  11204    6.43 2010-10-24 0.0193  6.27  7.08 0.158</span>
@@ -307,7 +307,7 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(fludta, <s
 <span class="co">#&gt;  language (EN)                        </span>
 <span class="co">#&gt;  collate  English_United States.1252  </span>
 <span class="co">#&gt;  tz       America/New_York            </span>
-<span class="co">#&gt;  date     2017-12-28                  </span>
+<span class="co">#&gt;  date     2018-01-11                  </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; - Packages --------------------------------------------------------------</span>
 <span class="co">#&gt;  package     * version    date       source                             </span>
@@ -324,7 +324,7 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(fludta, <s
 <span class="co">#&gt;  digest        0.6.13     2017-12-14 CRAN (R 3.4.3)                     </span>
 <span class="co">#&gt;  dplyr       * 0.7.4.9000 2017-12-21 Github (hadley/dplyr@c04deb3)      </span>
 <span class="co">#&gt;  evaluate      0.10.1     2017-06-24 CRAN (R 3.4.1)                     </span>
-<span class="co">#&gt;  flumodelr   * 0.0.4.9000 2017-12-28 local                              </span>
+<span class="co">#&gt;  flumodelr   * 0.0.4.9000 2018-01-11 local                              </span>
 <span class="co">#&gt;  forcats     * 0.2.0      2017-01-23 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  foreign       0.8-69     2017-06-22 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  ggplot2     * 2.2.1      2016-12-30 CRAN (R 3.4.0)                     </span>
@@ -357,7 +357,7 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(fludta, <s
 <span class="co">#&gt;  reshape2      1.4.3      2017-12-11 CRAN (R 3.4.3)                     </span>
 <span class="co">#&gt;  rlang         0.1.6      2017-12-21 CRAN (R 3.4.3)                     </span>
 <span class="co">#&gt;  rmarkdown     1.8        2017-11-17 CRAN (R 3.4.2)                     </span>
-<span class="co">#&gt;  rprojroot     1.3-1      2017-12-18 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  rprojroot     1.3-2      2018-01-03 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  rstudioapi    0.7.0-9000 2017-12-14 Github (rstudio/rstudioapi@335f257)</span>
 <span class="co">#&gt;  rvest         0.3.2      2016-06-17 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  scales      * 0.5.0      2017-08-24 CRAN (R 3.4.2)                     </span>
@@ -368,7 +368,7 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(fludta, <s
 <span class="co">#&gt;  tidyr       * 0.7.2      2017-10-16 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  tidyselect    0.2.3      2017-11-06 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  tidyverse   * 1.2.1      2017-11-14 CRAN (R 3.4.2)                     </span>
-<span class="co">#&gt;  utf8          1.1.2      2017-12-14 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  utf8          1.1.3      2018-01-03 CRAN (R 3.4.2)                     </span>
 <span class="co">#&gt;  withr         2.1.1      2017-12-19 CRAN (R 3.4.3)                     </span>
 <span class="co">#&gt;  xml2          1.1.1      2017-01-24 CRAN (R 3.4.1)                     </span>
 <span class="co">#&gt;  yaml          2.1.16     2017-12-12 CRAN (R 3.4.3)</span></code></pre></div>
@@ -384,7 +384,7 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw">mflu</span>(fludta, <s
 <li>
 <a href="#modern-applications-of-serfling-models">Modern Applications of Serfling Models</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#virology-data">Virology data</a></li>
-      <li><a href="#mflu">mflu()</a></li>
+      <li><a href="#flum">flum()</a></li>
       <li><a href="#general-estimation-procedure-performed-by-mflu">General Estimation Procedure (performed by <code>mflu()</code>)</a></li>
       <li><a href="#add-fitted-values-to-dataset">Add fitted values to dataset</a></li>
       <li><a href="#compute-attributable-mortality">Compute attributable mortality</a></li>

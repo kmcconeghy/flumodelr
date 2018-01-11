@@ -141,30 +141,30 @@ fludta</code></pre></div>
 <div id="fit-traditional-serfling-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#fit-traditional-serfling-model" class="anchor"></a>Fit Traditional Serfling Model</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit &lt;-<span class="st"> </span>flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/serflm">serflm</a></span>(fludta, <span class="dt">outc =</span> fludeaths, <span class="dt">time =</span> yrweek_dt)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit &lt;-<span class="st"> </span>flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/serflm">serflm</a></span>(fludta, <span class="dt">outc =</span> perc_fludeaths, <span class="dt">time =</span> yrweek_dt)</code></pre></div>
 <p>Assumes epidemic influenza period of Sept. - May. Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span> (year, week, fludeaths, y0, y0_ul)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span> (year, week, perc_fludeaths, y0, y0_ul)</code></pre></div>
 <pre><code>## # A tibble: 261 x 5
-##     year  week fludeaths    y0 y0_ul
-##    &lt;int&gt; &lt;int&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1  2010    42       726   706   786
-##  2  2010    43       720   718   800
-##  3  2010    44       739   731   816
-##  4  2010    45       724   745   832
-##  5  2010    46       740   758   849
-##  6  2010    47       516   772   866
-##  7  2010    48       796   786   883
-##  8  2010    49       863   799   899
-##  9  2010    50       816   811   915
-## 10  2010    51       713   823   929
+##     year  week perc_fludeaths    y0 y0_ul
+##    &lt;int&gt; &lt;int&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  2010    42           6.44  6.50  6.71
+##  2  2010    43           6.43  6.56  6.80
+##  3  2010    44           6.65  6.63  6.90
+##  4  2010    45           7.01  6.70  7.00
+##  5  2010    46           6.43  6.77  7.11
+##  6  2010    47           6.04  6.85  7.21
+##  7  2010    48           6.47  6.92  7.32
+##  8  2010    49           6.86  6.99  7.42
+##  9  2010    50           6.78  7.07  7.52
+## 10  2010    51           7.38  7.13  7.61
 ## # ... with 251 more rows</code></pre>
 </div>
 <div id="influenza-time-series-plot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#influenza-time-series-plot" class="anchor"></a>Influenza Time-Series Plot</h3>
 <p>An convenience function for plotting the above fit lines.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/fluplot">fluplot</a></span>(flu_fit, <span class="dt">xvar=</span>yrweek_dt, fludeaths, y0, y0_ul,
-                    <span class="dt">ylab=</span><span class="st">"Mortality per 100,000"</span>, <span class="dt">title=</span><span class="st">"Serfling Model"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/fluplot">fluplot</a></span>(flu_fit, <span class="dt">xvar=</span>yrweek_dt, perc_fludeaths, y0, y0_ul,
+                    <span class="dt">ylab=</span><span class="st">"% Deaths due to P&amp;I"</span>, <span class="dt">title=</span><span class="st">"Serfling Model"</span>)</code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 </div>
 </div>
@@ -190,7 +190,7 @@ fludta</code></pre></div>
 <a href="#important-references" class="anchor"></a>Important References</h1>
 <ol style="list-style-type: decimal">
 <li><p>Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/">Pubmed Link</a></p></li>
-<li><p>Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L, Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated deaths made using four different methods. Influenza Other Respir Viruses. 2009 Jan;3(1):37-49. /url{<a href="https://www.ncbi.nlm.nih.gov/pubmed/19453440" class="uri">https://www.ncbi.nlm.nih.gov/pubmed/19453440</a>}</p></li>
+<li><p>Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L, Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated deaths made using four different methods. Influenza Other Respir Viruses. 2009 Jan;3(1):37-49. <a href="https://www.ncbi.nlm.nih.gov/pubmed/19453440">Pubmed Link</a></p></li>
 </ol>
 </div>
 <div id="authors" class="section level1">

@@ -87,7 +87,7 @@
       <h1>Serfling Model Background</h1>
                         <h4 class="author">Kevin W. McConeghy</h4>
             
-            <h4 class="date">2017-12-28</h4>
+            <h4 class="date">2018-01-11</h4>
           </div>
 
     
@@ -225,7 +225,7 @@ fludta_serfling &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</sp
 </blockquote>
 <p>The CDC also describes the threshold as:</p>
 <blockquote>
-<p>“The seasonal baseline of P&amp;I deaths is calculated using a periodic regression model that incorporates a robust regression procedure applied to &gt; data from the previous five years. An increase of 1.645 standard deviations &gt; above the seasonal baseline of P&amp;I deaths is considered the ‘epidemic threshold,’ i.e., the point at which the observed proportion of deaths attributed to pneumonia or influenza was significantly higher than would be &gt; expected at that time of the year in the absence of substantial influenza-related mortality.”</p>
+<p>“The seasonal baseline of P&amp;I deaths is calculated using a periodic regression model that incorporates a robust regression procedure applied to data from the previous five years. An increase of 1.645 standard deviations &gt; above the seasonal baseline of P&amp;I deaths is considered the ‘epidemic threshold,’ i.e., the point at which the observed proportion of deaths attributed to pneumonia or influenza was significantly higher than would be expected at that time of the year in the absence of substantial influenza-related mortality.”</p>
 </blockquote>
 <p><code>serflm</code> follows this method, but the modified serfling function allows for more options for threshold prediction. 1.645 standard deviations is equal to the upper limit 90% prediction interval.</p>
 <div id="step-2c--add-predicted-values-to-original-dataset-" class="section level4">
@@ -315,10 +315,10 @@ flu_fit
 <span class="co">#&gt; # A tibble: 261 x 10</span>
 <span class="co">#&gt;    year  week fludeaths allde~ perc_f~ yrweek_dt  prop_~ epi      y0 y0_ul</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;  &lt;int&gt;   &lt;dbl&gt; &lt;date&gt;      &lt;dbl&gt; &lt;lgl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42       726  11269    6.44 2010-10-17 0.0133 T      6.50  6.99</span>
-<span class="co">#&gt; 2  2010    43       720  11204    6.43 2010-10-24 0.0193 T      6.56  7.07</span>
-<span class="co">#&gt; 3  2010    44       739  11115    6.65 2010-10-31 0.0173 T      6.63  7.15</span>
-<span class="co">#&gt; 4  2010    45       724  10321    7.01 2010-11-07 0.0231 T      6.70  7.24</span>
+<span class="co">#&gt; 1  2010    42       726  11269    6.44 2010-10-17 0.0133 T      6.50  6.71</span>
+<span class="co">#&gt; 2  2010    43       720  11204    6.43 2010-10-24 0.0193 T      6.56  6.80</span>
+<span class="co">#&gt; 3  2010    44       739  11115    6.65 2010-10-31 0.0173 T      6.63  6.90</span>
+<span class="co">#&gt; 4  2010    45       724  10321    7.01 2010-11-07 0.0231 T      6.70  7.00</span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <div id="plot-function-fluplot" class="section level3">
 <h3 class="hasAnchor">
