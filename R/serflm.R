@@ -87,7 +87,7 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
   #compute baseline regression  
     base_fit <- data %>%
       dplyr::filter(UQ(epi_eq)==F) %>% #Must UQ, !! doesnt work
-      lm(flu.form, data=., na.action = na.exclude)  
+      glm(flu.form, family=gaussian, data=., na.action = na.exclude)  
     
     #parameters  
     if (echo==T) {
@@ -95,12 +95,15 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
     }
     
   ## Fitted values + prediction interval
+    ## Fitted values + prediction interval
     pred <- data %>%
-      predict(base_fit, newdata=., se.fit=TRUE, 
-              interval="prediction", level=0.90)
+      predict(base_fit, 
+              newdata=., 
+              se.fit=TRUE, 
+              type="response")
     
-    y0 <- pred$fit[,1] #fitted values
-    y0_ul <- pred$fit[,3] #upper limit
+    y0 <- pred$fit #fitted values
+    y0_ul <- pred$fit + (qnorm(0.95)*pred$se.fit)
     
     data <- data %>%
       tibble::add_column(., y0, y0_ul) %>%
