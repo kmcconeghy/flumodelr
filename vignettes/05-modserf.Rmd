@@ -27,7 +27,7 @@ The cyclical regression model published by Serfling [@Serlfing1963] is not commo
 ## Virology data  
 In current methods, most researchers incorporate data on the percent of isolates positive with influenza viral types. This is publically available in many cases, see `?nrevss`. The data describes the proportion of isolates tested, which may be obtained from participating hospital and outpatient settings. Using this surrogate time-periods of low flu activity can be used to construct a counterfactual for what the rate of the reported influenza outcome would be in the absence of high influenza activity. Whereas the original model relied on "off-season" data and the Fourier term, virology data gives you a more direct measure. This ultimately provides increased confidence that deaths are influenza related and estimated influenza morbidity and mortality.  
 
-The example dataset for this package, `flumodelr::fluex` is a combination of the CDC-122 cities dataset, `?cdc122city` and the public virology data `?nrevss`.  The virology is matched by week, with a lag of 2 weeks to allow for reporting of deaths (i.e. Virology(week_t-2)=Mortality(week_t)).  
+The example dataset for this package, `flumodelr::fludta` is a combination of the CDC-122 cities dataset, `?cdc122city` and the public virology data `?nrevss`.  The virology is matched by week, with a lag of 2 weeks to allow for reporting of deaths (i.e. Virology(week_t-2)=Mortality(week_t)).  
 
 ```{r }
 fludta <- flumodelr::fludta
@@ -64,9 +64,9 @@ Where *Flu* = no. of isolates positive for influenza / total isolates tested in 
 
 Many published examples of this exist [@Wang2012, @Matias2016]. Some authors include data on the % RSV (+), as well as breakdown influenza by subtype and even include data on weather, humidity etc.  Including individual terms for each viral subtype may have advantages as certain types of influenza are associated with more severe outcomes such as hospitalization and death.  
 
-## mflu()
+## flum()
 
-A general wrapper, ` mflu() `, for modeling time-series data is written for this purpose. This will compute a traditional serfling model, (runs `serflm()` under the hood), a smoothed model (adds polynomial terms), a model which allows for virology data, and other options explored below.  
+A general wrapper, ` mflu() `, for modeling time-series data is written for this purpose. This will compute a traditional serfling model or other generalized linear models, (runs `fluglm()` under the hood), a smoothed model (adds polynomial terms), a model which allows for virology data, and other options explored below.  
 
 ### Influenza data
 ```{r }
@@ -157,13 +157,13 @@ This model differs from the original Serfling regressions because of it's use of
 ### Excess mortality 
 You can either report the deaths in excess of the 95% prediction interval, which are sometimes described as epidemics or severe periods of influenza morbidity and mortality.  
 ```{r }
-df_excess <- fluexcess(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0_ul)
+df_excess <- fludiff(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0_ul)
 df_excess
 ```
 
 ```{r, echo=F, results='as.is', fig.width=7.0}
 ggplot(df_excess, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=y_excess, colour="Epidemic mortality"), size=0.8, linetype=2) +
+  geom_line(aes(y=y_diff, colour="Epidemic mortality"), size=0.8, linetype=2) +
   geom_line(aes(y=perc_fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
@@ -180,13 +180,13 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
 ### Attributable influenza mortality  
 Alternatively, you can simply take the excess deaths above the predicted line and report these as deaths attributable to influenza. Since they are in excess of the predicted deaths in the absence of influenza (i.e. no influenza positive isolates).  
 ```{r }
-df_excess <- fluexcess(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0)
+df_excess <- fludiff(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0)
 df_excess
 ```
 
 ```{r, echo=F, results='as.is', fig.width=7.0}
 ggplot(df_excess, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=y_excess, colour="Excess mortality"), size=0.8, linetype=2) +
+  geom_line(aes(y=y_diff, colour="Excess mortality"), size=0.8, linetype=2) +
   geom_line(aes(y=perc_fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 

@@ -98,12 +98,12 @@ ggplot(fludta_fitted, aes(x=yrweek_dt)) +
   guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
 
 ## ------------------------------------------------------------------------
-df_excess <- fluexcess(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0_ul)
+df_excess <- fludiff(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0_ul)
 df_excess
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
 ggplot(df_excess, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=y_excess, colour="Epidemic mortality"), size=0.8, linetype=2) +
+  geom_line(aes(y=y_diff, colour="Epidemic mortality"), size=0.8, linetype=2) +
   geom_line(aes(y=perc_fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
@@ -117,12 +117,12 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
   labs(title="Figure 3. Periods of influenza epidemics over time")
 
 ## ------------------------------------------------------------------------
-df_excess <- fluexcess(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0)
+df_excess <- fludiff(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0)
 df_excess
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
 ggplot(df_excess, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=y_excess, colour="Excess mortality"), size=0.8, linetype=2) +
+  geom_line(aes(y=y_diff, colour="Excess mortality"), size=0.8, linetype=2) +
   geom_line(aes(y=perc_fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
