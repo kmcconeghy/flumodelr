@@ -2,10 +2,11 @@
 % Please edit documentation in R/fluglm.R
 \name{fluglm}
 \alias{fluglm}
-\title{fluglm: Predict outcome based on generalized linear model.}
+\title{fluglm: Generate fitted prediction values with generalized linear model.}
 \usage{
 fluglm(data=NULL, outc=NULL, epi=NULL, time=NULL, 
-              t.interval=52, echo=F)
+              t.interval=52, echo=F, poly=T, model.form=NULL,
+              int_type="ci", alpha=0.1)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
@@ -21,7 +22,7 @@ or if null will default to Sept - May.}
 a numeric/integer class variable in dataframe which corresponds
 to a unit of time, must be unique (i.e. non-repeating)}
 
-\item{t.interval}{a numeric vector indicating period length, i.e. 52 weeks in year}
+\item{period}{a numeric vector indicating period length, i.e. 52 weeks in year}
 
 \item{echo}{A logical parameter, if T will print variables used in model.}
 
@@ -31,14 +32,23 @@ quartic term.}
 \item{model.form}{An object of type formula, allowing for user-specified
 model to be passed on to glm(). Default missing.}
 
-\item{...}{Options passed on to glm model, e.g. family=poisson. See ?glm.}
+\item{int_type}{Specifies type of upper interval to be output, currently
+only allows for confidence intervals. Predictional intervals to be added,
+but are only approximate for Poisson families.}
+
+\item{alpha}{The threshold for interval, default is 0.1
+(a one-sided 95% interval).}
+
+\item{offset}{Specify if offset term to be used, must specify log(object)}
+
+\item{...}{options passed on to glm model (e.g. family=poisson, see ?glm)}
 }
 \value{
 an object of class data.frame, input + y0 (fitted values), y0_ul
 the upper threshold
 }
 \description{
-Similar to Serfling linear model, but allows for glm
+Similar to serflm, but allows for more
 specifications.
 }
 \examples{
