@@ -18,8 +18,6 @@ test_that("serflm computes correct estimates", {
   expect_s3_class(d_pred, "data.frame")
   expect_that(dnames, equals(names(d_pred)))
   expect_type(d_pred$y0, "double")
-  expect_type(d_pred$y0, "double")
-  expect_type(d_pred$y0_ul, "double")
   expect_type(d_pred$y0_ul, "double")
 
 })
