@@ -1,3 +1,7 @@
+# Version 0.0.6   
+
+  * fixed author typo 
+  
 # Version 0.0.5 01/11/2018  
 
   * Streamlined tidy eval between functions
