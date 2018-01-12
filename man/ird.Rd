@@ -5,7 +5,7 @@
 \title{ird: Perform incidence rate-difference models}
 \usage{
 ird (data=NULL, outc=NULL, time=NULL, viral=NULL, 
-            t.interval=52, respStart=27, high=0.1, fluStart=40,
+            period=52, respStart=27, high=0.1, fluStart=40,
             fluStop=18)
 }
 \arguments{
@@ -24,7 +24,7 @@ to a unit of time, must be unique (i.e. non-repeating)}
 a numeric type variable in dataframe data which is the measure
 of viral activity.}
 
-\item{t.interval}{a numeric variable indicating the period length of the
+\item{period}{a numeric variable indicating the period length of the
 time variable (i.e. weeks = 52, the default)}
 
 \item{respStart}{A numeric/integer class variable, must specify the

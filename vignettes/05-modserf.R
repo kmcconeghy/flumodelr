@@ -5,7 +5,6 @@ knitr::opts_chunk$set(
 )
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 library(flumodelr)
-library(tidyverse)
 library(lubridate)
 library(scales)
 
@@ -143,32 +142,40 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
 #  
 #  fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 
-## ---- eval=F-------------------------------------------------------------
-#  fludta <- flumodelr::fludta
-#  
-#  fludta_mod <- flum(fludta, method="serflm",
-#                     outc=perc_fludeaths, time=yrweek_dt)
-#  
-#  fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
+## ---- eval=T-------------------------------------------------------------
+fludta <- flumodelr::fludta  
+
+fludta_mod <- flum(fludta, model="fluserf", 
+                   outc=perc_fludeaths, time=yrweek_dt)
+
+fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 
 ## ---- eval=F-------------------------------------------------------------
 #  fludta <- flumodelr::fludta
 #  
-#  fludta_mod <- flum(fludta, method="virology",
-#                     outc=fludeaths, time=yrweek_dt, lab=prop_flupos)
+#  fludta_mod <- flum(fludta, model="fluglm",
+#                     outc=fludeaths, time=yrweek_dt,
+#                     bl_type="viral", bl_var=prop_flupos)
 #  
-#  fludta_mod %>% select(year, week, fludeaths, pred_y0, pred_y0_uci)
+#  fludta_mod %>% select(year, week, fludeaths, y0, y0_ul)
 
-## ---- eval=F-------------------------------------------------------------
-#  ## Without polynomial terms
-#  fludta_mod <- flum(fludta, method="virology",
-#                     outc="fludeaths", time="yrweek_dt", lab="prop_flupos",
-#                     poly=F)
-#  
-#  ## Epidemic period specified (serfling model only)
-#  fludta_mod <- mflu(fludta, method="serflm",
-#                     outc="fludeaths", time="yrweek_dt", epi=c(40, 20)
-#                     )
+## ------------------------------------------------------------------------
+## Without polynomial terms
+fludta_mod <- flum(fludta, model="fluglm", 
+                   outc=fludeaths, time=yrweek_dt, 
+                   bl_type="viral", bl_var=prop_flupos, poly=F)
+
+## ------------------------------------------------------------------------
+## Epidemic period specified
+fludta_mod <- flum(fludta, model="fluglm", 
+                   outc=fludeaths, time=yrweek_dt, 
+                   bl_type="season", poly=F)
+
+## ------------------------------------------------------------------------
+## Poisson model with offset term
+fludta_mod <- flum(fludta, model="fluglm", outc = fludeaths, time = yrweek_dt, 
+                bl_type="viral", bl_var=prop_flupos,
+                family=poisson, offset=log(alldeaths)) 
 
 ## ------------------------------------------------------------------------
 sessioninfo::session_info()

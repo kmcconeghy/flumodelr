@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>fludiff: Compute excess mortality — fludiff â€¢ flumodelr</title>
+<title>fluserf: Fit a Serfling Model on Time Series Data — fluserf â€¢ flumodelr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -107,53 +107,82 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>fludiff: Compute excess mortality</h1>
+    <h1>fluserf: Fit a Serfling Model on Time Series Data</h1>
     </div>
 
     
-    <p>This function takes fitted data from a serflm() or similar
-procedure and computes difference between observed and predicted mortality.</p>
+    <p>Performs a cyclical linear regression model,
+or 'fluserf' model</p>
     
 
-    <pre class="usage"><span class='fu'>fludiff</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>obsvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fitvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>def</span> <span class='kw'>=</span> <span class='st'>"fit"</span>,
-  <span class='kw'>serfrule</span> <span class='kw'>=</span> <span class='no'>F</span>)</pre>
+    <pre class="usage"><span class='fu'>fluserf</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>epi</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+              <span class='kw'>period</span><span class='kw'>=</span><span class='fl'>52</span>, <span class='kw'>echo</span><span class='kw'>=</span><span class='no'>F</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A dataframe class object, must contain observed, fitted variables</p></td>
+      <td><p>A dataframe class object, must contain time variable,
+epidemic indicator, and measure of influenza morbidity</p></td>
     </tr>
     <tr>
-      <th>obsvar</th>
-      <td><p>named observed outcome variable</p></td>
+      <th>outc</th>
+      <td><p>an unquoted name of a column in data which corresponds to
+the outcome variable of interest</p></td>
     </tr>
     <tr>
-      <th>fitvar</th>
-      <td><p>named fitted trend variable. Can specify either fit line, or
-upper threshold limit.</p></td>
+      <th>epi</th>
+      <td><p>an unquoted name of a column in data object (e.g. epi)
+or if null will default to Sept - May.</p></td>
     </tr>
     <tr>
-      <th>serfrule</th>
-      <td><p>Logical, default=F. If T the function will apply the
-Serfling rule which only counts consecutive observations of excess
-mortality.</p></td>
+      <th>time</th>
+      <td><p>an unquoted name of a column in data object, must be
+a numeric/integer class variable in dataframe which corresponds
+to a unit of time, must be unique (i.e. non-repeating)</p></td>
+    </tr>
+    <tr>
+      <th>period</th>
+      <td><p>a numeric vector indicating period length, i.e. 52 weeks in year</p></td>
+    </tr>
+    <tr>
+      <th>echo</th>
+      <td><p>A logical parameter, if T. Will print variables used in model.</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>Specify level for one-sided test to compute upper limit interval.
+default is 0.05</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an object of class dataframe</p>
+    <p>an object of class data.frame, input + y0 (fitted values), y0_ul
+the upper serfling threshold</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Serfling RE. Methods for current statistical analysis of
+excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun;
+78(6): 494 - 506.
+/urlhttps://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
-<span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
-<span class='no'>serf_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fluglm.html'>fluglm</a></span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span> , <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>,
-<span class='kw'>offset</span> <span class='kw'>=</span> <span class='fu'>log</span>(<span class='no'>alldeaths</span>), )
+<span class='no'>fludta</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
+<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fluserf</span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>)
 
-<span class='no'>excess_fludeaths</span> <span class='kw'>&lt;-</span> <span class='fu'>fludiff</span>(<span class='no'>flu_fit</span>, <span class='kw'>xvar</span><span class='kw'>=</span><span class='no'>yrweek_dt</span>, <span class='kw'>yvar</span><span class='kw'>=</span><span class='no'>fludeaths</span>)</div><div class='output co'>#&gt; <span class='error'>Error in fludiff(flu_fit, xvar = yrweek_dt, yvar = fludeaths): unused arguments (xvar = yrweek_dt, yvar = fludeaths)</span></div><div class='input'>
+<span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 10
+#&gt;    year  week fludeaths alldeaths perc_fl~ yrweek_dt  prop_f~ epi      y0 y0_ul
+#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt; &lt;date&gt;       &lt;dbl&gt; &lt;lgl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1  2010    42       726     11269     6.44 2010-10-17  0.0133 T       706   740
+#&gt; 2  2010    43       720     11204     6.43 2010-10-24  0.0193 T       718   757
+#&gt; 3  2010    44       739     11115     6.65 2010-10-31  0.0173 T       731   775
+#&gt; 4  2010    45       724     10321     7.01 2010-11-07  0.0231 T       745   793
+#&gt; # ... with 2 more rows</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -162,6 +191,8 @@ mortality.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#references">References</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

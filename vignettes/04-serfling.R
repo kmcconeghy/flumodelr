@@ -90,7 +90,7 @@ base_fit <- fludta_serfling %>%
 df_pred <- fludta_serfling %>%
   dplyr::filter(year==2014 & week>=40 | year>2014) %>%
   predict(base_fit, newdata=., se.fit=TRUE, 
-          interval="prediction", level=0.90)
+          interval="confidence", level=0.90) #must specify 0.9 bc two-sided
 
 pred_y0 <- df_pred$fit[,1] #fitted values
 pred_y0_serf <- df_pred$fit[,3] 
@@ -175,10 +175,13 @@ ggplot(df_serf_excess, aes(x=yrweek_dt)) +
 ## ------------------------------------------------------------------------
 ##The following command completes the above steps 
 ##fit serfling model
-flu_fit <- serflm(data=fludta, outc=perc_fludeaths, time=yrweek_dt)
+flu_fit <- fluserf(data=fludta, outc=perc_fludeaths, time=yrweek_dt)
 flu_fit
 
 ## ---- results='as.is', fig.width=7.0-------------------------------------
 fluplot(flu_fit, xvar=yrweek_dt, perc_fludeaths, y0, y0_ul,
                     ylab="% Deaths from P&I", title="Serfling Model")
+
+## ------------------------------------------------------------------------
+sessioninfo::session_info()
 

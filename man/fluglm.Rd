@@ -5,7 +5,7 @@
 \title{fluglm: Generate fitted prediction values with generalized linear model.}
 \usage{
 fluglm(data=NULL, outc=NULL, epi=NULL, time=NULL, 
-              t.interval=52, echo=F, poly=T, model.form=NULL,
+              period=52, echo=F, poly=T, model.form=NULL,
               int_type="ci", alpha=0.1)
 }
 \arguments{
@@ -15,8 +15,10 @@ epidemic indicator, and measure of influenza morbidity}
 \item{outc}{an unquoted name of a column in data which corresponds to
 the outcome variable of interest}
 
-\item{epi}{an unquoted name of a column in data object (e.g. epi)
-or if null will default to Sept - May.}
+\item{bl_type}{A quote string either: "season" or "viral". Denoting type of baseline
+to use for fitting model.}
+
+\item{bl_var}{an unquoted name of a variable corresponding to bl_type.}
 
 \item{time}{an unquoted name of a column in data object, must be
 a numeric/integer class variable in dataframe which corresponds
@@ -29,15 +31,14 @@ to a unit of time, must be unique (i.e. non-repeating)}
 \item{poly}{A logical parameter, if T will include a quadratic, cubic and
 quartic term.}
 
-\item{model.form}{An object of type formula, allowing for user-specified
+\item{model_form}{An object of type formula, allowing for user-specified
 model to be passed on to glm(). Default missing.}
 
 \item{int_type}{Specifies type of upper interval to be output, currently
 only allows for confidence intervals. Predictional intervals to be added,
 but are only approximate for Poisson families.}
 
-\item{alpha}{The threshold for interval, default is 0.1
-(a one-sided 95% interval).}
+\item{alpha}{The threshold for interval, default is 0.05 (one-sided).}
 
 \item{offset}{Specify if offset term to be used, must specify log(object)}
 

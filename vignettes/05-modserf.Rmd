@@ -73,7 +73,7 @@ fludta <- flumodelr::fludta
 fludta
 ```
 
-## General Estimation Procedure (performed by `mflu()`)    
+## General Estimation Procedure (performed by `flum()`)    
 ### add Fourier term  
 ```{r }
 fludta_mod <- fludta %>%

@@ -87,7 +87,7 @@
       <h1>Serfling Model Background</h1>
                         <h4 class="author">Kevin W. McConeghy</h4>
             
-            <h4 class="date">2018-01-11</h4>
+            <h4 class="date">2018-01-12</h4>
           </div>
 
     
@@ -156,7 +156,7 @@ fit &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</span>
 <div id="step-wise-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#step-wise-example" class="anchor"></a>Step-wise example</h2>
-<p>The flumodelr function serflm will perform the above steps. We present the individual steps here for demonstration.</p>
+<p>The flumodelr function fluserf will perform the above steps. We present the individual steps here for demonstration.</p>
 <p>It is assumed the influenza epidemic period begins Oct. 1st, and ends May 31st. This is a conventional “flu” season in the U.S. However individual areas / regions may justify tailored periods. These assumptions are modifiable as options in the regression function.</p>
 <div id="step-1--formatted-influenza-data" class="section level3">
 <h3 class="hasAnchor">
@@ -171,7 +171,7 @@ fit &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</span>
 <span class="co">#&gt; 3 2010-10-31           6.65</span>
 <span class="co">#&gt; 4 2010-11-07           7.01</span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
-<p><code><a href="../reference/serflm.html">serflm()</a></code> Will allow you to specify the boundaries for epidemic periods, and then compute the baseline off of non-epidemic timepoints. Additionally you can provide it with a logical variable in the dataset which indicates the epidemic period.</p>
+<p><code><a href="../reference/fluserf.html">fluserf()</a></code> Will allow you to specify the boundaries for epidemic periods, and then compute the baseline off of non-epidemic timepoints. Additionally you can provide it with a logical variable in the dataset which indicates the epidemic period.</p>
 </div>
 <div id="example-adding-epidemic-period-indicator" class="section level3">
 <h3 class="hasAnchor">
@@ -227,7 +227,7 @@ fludta_serfling &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</sp
 <blockquote>
 <p>“The seasonal baseline of P&amp;I deaths is calculated using a periodic regression model that incorporates a robust regression procedure applied to data from the previous five years. An increase of 1.645 standard deviations &gt; above the seasonal baseline of P&amp;I deaths is considered the ‘epidemic threshold,’ i.e., the point at which the observed proportion of deaths attributed to pneumonia or influenza was significantly higher than would be expected at that time of the year in the absence of substantial influenza-related mortality.”</p>
 </blockquote>
-<p><code>serflm</code> follows this method, but the modified serfling function allows for more options for threshold prediction. 1.645 standard deviations is equal to the upper limit 90% prediction interval.</p>
+<p><code>fluserf</code> follows this method, but the modified serfling function allows for more options for threshold prediction. 1.645 standard deviations is equal to a one-sided upper limit 95% confidence interval.</p>
 <div id="step-2c--add-predicted-values-to-original-dataset-" class="section level4">
 <h4 class="hasAnchor">
 <a href="#step-2c--add-predicted-values-to-original-dataset-" class="anchor"></a>Step 2c. Add predicted values to original dataset.</h4>
@@ -235,7 +235,7 @@ fludta_serfling &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</sp
 df_pred &lt;-<span class="st"> </span>fludta_serfling <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(year<span class="op">==</span><span class="dv">2014</span> <span class="op">&amp;</span><span class="st"> </span>week<span class="op">&gt;=</span><span class="dv">40</span> <span class="op">|</span><span class="st"> </span>year<span class="op">&gt;</span><span class="dv">2014</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">predict</span>(base_fit, <span class="dt">newdata=</span>., <span class="dt">se.fit=</span><span class="ot">TRUE</span>, 
-          <span class="dt">interval=</span><span class="st">"prediction"</span>, <span class="dt">level=</span><span class="fl">0.90</span>)
+          <span class="dt">interval=</span><span class="st">"confidence"</span>, <span class="dt">level=</span><span class="fl">0.90</span>) <span class="co">#must specify 0.9 bc two-sided</span>
 
 pred_y0 &lt;-<span class="st"> </span>df_pred<span class="op">$</span>fit[,<span class="dv">1</span>] <span class="co">#fitted values</span>
 pred_y0_serf &lt;-<span class="st"> </span>df_pred<span class="op">$</span>fit[,<span class="dv">3</span>] 
@@ -249,10 +249,10 @@ df_base <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <span class="co">#&gt; # A tibble: 55 x 5</span>
 <span class="co">#&gt;    year  week perc_fludeaths pred_y0 pred_y0_serf</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;          &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2014    40           5.50    5.61         6.09</span>
-<span class="co">#&gt; 2  2014    41           5.47    5.67         6.16</span>
-<span class="co">#&gt; 3  2014    42           5.34    5.74         6.24</span>
-<span class="co">#&gt; 4  2014    43           5.52    5.81         6.33</span>
+<span class="co">#&gt; 1  2014    40           5.50    5.61         5.77</span>
+<span class="co">#&gt; 2  2014    41           5.47    5.67         5.86</span>
+<span class="co">#&gt; 3  2014    42           5.34    5.74         5.96</span>
+<span class="co">#&gt; 4  2014    43           5.52    5.81         6.06</span>
 <span class="co">#&gt; # ... with 51 more rows</span></code></pre></div>
 <p><img src="04-serfling_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 <p><strong>% of Deaths from P&amp;I</strong> - No. of influenza or pneumonia deaths / total number of deaths *100.<br><strong>Expected %</strong> - A fit of the cyclical regression model, (one Fourier term).<br><strong>Epidemic Threshold</strong> - The fitted line + 1.64 standard deviations.</p>
@@ -305,12 +305,12 @@ df_serf_excess <span class="op">%&gt;%</span><span class="st"> </span><span clas
 <p>Note how for weeks 29 and 31, the Serfling rule discounts the excess mortality.</p>
 <p><img src="04-serfling_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
 </div>
-<div id="serflm-function" class="section level2">
+<div id="fluserf-function" class="section level2">
 <h2 class="hasAnchor">
-<a href="#serflm-function" class="anchor"></a>serflm() function</h2>
+<a href="#fluserf-function" class="anchor"></a>fluserf() function</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##The following command completes the above steps 
 ##fit serfling model
-flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/serflm.html">serflm</a></span>(<span class="dt">data=</span>fludta, <span class="dt">outc=</span>perc_fludeaths, <span class="dt">time=</span>yrweek_dt)
+flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fluserf.html">fluserf</a></span>(<span class="dt">data=</span>fludta, <span class="dt">outc=</span>perc_fludeaths, <span class="dt">time=</span>yrweek_dt)
 flu_fit
 <span class="co">#&gt; # A tibble: 261 x 10</span>
 <span class="co">#&gt;    year  week fludeaths allde~ perc_f~ yrweek_dt  prop_~ epi      y0 y0_ul</span>
@@ -342,6 +342,80 @@ flu_fit
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sessioninfo<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/sessioninfo/topics/session_info">session_info</a></span>()
+<span class="co">#&gt; - Session info ----------------------------------------------------------</span>
+<span class="co">#&gt;  setting  value                       </span>
+<span class="co">#&gt;  version  R version 3.4.2 (2017-09-28)</span>
+<span class="co">#&gt;  os       Windows 10 x64              </span>
+<span class="co">#&gt;  system   x86_64, mingw32             </span>
+<span class="co">#&gt;  ui       RTerm                       </span>
+<span class="co">#&gt;  language (EN)                        </span>
+<span class="co">#&gt;  collate  English_United States.1252  </span>
+<span class="co">#&gt;  tz       America/New_York            </span>
+<span class="co">#&gt;  date     2018-01-12                  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; - Packages --------------------------------------------------------------</span>
+<span class="co">#&gt;  package     * version    date       source                             </span>
+<span class="co">#&gt;  assertthat    0.2.0      2017-04-11 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  backports     1.1.2      2017-12-13 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  bindr         0.1        2016-11-13 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  bindrcpp    * 0.2        2017-06-17 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  broom         0.4.3      2017-11-20 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  cellranger    1.1.0      2016-07-27 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  cli           1.0.0      2017-12-15 Github (r-lib/cli@ab1c3aa)         </span>
+<span class="co">#&gt;  clisymbols    1.2.0      2017-05-21 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  colorspace    1.3-2      2016-12-14 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  crayon        1.3.4      2017-09-16 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  digest        0.6.13     2017-12-14 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  dplyr       * 0.7.4      2017-09-28 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  evaluate      0.10.1     2017-06-24 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  flumodelr   * 0.0.6      2018-01-12 local                              </span>
+<span class="co">#&gt;  forcats     * 0.2.0      2017-01-23 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  foreign       0.8-69     2017-06-22 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  ggplot2     * 2.2.1      2016-12-30 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  glue          1.2.0      2017-10-29 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  gtable        0.2.0      2016-02-26 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  haven         1.1.0      2017-07-09 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  hms           0.4.0      2017-11-23 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  htmltools     0.3.6      2017-04-28 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  httr          1.3.1      2017-08-20 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  jsonlite      1.5        2017-06-01 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  knitr         1.18       2017-12-27 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  labeling      0.3        2014-08-23 CRAN (R 3.4.1)                     </span>
+<span class="co">#&gt;  lattice       0.20-35    2017-03-25 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  lazyeval      0.2.1      2017-10-29 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  lubridate   * 1.7.1      2017-11-03 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  magrittr      1.5        2014-11-22 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  mnormt        1.5-5      2016-10-15 CRAN (R 3.4.1)                     </span>
+<span class="co">#&gt;  modelr        0.1.1      2017-07-24 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  munsell       0.4.3      2016-02-13 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  nlme          3.1-131    2017-02-06 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  pillar        1.0.1      2017-11-27 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  pkgconfig     2.0.1      2017-03-21 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  plyr          1.8.4      2016-06-08 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  psych         1.7.8      2017-09-09 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  purrr       * 0.2.4      2017-10-18 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  R6            2.2.2      2017-06-17 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  Rcpp          0.12.14    2017-11-23 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  readr       * 1.1.1      2017-05-16 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  readxl        1.0.0      2017-04-18 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  reshape2      1.4.3      2017-12-11 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  rlang         0.1.6      2017-12-21 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  rmarkdown     1.8        2017-11-17 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  rprojroot     1.3-2      2018-01-03 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  rstudioapi    0.7.0-9000 2018-01-12 Github (rstudio/rstudioapi@109e593)</span>
+<span class="co">#&gt;  rvest         0.3.2      2016-06-17 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  scales      * 0.5.0      2017-08-24 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  sessioninfo   1.0.1.9000 2017-12-15 Github (r-lib/sessioninfo@c871d01) </span>
+<span class="co">#&gt;  stringi       1.1.6      2017-11-17 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  stringr     * 1.2.0      2017-02-18 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  tibble      * 1.4.1      2017-12-25 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  tidyr       * 0.7.2      2017-10-16 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  tidyverse   * 1.2.1      2017-11-14 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  utf8          1.1.3      2018-01-03 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  withr         2.1.1      2017-12-19 CRAN (R 3.4.3)                     </span>
+<span class="co">#&gt;  xml2          1.1.1      2017-01-24 CRAN (R 3.4.2)                     </span>
+<span class="co">#&gt;  yaml          2.1.16     2017-12-12 CRAN (R 3.4.3)</span></code></pre></div>
 </div>
 </div>
   </div>
@@ -357,7 +431,7 @@ flu_fit
       <li><a href="#estimation-approach-for-attributable-or-excess-mortality">Estimation approach for attributable or “excess” mortality</a></li>
       <li><a href="#step-wise-example">Step-wise example</a></li>
       <li><a href="#serfling-consecutive-rule">Serfling consecutive rule</a></li>
-      <li><a href="#serflm-function">serflm() function</a></li>
+      <li><a href="#fluserf-function">fluserf() function</a></li>
       <li><a href="#criticisms-of-this-approach">Criticisms of this approach</a></li>
       <li><a href="#references">References</a></li>
       </ul>
@@ -368,11 +442,11 @@ flu_fit
 
 
       <footer><div class="copyright">
-  <p>Developed by Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo, Nina joyce.</p>
+  <p>Developed by Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo, Nina Joyce.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

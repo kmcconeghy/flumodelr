@@ -1,8 +1,10 @@
-# Version 0.0.6   
+# Version 0.0.6 01-12-2018  
 
   * fixed author typo 
+  * added viral option to fluglm
+  * renamed serflm to fluserf
   
-# Version 0.0.5 01/11/2018  
+# Version 0.0.5 01-11-2018  
 
   * Streamlined tidy eval between functions
   * converted lm to glm functions

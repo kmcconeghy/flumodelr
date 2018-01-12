@@ -110,10 +110,13 @@
     <h1>fluglm: Generate fitted prediction values with generalized linear model.</h1>
     </div>
 
-
+    
+    <p>Similar to serflm, but allows for more
+specifications.</p>
+    
 
     <pre class="usage"><span class='fu'>fluglm</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>epi</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='kw'>NULL</span>,
-              <span class='kw'>t.interval</span><span class='kw'>=</span><span class='fl'>52</span>, <span class='kw'>echo</span><span class='kw'>=</span><span class='no'>F</span>, <span class='kw'>poly</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>model.form</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+              <span class='kw'>period</span><span class='kw'>=</span><span class='fl'>52</span>, <span class='kw'>echo</span><span class='kw'>=</span><span class='no'>F</span>, <span class='kw'>poly</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>model.form</span><span class='kw'>=</span><span class='kw'>NULL</span>,
               <span class='kw'>int_type</span><span class='kw'>=</span><span class='st'>"ci"</span>, <span class='kw'>alpha</span><span class='kw'>=</span><span class='fl'>0.1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -130,9 +133,13 @@ epidemic indicator, and measure of influenza morbidity</p></td>
 the outcome variable of interest</p></td>
     </tr>
     <tr>
-      <th>epi</th>
-      <td><p>an unquoted name of a column in data object (e.g. epi)
-or if null will default to Sept - May.</p></td>
+      <th>bl_type</th>
+      <td><p>A quote string either: "season" or "viral". Denoting type of baseline
+to use for fitting model.</p></td>
+    </tr>
+    <tr>
+      <th>bl_var</th>
+      <td><p>an unquoted name of a variable corresponding to bl_type.</p></td>
     </tr>
     <tr>
       <th>time</th>
@@ -154,7 +161,7 @@ to a unit of time, must be unique (i.e. non-repeating)</p></td>
 quartic term.</p></td>
     </tr>
     <tr>
-      <th>model.form</th>
+      <th>model_form</th>
       <td><p>An object of type formula, allowing for user-specified
 model to be passed on to glm(). Default missing.</p></td>
     </tr>
@@ -166,33 +173,69 @@ but are only approximate for Poisson families.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>The threshold for interval, default is 0.1
-(a one-sided 95<!-- % interval).} -->
-
-offsetSpecify if offset term to be used, must specify log(object)
-
-...options passed on to glm model (e.g. family=poisson, see ?glm)</p></td>
+      <td><p>The threshold for interval, default is 0.05 (one-sided).</p></td>
+    </tr>
+    <tr>
+      <th>offset</th>
+      <td><p>Specify if offset term to be used, must specify log(object)</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>options passed on to glm model (e.g. family=poisson, see ?glm)</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>an object of class data.frame, input + y0 (fitted values), y0_ul
+the upper threshold</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L,
+Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated
+deaths made using four different methods. Influenza Other Respir
+Viruses. 2009 Jan;3(1):37-49.
+/urlhttps://www.ncbi.nlm.nih.gov/pubmed/19453440</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
+<span class='no'>fludta</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
+<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fluglm</span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>)
+
+<span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 10
+#&gt;    year  week fludeaths alldeaths perc_fl~ yrweek_dt  prop_f~ epi      y0 y0_ul
+#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt; &lt;date&gt;       &lt;dbl&gt; &lt;lgl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1  2010    42       726     11269     6.44 2010-10-17  0.0133 T       805   946
+#&gt; 2  2010    43       720     11204     6.43 2010-10-24  0.0193 T       815   951
+#&gt; 3  2010    44       739     11115     6.65 2010-10-31  0.0173 T       826   958
+#&gt; 4  2010    45       724     10321     7.01 2010-11-07  0.0231 T       838   966
+#&gt; # ... with 2 more rows</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#references">References</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo, Nina joyce.</p>
+  <p>Developed by Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo, Nina Joyce.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

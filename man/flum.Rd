@@ -4,8 +4,7 @@
 \alias{flum}
 \title{flum: General modeling function for Attributable Influenza Mortality}
 \usage{
-flum(data=NULL, model="serflm", outc=NULL, epi=NULL, time=NULL, 
-              t.interval=52, echo=F)
+flum(data=NULL, model="serflm", ...)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
@@ -15,28 +14,11 @@ epidemic indicator, and measure of influenza morbidity}
 include "ird" (see ?ird), "serflm" (see ?serflm), virology model (vignette('05-modserf',
 package = "flumodelr")), "arima" (see ?flurima).}
 
-\item{outc}{an unquoted name of a column in data which corresponds to
-the outcome variable of interest}
-
-\item{epi}{an unquoted name of a column in data object (e.g. epi)
-or if null will default to Sept - May.}
-
-\item{time}{an unquoted name of a column in data object, must be
-a numeric/integer class variable in dataframe which corresponds
-to a unit of time, must be unique (i.e. non-repeating)}
-
-\item{t.interval}{a numeric vector indicating period length, i.e. 52 weeks
-in year}
-
-\item{echo}{A logical parameter, if T Will output model parameters and
-description.}
-
-\item{...}{Individual models may need additional parameters, e.g. for
-virology must specify a viral test variable.}
+\item{...}{Extra arguments will depend on model requested, see examples and vignettes.}
 }
 \value{
 an object of class data.frame, input + y0 (fitted values), threshold
-if applicable, and computted excess mortality.
+if applicable, and computed excess mortality.
 }
 \description{
 General function wrapper to perform a variety of forecasted
