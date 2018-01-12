@@ -1,13 +1,13 @@
 library(tidyverse, quietly = T, warn.conflicts = F)
 library(lubridate, quietly = T, warn.conflicts = F)
 
-context("serflm")
+context("fluserf")
 
 
-test_that("serflm computes correct estimates", {
+test_that("fluserf computes correct estimates", {
   
   d <- flumodelr::fludta 
-  d_pred <- serflm(data=d, outc=perc_fludeaths, time=yrweek_dt)
+  d_pred <- fluserf(data=d, outc=perc_fludeaths, time=yrweek_dt)
 
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 

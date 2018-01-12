@@ -127,7 +127,7 @@ In this package we operationalize this like so:
   * Quantify values in excess of threshold    
 
 ## Step-wise example  
-The flumodelr function serflm will perform the above steps. We present the individual steps here for demonstration. 
+The flumodelr function fluserf will perform the above steps. We present the individual steps here for demonstration. 
 
 It is assumed the influenza epidemic period begins Oct. 1st, and ends May 31st. This is a conventional "flu" season in the U.S. However individual areas / regions may justify tailored periods. These assumptions are modifiable as options in the regression function.  
 
@@ -137,7 +137,7 @@ To compute a traditional Serfling model. The input dataframe must have time vect
 fludta %>% select(yrweek_dt, perc_fludeaths)
 ```
 
-` serflm() ` Will allow you to specify the boundaries for epidemic periods, and then compute the baseline off of non-epidemic timepoints. Additionally you can provide it with a logical variable in the dataset which indicates the epidemic period.  
+` fluserf() ` Will allow you to specify the boundaries for epidemic periods, and then compute the baseline off of non-epidemic timepoints. Additionally you can provide it with a logical variable in the dataset which indicates the epidemic period.  
 
 ### Example adding epidemic period indicator  
 ```{r }
@@ -189,7 +189,7 @@ The CDC also describes the threshold as:
 > expected at that time of the year in the absence of substantial 
 > influenza-related mortality."
 
-` serflm ` follows this method, but the modified serfling function allows for more options for threshold prediction. 1.645 standard deviations is equal to the upper limit 90% prediction interval.  
+` fluserf ` follows this method, but the modified serfling function allows for more options for threshold prediction. 1.645 standard deviations is equal to a one-sided upper limit 95% confidence interval.  
 
 #### Step 2c. Add predicted values to original dataset.  
 ```{r }
@@ -197,7 +197,7 @@ The CDC also describes the threshold as:
 df_pred <- fludta_serfling %>%
   dplyr::filter(year==2014 & week>=40 | year>2014) %>%
   predict(base_fit, newdata=., se.fit=TRUE, 
-          interval="prediction", level=0.90)
+          interval="confidence", level=0.90) #must specify 0.9 bc two-sided
 
 pred_y0 <- df_pred$fit[,1] #fitted values
 pred_y0_serf <- df_pred$fit[,3] 
@@ -298,11 +298,11 @@ ggplot(df_serf_excess, aes(x=yrweek_dt)) +
   labs(title="Figure 5. Periods of excess mortality over time")
 ```
 
-## serflm() function
+## fluserf() function
 ```{r }
 ##The following command completes the above steps 
 ##fit serfling model
-flu_fit <- serflm(data=fludta, outc=perc_fludeaths, time=yrweek_dt)
+flu_fit <- fluserf(data=fludta, outc=perc_fludeaths, time=yrweek_dt)
 flu_fit
 ```
 
@@ -325,3 +325,6 @@ The historical Serfling model should be considered as important background and a
  * The selected threshold for what constitutes "excess" is somewhat arbitrary. The original Serfling paper describes 1.64 standard deviations for 2 or more weeks as criteria. Recent papers have used the 95% prediction interval.   
  
 # References  
+```{r }
+sessioninfo::session_info()
+```

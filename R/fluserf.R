@@ -1,10 +1,10 @@
-#' @title serflm: Fit a Serfling Model on Time Series Data
+#' @title fluserf: Fit a Serfling Model on Time Series Data
 #' 
 #' @description Performs a cyclical linear regression model, 
-#' or 'serfling' model
+#' or 'fluserf' model
 #'
-#' @usage serflm(data=NULL, outc=NULL, epi=NULL, time=NULL, 
-#'               t.interval=52, echo=F)
+#' @usage fluserf(data=NULL, outc=NULL, epi=NULL, time=NULL, 
+#'               period=52, echo=F)
 #'               
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
@@ -19,9 +19,12 @@
 #' a numeric/integer class variable in dataframe which corresponds 
 #' to a unit of time, must be unique (i.e. non-repeating)  
 #' 
-#' @param t.interval a numeric vector indicating period length, i.e. 52 weeks in year  
+#' @param period a numeric vector indicating period length, i.e. 52 weeks in year  
 #'   
 #' @param echo A logical parameter, if T. Will print variables used in model.  
+#' 
+#' @param alpha Specify level for one-sided test to compute upper limit interval. 
+#' default is 0.05
 #' 
 #' @return an object of class data.frame, input + y0 (fitted values), y0_ul 
 #' the upper serfling threshold
@@ -31,7 +34,7 @@
 #' @examples
 #' require(flumodelr)
 #' fludta <- flumodelr::fludta
-#' flu_fit <- serflm(fludta, outc = fludeaths, time = yrweek_dt)  
+#' flu_fit <- fluserf(fludta, outc = fludeaths, time = yrweek_dt)  
 #'               
 #' head(flu_fit)
 #' 
@@ -41,8 +44,8 @@
 #' 78(6): 494 - 506.  
 #' /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/} 
 #' 
-serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL, 
-                   t.interval=52, echo=F) {
+fluserf <- function(data=NULL, outc=NULL, epi=NULL, time=NULL, 
+                   period=52, echo=F, alpha=0.05) {
   #sanity checks
     #df is data.frame
       stopifnot(is.data.frame(data)) 
@@ -69,14 +72,14 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
         cat(" 'outc' variable is:", rlang::quo_text(outc_eq), "\n")
         cat(" 'epi' variable is:", rlang::quo_text(epi_eq), "\n")
         cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
-        cat("  time period is:", t.interval, "\n")
+        cat("  time period is:", period, "\n")
       }
       
   data <- data %>% dplyr::arrange(., UQ(time_eq))
     
   data <- data %>%
       dplyr::mutate(t_unit = row_number(),
-              theta = 2*t_unit/t.interval,
+              theta = 2*t_unit/period,
               sin_f1 = sinpi(theta),
               cos_f1 = cospi(theta))
 
@@ -100,11 +103,11 @@ serflm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
       predict(base_fit, 
               newdata=., 
               se.fit=TRUE, 
-              type="response")
+              type="link")
     
     y0 <- pred$fit #fitted values
-    y0_ul <- pred$fit + (qnorm(0.95)*pred$se.fit)
-    
+    y0_ul <- pred$fit + (qnorm(1-alpha) * pred$se.fit)
+
     data <- data %>%
       tibble::add_column(., y0, y0_ul) %>%
       dplyr::select(-t_unit, -theta, -sin_f1, -cos_f1)

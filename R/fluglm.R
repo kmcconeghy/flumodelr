@@ -4,7 +4,7 @@
 #' specifications. 
 #'
 #' @usage fluglm(data=NULL, outc=NULL, epi=NULL, time=NULL, 
-#'               t.interval=52, echo=F, poly=T, model.form=NULL,
+#'               period=52, echo=F, poly=T, model.form=NULL,
 #'               int_type="ci", alpha=0.1)
 #'               
 #' @param data A dataframe class object, must contain time variable, 
@@ -13,8 +13,10 @@
 #' @param outc an unquoted name of a column in data which corresponds to 
 #' the outcome variable of interest
 #' 
-#' @param epi an unquoted name of a column in data object (e.g. epi) 
-#' or if null will default to Sept - May.  
+#' @param bl_type A quote string either: "season" or "viral". Denoting type of baseline
+#' to use for fitting model.  
+#' 
+#' @param bl_var an unquoted name of a variable corresponding to bl_type.   
 #' 
 #' @param time an unquoted name of a column in data object, must be 
 #' a numeric/integer class variable in dataframe which corresponds 
@@ -27,15 +29,14 @@
 #' @param poly A logical parameter, if T will include a quadratic, cubic and 
 #' quartic term.  
 #' 
-#' @param model.form An object of type formula, allowing for user-specified 
+#' @param model_form An object of type formula, allowing for user-specified 
 #' model to be passed on to glm(). Default missing.    
 #' 
 #' @param int_type Specifies type of upper interval to be output, currently
 #' only allows for confidence intervals. Predictional intervals to be added,  
 #' but are only approximate for Poisson families.  
 #' 
-#' @param alpha The threshold for interval, default is 0.1 
-#' (a one-sided 95% interval).  
+#' @param alpha The threshold for interval, default is 0.05 (one-sided).  
 #' 
 #' @param offset Specify if offset term to be used, must specify log(object)  
 #' 
@@ -60,9 +61,11 @@
 #' Viruses. 2009 Jan;3(1):37-49. 
 #' /url{https://www.ncbi.nlm.nih.gov/pubmed/19453440}
 #' 
-fluglm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL, 
-                   period=52, echo=F, poly=T, model.form=NULL, 
-                   int_type="ci", alpha=0.1, offset=NULL, ...) {
+fluglm <- function(data=NULL, outc=NULL, 
+                   bl_type="season", bl_var=NULL, 
+                   time=NULL, period=52, 
+                   echo=F, poly=T, model_form=NULL, 
+                   int_type="ci", alpha=0.05, offset=NULL, ...) {
   #sanity checks
   #df is data.frame
   stopifnot(is.data.frame(data)) 
@@ -70,25 +73,25 @@ fluglm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
   #tidy evaluation  
   outc_eq <- enquo(outc)
   time_eq <- enquo(time)
-  epi_eq <- enquo(epi)
+  blvar_eq <- enquo(bl_var)
   offset_eq <- enquo(offset)  
   
   #If no epi variable then, generate automatic period from Sept - May. 
   #write epi object as name
-    if (epi_eq==quo(NULL)) {
+    if (bl_type=="season" & blvar_eq==quo(NULL)) {
       data <- data %>%
         dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | 
-                                      month(!!time_eq)<=5, 
+                                    month(!!time_eq)<=5, 
                                     T, F))  
-      epi <- "epi"
-      epi_eq <- quo(epi)
-    } else {epi_eq <- enquo(epi)}
+      blvar_eq <- quo(epi)
+    } 
   
   #parameters  
     if (echo==T) {
       cat("Setting regression parameters...\n")
       cat(" 'outc' variable is:", rlang::quo_text(outc_eq), "\n")
-      cat(" 'epi' variable is:", rlang::quo_text(epi_eq), "\n")
+      if (bl_type=="season") {cat(" 'epi' variable is:", rlang::quo_text(blvar_eq), "\n")}
+      if (bl_type=="viral") {cat(" 'viral' variable is:", rlang::quo_text(blvar_eq), "\n")}
       cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
       cat("  time period is:", period, "\n")
     }
@@ -103,51 +106,84 @@ fluglm <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
   
   
   #build model formula
-    flu.form <- paste0(rlang::quo_text(outc_eq), 
+    flu_form <- paste0(rlang::quo_text(outc_eq), 
                        " ~ ", "t_unit", "+ sin_f1", "+ cos_f1")
     ## Offset term
     if (offset_eq!=quo(NULL)) {
-      flu.form <- paste0(flu.form, 
+      flu_form <- paste0(flu_form, 
                          "+ offset(", rlang::quo_text(offset_eq), ")")
     }
   
     ## Add polynomials
     if (poly==T) {
-      flu.form <- paste0(flu.form, "+ I(t_unit^2) + I(t_unit^3) + I(t_unit^4)")
+      flu_form <- paste0(flu_form, "+ I(t_unit^2) + I(t_unit^3) + I(t_unit^4)")
     }
   
     ## If user-specified formula  
-      if (is.null(model.form)==F) {
-        flu.form <- model.form
+      if (is.null(model_form)==F) {
+        flu.form <- model_form
       }
   
-  if (echo==T) {print(paste0("Model formula: ", flu.form))}
   
-  #compute baseline regression 
-    argslist <- list(formula=flu.form, 
-                 data=dplyr::filter(data, UQ(epi_eq)==F),
-                 na.action = na.exclude,
-                 ...)
+  #SEASONAL MODEL
+    if (bl_type=="season") {
+      if (echo==T) {print(paste0("Model formula: ", flu_form))}
+      
+      #compute baseline regression 
+        argslist <- list(formula=flu_form, 
+                     data=dplyr::filter(data, UQ(blvar_eq)==F),
+                     na.action = na.exclude,
+                     ...)
+        
+      base_fit <- do.call(glm, args=argslist)  
+      
+      ## Fitted values + prediction interval
+      if (int_type == "ci") {
+        pred <- data %>%
+          predict(base_fit, 
+                  newdata=., 
+                  se.fit=TRUE, 
+                  type="link")
+        
+        upr <- pred$fit + (qnorm(1-alpha) * pred$se.fit)
+        y0 <- base_fit$family$linkinv(pred$fit) #fitted values
+        y0_ul <- base_fit$family$linkinv(upr)
+      }
+    }
     
-  base_fit <- do.call(glm, args=argslist)  
-  
+    #VIROLOGY MODEL
+    if (bl_type=="viral") { 
+      flu_form <- paste0(flu_form, 
+                         "+ ", rlang::quo_text(blvar_eq))
+      if (echo==T) {print(paste0("Model formula: ", flu_form))}
+      
+      #compute baseline regression 
+      argslist <- list(formula=flu_form, 
+                       data=data,
+                       na.action = na.exclude,
+                       ...)
+      
+      base_fit <- do.call(glm, args=argslist)  
+      
+      ## Fitted values + prediction interval
+      if (int_type == "ci") {
+        pred <- data %>%
+          mutate(UQ(blvar_eq) == 0) %>%
+          predict(base_fit, 
+                  newdata=., 
+                  se.fit=TRUE, 
+                  type="link")
+        
+        upr <- pred$fit + (qnorm(1-alpha) * pred$se.fit)
+        y0 <- base_fit$family$linkinv(pred$fit) #fitted values
+        y0_ul <- base_fit$family$linkinv(upr)
+      }
+    }
   #parameters  
   if (echo==T) {
     print(summary(base_fit))
   }
   
-  ## Fitted values + prediction interval
-  if (int_type == "ci") {
-    pred <- data %>%
-      predict(base_fit, 
-              newdata=., 
-              se.fit=TRUE, 
-              type="link")
-    
-    upr <- pred$fit + (qnorm(1-alpha/2) * pred$se.fit)
-    y0 <- base_fit$family$linkinv(pred$fit) #fitted values
-    y0_ul <- base_fit$family$linkinv(upr)
-  }
   data <- data %>%
     tibble::add_column(., y0, y0_ul) %>%
     dplyr::select(-t_unit, -theta, -sin_f1, -cos_f1)

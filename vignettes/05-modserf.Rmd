@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 )
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 library(flumodelr)
-library(tidyverse)
 library(lubridate)
 library(scales)
 ```
@@ -66,7 +65,7 @@ Many published examples of this exist [@Wang2012, @Matias2016]. Some authors inc
 
 ## flum()
 
-A general wrapper, ` mflu() `, for modeling time-series data is written for this purpose. This will compute a traditional serfling model or other generalized linear models, (runs `fluglm()` under the hood), a smoothed model (adds polynomial terms), a model which allows for virology data, and other options explored below.  
+A general wrapper, ` flum() `, for modeling time-series data is written for this purpose. This will compute a traditional serfling model or other generalized linear models, a smoothed model (adds polynomial terms), a model which allows for virology data, and other options explored below.  
 
 ### Influenza data
 ```{r }
@@ -155,7 +154,7 @@ This model differs from the original Serfling regressions because of it's use of
 
 ## Compute attributable mortality  
 ### Excess mortality 
-You can either report the deaths in excess of the 95% prediction interval, which are sometimes described as epidemics or severe periods of influenza morbidity and mortality.  
+You can either report the deaths in excess of the one-sided 95% prediction interval, which are sometimes described as epidemics or severe periods of influenza morbidity and mortality.  
 ```{r }
 df_excess <- fludiff(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0_ul)
 df_excess
@@ -213,10 +212,10 @@ fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 ```
 
 ### original serfling model  
-```{r, eval=F}
+```{r, eval=T}
 fludta <- flumodelr::fludta  
 
-fludta_mod <- flum(fludta, method="serflm", 
+fludta_mod <- flum(fludta, model="fluserf", 
                    outc=perc_fludeaths, time=yrweek_dt)
 
 fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
@@ -226,23 +225,33 @@ fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 ```{r , eval=F}
 fludta <- flumodelr::fludta  
 
-fludta_mod <- flum(fludta, method="virology", 
-                   outc=fludeaths, time=yrweek_dt, lab=prop_flupos)
+fludta_mod <- flum(fludta, model="fluglm", 
+                   outc=fludeaths, time=yrweek_dt, 
+                   bl_type="viral", bl_var=prop_flupos)
 
-fludta_mod %>% select(year, week, fludeaths, pred_y0, pred_y0_uci)
+fludta_mod %>% select(year, week, fludeaths, y0, y0_ul)
 ```
 
 ### Other options  
-```{r , eval=F}
+```{r, }
 ## Without polynomial terms
-fludta_mod <- flum(fludta, method="virology", 
-                   outc="fludeaths", time="yrweek_dt", lab="prop_flupos",
-                   poly=F)
+fludta_mod <- flum(fludta, model="fluglm", 
+                   outc=fludeaths, time=yrweek_dt, 
+                   bl_type="viral", bl_var=prop_flupos, poly=F)
+```
 
-## Epidemic period specified (serfling model only)
-fludta_mod <- mflu(fludta, method="serflm", 
-                   outc="fludeaths", time="yrweek_dt", epi=c(40, 20)
-                   )
+```{r, }
+## Epidemic period specified
+fludta_mod <- flum(fludta, model="fluglm", 
+                   outc=fludeaths, time=yrweek_dt, 
+                   bl_type="season", poly=F)
+```
+
+```{r }
+## Poisson model with offset term
+fludta_mod <- flum(fludta, model="fluglm", outc = fludeaths, time = yrweek_dt, 
+                bl_type="viral", bl_var=prop_flupos,
+                family=poisson, offset=log(alldeaths)) 
 ```
 
 # References  

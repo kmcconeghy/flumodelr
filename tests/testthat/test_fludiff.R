@@ -6,7 +6,7 @@ context("fludiff")
 test_that("fludiff computes", {
   
   d <- flumodelr::fludta 
-  d_pred <- serflm(data=d, outc=perc_fludeaths, time=yrweek_dt)
+  d_pred <- fluserf(data=d, outc=perc_fludeaths, time=yrweek_dt)
   d_diff <- fludiff(d_pred, obsvar = perc_fludeaths, fitvar = y0_ul)
 
   #load data

@@ -7,7 +7,7 @@ context("fluplot")
 
 test_that("fluplot generates plot", {
   d <- flumodelr::fludta 
-  d_pred <- serflm(data=d, outc=perc_fludeaths, time=yrweek_dt)
+  d_pred <- fluserf(data=d, outc=perc_fludeaths, time=yrweek_dt)
   g <-fluplot(d_pred, xvar=yrweek_dt, perc_fludeaths, y0, y0_ul,
               ylab="% Deaths due to P&I", title="Serfling Model")
   
