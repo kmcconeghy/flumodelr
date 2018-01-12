@@ -5,7 +5,7 @@
 #' summer season
 #' 
 #' @usage ird (data=NULL, outc=NULL, time=NULL, viral=NULL, 
-#'             t.interval=52, respStart=27, high=0.1, fluStart=40,
+#'             period=52, respStart=27, high=0.1, fluStart=40,
 #'             fluStop=18)
 #' 
 #' @param data A dataframe class object, must contain time variable, 
@@ -19,7 +19,7 @@
 #' a numeric/integer class variable in dataframe which corresponds 
 #' to a unit of time, must be unique (i.e. non-repeating)  
 #' 
-#' @param t.interval a numeric variable indicating the period length of the 
+#' @param period a numeric variable indicating the period length of the 
 #' time variable (i.e. weeks = 52, the default)  
 #' 
 #' @param respStart A numeric/integer class variable, must specify the 
@@ -65,7 +65,7 @@ ird <- function(data=NULL,
                 outc=NULL, 
                 time=NULL,
                 viral=NULL,
-                t.interval=52,
+                period=52,
                 respStart=27,
                 high=0.1,
                 fluStart=40,
@@ -103,7 +103,7 @@ ird <- function(data=NULL,
     cat(" 'outc' argument is:", rlang::quo_text(outc_eq), "\n")
     cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
     cat(" 'viral' variable is:", rlang::quo_text(viral_eq), "\n")
-    cat("  time period is:", t_interval, "\n")
+    cat("  time period is:", period, "\n")
   }
   
   #find respiratory seasons
