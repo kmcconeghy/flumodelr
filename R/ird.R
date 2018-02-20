@@ -135,27 +135,35 @@ ird <- function(data=NULL,
   
 }
 #' @export  
-rb <- function(data, outc, echo=F){ #calculate the rates for each of the periods
+rb <- function(data, outc, echo=F){ 
+  
   #tidy evaluation  
-  outc_eq <- enquo(outc)
+    outc_eq <- enquo(outc)
 
   #parameters 
-  if (echo==T) {
-    cat("Setting rb parameters...\n")
-    cat(" 'outc' argument is:", rlang::quo_text(outc_eq), "\n")
-  }  
+    if (echo==T) {
+      cat("Setting rb parameters...\n")
+      cat(" 'outc' argument is:", rlang::quo_text(outc_eq), "\n")
+    }  
   
   #sum the outcomes
-  highrates <- data %>% group_by(season, high) %>% summarize(out_high = mean(!!outc_eq))
-  flurates <- data %>% group_by(season, fluseason) %>% summarize(out_flu = mean(!!outc_eq))
+    highrates <- data %>% 
+      group_by(season, high) %>% 
+      summarize(out_high = mean(!!outc_eq))
+  
+    flurates <- data %>% 
+      group_by(season, fluseason) %>% 
+      summarize(out_flu = mean(!!outc_eq))
   
   #join the tables
-  flu_rates <- flurates %>% left_join(highrates, by = c("fluseason"="high", "season"))
-  names(flu_rates) <- c("season", "high_act", 
-                        paste0(rlang::quo_text(outc_eq), "_fluseason"), 
-                        paste0(rlang::quo_text(outc_eq),"_viral_act"))
-  levels(flu_rates$high_act) <- c(TRUE,FALSE)
-  return(flu_rates)
+    flu_rates <- flurates %>% 
+      left_join(highrates, by = c("fluseason"="high", "season"))
+    
+    names(flu_rates) <- c("season", "high_act", 
+                          paste0(rlang::quo_text(outc_eq), "_fluseason"), 
+                          paste0(rlang::quo_text(outc_eq),"_viral_act"))
+    levels(flu_rates$high_act) <- c(TRUE,FALSE)
+    return(flu_rates)
 }
 
 #' @export  

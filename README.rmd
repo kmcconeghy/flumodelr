@@ -1,9 +1,6 @@
 flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality
 ===============
 
-[![CRAN version](https://www.r-pkg.org/badges/version/flumodelr)](https://cran.r-project.org/package=flumodelr)
-[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/flumodelr)](https://cran.r-project.org/package=flumodelr)
-
 <img src="man/figures/flumodelr_cdc122ex.jpeg" width=750 height=400 align="center"/>  
 
 # Overview  
@@ -31,13 +28,13 @@ library(tidyverse, quietly = T, warn.conflicts = F)
 
 ### Example data  
 ```{r }
-fludta <- flumodelr::fludta
+fludta <- fludta
 fludta
 ```
 
 ### Fit Traditional Serfling Model
 ```{r }
-flu_fit <- flumodelr::fluserf(fludta, outc = perc_fludeaths, time = yrweek_dt)
+flu_fit <- fluserf(fludta, outc = perc_fludeaths, time = yrweek_dt)
 ```
 
 Assumes epidemic influenza period of Sept. - May.  Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.  
@@ -49,7 +46,7 @@ flu_fit %>% select (year, week, perc_fludeaths, y0, y0_ul)
 ### Influenza Time-Series Plot  
 An convenience function for plotting the above fit lines.  
 ```{r }
-flumodelr::fluplot(flu_fit, xvar=yrweek_dt, perc_fludeaths, y0, y0_ul,
+fluplot(flu_fit, xvar=yrweek_dt, perc_fludeaths, y0, y0_ul,
                     ylab="% Deaths due to P&I", title="Serfling Model")
 ```
 
@@ -57,7 +54,7 @@ flumodelr::fluplot(flu_fit, xvar=yrweek_dt, perc_fludeaths, y0, y0_ul,
 Several companion documents have been written to assist interested readers with the background and use of the package. We suggest you start here:
 [Introduction to flumodelr](https://kmcconeghy.github.io/flumodelr/index.html) or if the package is installed:  
 ```{r, eval=F}
-devtools::vignette("01-Introduction", "flumodelr")
+vignette("01-Introduction", "flumodelr")
 ```
 
 # Latest Version Updates  

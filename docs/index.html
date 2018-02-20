@@ -91,7 +91,6 @@
 <div id="flumodelr-an-r-package-for-estimating-attributable-influenza-morbidity-and-mortality" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#flumodelr-an-r-package-for-estimating-attributable-influenza-morbidity-and-mortality" class="anchor"></a>flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality</h1></div>
-
 <p><img src="reference/figures/flumodelr_cdc122ex.jpeg" width="750" height="400" align="center"></p>
 </div>
 <div id="overview" class="section level1">
@@ -121,7 +120,7 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <div id="example-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-data" class="anchor"></a>Example data</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>fludta
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta &lt;-<span class="st"> </span>fludta
 fludta</code></pre></div>
 <pre><code>## # A tibble: 261 x 7
 ##     year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos
@@ -141,7 +140,7 @@ fludta</code></pre></div>
 <div id="fit-traditional-serfling-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#fit-traditional-serfling-model" class="anchor"></a>Fit Traditional Serfling Model</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit &lt;-<span class="st"> </span>flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/fluserf">fluserf</a></span>(fludta, <span class="dt">outc =</span> perc_fludeaths, <span class="dt">time =</span> yrweek_dt)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/fluserf.html">fluserf</a></span>(fludta, <span class="dt">outc =</span> perc_fludeaths, <span class="dt">time =</span> yrweek_dt)</code></pre></div>
 <p>Assumes epidemic influenza period of Sept. - May. Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flu_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span> (year, week, perc_fludeaths, y0, y0_ul)</code></pre></div>
 <pre><code>## # A tibble: 261 x 5
@@ -163,7 +162,7 @@ fludta</code></pre></div>
 <h3 class="hasAnchor">
 <a href="#influenza-time-series-plot" class="anchor"></a>Influenza Time-Series Plot</h3>
 <p>An convenience function for plotting the above fit lines.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flumodelr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/flumodelr/topics/fluplot">fluplot</a></span>(flu_fit, <span class="dt">xvar=</span>yrweek_dt, perc_fludeaths, y0, y0_ul,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/fluplot.html">fluplot</a></span>(flu_fit, <span class="dt">xvar=</span>yrweek_dt, perc_fludeaths, y0, y0_ul,
                     <span class="dt">ylab=</span><span class="st">"% Deaths due to P&amp;I"</span>, <span class="dt">title=</span><span class="st">"Serfling Model"</span>)</code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 </div>
@@ -172,7 +171,7 @@ fludta</code></pre></div>
 <h1 class="hasAnchor">
 <a href="#vignettes" class="anchor"></a>Vignettes</h1>
 <p>Several companion documents have been written to assist interested readers with the background and use of the package. We suggest you start here: <a href="https://kmcconeghy.github.io/flumodelr/index.html">Introduction to flumodelr</a> or if the package is installed:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">vignette</span>(<span class="st">"01-Introduction"</span>, <span class="st">"flumodelr"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vignette</span>(<span class="st">"01-Introduction"</span>, <span class="st">"flumodelr"</span>)</code></pre></div>
 </div>
 <div id="latest-version-updates" class="section level1">
 <h1 class="hasAnchor">
@@ -231,11 +230,6 @@ Nina Joyce, Ph.D., Brown University School of Public Health, Dept. Health Servic
 <li>Andrew Zullo <br><small class="roles"> Author, copyright holder </small> </li>
 <li>Nina Joyce <br><small class="roles"> Author, copyright holder </small> </li>
 </ul>
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=flumodelr"><img src="https://www.r-pkg.org/badges/version/flumodelr" alt="CRAN version"></a></li>
-<li><a href="https://cran.r-project.org/package=flumodelr"><img src="https://cranlogs.r-pkg.org/badges/flumodelr" alt="CRAN RStudio mirror downloads"></a></li>
-</ul>
 </div>
 
 </div>
@@ -246,7 +240,7 @@ Nina Joyce, Ph.D., Brown University School of Public Health, Dept. Health Servic
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>
