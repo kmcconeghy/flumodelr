@@ -134,48 +134,60 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
   theme(plot.title = element_text(size=14)) +
   labs(title="Figure 4. Periods of excess mortality over time")
 
-## ---- eval=F-------------------------------------------------------------
-#  fludta <- flumodelr::fludta
-#  
-#  fludta_mod <- flum(fludta, model="ird",
-#                     outc=perc_fludeaths, time=yrweek_dt)
-#  
-#  fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
-
-## ---- eval=T-------------------------------------------------------------
+## ------------------------------------------------------------------------
 fludta <- flumodelr::fludta  
 
+fludta_mod <- flum(fludta, model="ird", 
+                   outc=perc_fludeaths, time=yrweek_dt,
+                   viral=prop_flupos)
+
+fludta_mod %>% select(year, week, prop_flupos, season, high)
+
+## ------------------------------------------------------------------------
 fludta_mod <- flum(fludta, model="fluserf", 
                    outc=perc_fludeaths, time=yrweek_dt)
 
 fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 
-## ---- eval=F-------------------------------------------------------------
-#  fludta <- flumodelr::fludta
-#  
-#  fludta_mod <- flum(fludta, model="fluglm",
+## ---- eval=FALSE---------------------------------------------------------
+#  flum(fludta, model="fluglm",
 #                     outc=fludeaths, time=yrweek_dt,
-#                     bl_type="viral", bl_var=prop_flupos)
+#                     viral = "prop_flupos")[, c(1:3, 7:9)]
+
+## ---- eval=FALSE---------------------------------------------------------
+#  ## Without polynomial terms
+#  flum(fludta, model="fluglm",
+#       outc=fludeaths, time=yrweek_dt,
+#       viral = "prop_flupos", poly=F)[, c(1:3, 7:9)]
+
+## ---- eval=FALSE---------------------------------------------------------
+#  ## Epidemic period, non-specified
+#  flum(fludta, model="fluglm",
+#       outc=fludeaths, time=yrweek_dt,
+#       season=T)[, c(1:3, 7:9)]
+
+## ---- eval=FALSE---------------------------------------------------------
+#  ## Epidemic period specified
+#  fludta_mod <- ird(data=fludta,
+#                 outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
 #  
-#  fludta_mod %>% select(year, week, fludeaths, y0, y0_ul)
+#  fluglm(data=fludta_mod, model="fluglm",
+#         outc=fludeaths, time=yrweek_dt,
+#         season=high)[, c(1:3, 7:10)]
 
-## ------------------------------------------------------------------------
-## Without polynomial terms
-fludta_mod <- flum(fludta, model="fluglm", 
-                   outc=fludeaths, time=yrweek_dt, 
-                   bl_type="viral", bl_var=prop_flupos, poly=F)
+## ----eval=FALSE----------------------------------------------------------
+#  ## Poisson model with offset term
+#  flum(fludta,
+#       model="fluglm", outc = fludeaths,
+#       time = yrweek_dt, season=T,
+#       family=poisson, offset=log(alldeaths))[, c(1:3, 7:9)]
 
-## ------------------------------------------------------------------------
-## Epidemic period specified
-fludta_mod <- flum(fludta, model="fluglm", 
-                   outc=fludeaths, time=yrweek_dt, 
-                   bl_type="season", poly=F)
-
-## ------------------------------------------------------------------------
-## Poisson model with offset term
-fludta_mod <- flum(fludta, model="fluglm", outc = fludeaths, time = yrweek_dt, 
-                bl_type="viral", bl_var=prop_flupos,
-                family=poisson, offset=log(alldeaths)) 
+## ----eval=FALSE----------------------------------------------------------
+#  ## Negative binomial model with offset term
+#  flum(fludta,
+#       model="flunb", outc = fludeaths,
+#       time = yrweek_dt, season=T,
+#       family=poisson, offset=log(alldeaths))[, c(1:3, 7:9)]
 
 ## ------------------------------------------------------------------------
 sessioninfo::session_info()

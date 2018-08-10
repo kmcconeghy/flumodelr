@@ -202,19 +202,18 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
 ## Examples with flum()  
 
 ### Incidence-Rate Difference (Simplest model) 
-```{r, eval=F}
+```{r, }
 fludta <- flumodelr::fludta  
 
 fludta_mod <- flum(fludta, model="ird", 
-                   outc=perc_fludeaths, time=yrweek_dt)
+                   outc=perc_fludeaths, time=yrweek_dt,
+                   viral=prop_flupos)
 
-fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
+fludta_mod %>% select(year, week, prop_flupos, season, high)
 ```
 
 ### original serfling model  
-```{r, eval=T}
-fludta <- flumodelr::fludta  
-
+```{r, }
 fludta_mod <- flum(fludta, model="fluserf", 
                    outc=perc_fludeaths, time=yrweek_dt)
 
@@ -222,36 +221,66 @@ fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 ```
 
 ### Virology-based model  
-```{r , eval=F}
-fludta <- flumodelr::fludta  
+You can specify virology data using viral option, which accepts a string
+vector of length any. The function will search for named columns in the
+data using that string and build a model formula which includes them.  
 
-fludta_mod <- flum(fludta, model="fluglm", 
+Any viral data called here should be a proportional value, i.e. float 
+between 0-1.  
+
+```{r, }
+flum(fludta, model="fluglm", 
                    outc=fludeaths, time=yrweek_dt, 
-                   bl_type="viral", bl_var=prop_flupos)
-
-fludta_mod %>% select(year, week, fludeaths, y0, y0_ul)
+                   viral = "prop_flupos")[, c(1:3, 7:9)]
 ```
 
 ### Other options  
+
+If excluding the polynomial terms is desired:  
 ```{r, }
 ## Without polynomial terms
-fludta_mod <- flum(fludta, model="fluglm", 
-                   outc=fludeaths, time=yrweek_dt, 
-                   bl_type="viral", bl_var=prop_flupos, poly=F)
+flum(fludta, model="fluglm", 
+     outc=fludeaths, time=yrweek_dt, 
+     viral = "prop_flupos", poly=F)[, c(1:3, 7:9)]
 ```
 
-```{r, }
+Perform a seasonal baseline model using Sept - May as season-period.  
+```{r, eval=FALSE}
+## Epidemic period, non-specified
+flum(fludta, model="fluglm", 
+     outc=fludeaths, time=yrweek_dt, 
+     season=T)[, c(1:3, 7:9)]
+```
+
+Identify your own epidemic period, then call flum() to use it. Season is 
+default NULL, but if a named variable in fludta_mod, the model will search
+for and use it as the baseline.  
+```{r, eval=FALSE}
 ## Epidemic period specified
-fludta_mod <- flum(fludta, model="fluglm", 
-                   outc=fludeaths, time=yrweek_dt, 
-                   bl_type="season", poly=F)
+fludta_mod <- ird(data=fludta, 
+               outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+
+flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=yrweek_dt, 
+       season=high)[, c(1:3, 7:10)]
 ```
 
-```{r }
+You can pass arguments to the glm() call, like specifying a Poisson model.  
+```{r eval=FALSE}
 ## Poisson model with offset term
-fludta_mod <- flum(fludta, model="fluglm", outc = fludeaths, time = yrweek_dt, 
-                bl_type="viral", bl_var=prop_flupos,
-                family=poisson, offset=log(alldeaths)) 
+flum(fludta, 
+     model="fluglm", outc = fludeaths, 
+     time = yrweek_dt, season=T, 
+     family=poisson, offset=log(alldeaths))[, c(1:3, 7:9)] 
+```
+
+A negative binomial model can be called from the MASS::glm.nb function. 
+The output is the same.  
+```{r eval=FALSE}
+## Negative binomial model with offset term
+flum(fludta, 
+     model="flunb", outc = fludeaths, 
+     time = yrweek_dt, season=T, 
+     family=poisson, offset=log(alldeaths))[, c(1:3, 7:9)] 
 ```
 
 # References  
