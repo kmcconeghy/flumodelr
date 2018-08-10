@@ -3,13 +3,18 @@ library(lubridate, quietly = T, warn.conflicts = F)
 
 context("fluglm")
 
+test_that("Usage example works", {
+  fludta <- flumodelr::fludta
+  flu_fit <- fluglm(fludta, outc = fludeaths, time = yrweek_dt) 
+  expect_is(flu_fit, 'data.frame')
+})
 
 test_that("fluglm gaussian computes", {
   d <- flumodelr::fludta 
   d_gaus <- fluglm(fludta, 
                    outc = perc_fludeaths, 
                    time = yrweek_dt, 
-                   family=gaussian) 
+                   family = gaussian) 
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
               "perc_fludeaths", "yrweek_dt", "prop_flupos",
@@ -27,8 +32,8 @@ test_that("fluglm poisson computes", {
   d_pois <- fluglm(fludta, 
                    outc = fludeaths, 
                    time = yrweek_dt, 
-                   family=poisson,
-                   offset=log(alldeaths)) 
+                   family = poisson,
+                   offset = log(alldeaths)) 
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
               "perc_fludeaths", "yrweek_dt", "prop_flupos",
