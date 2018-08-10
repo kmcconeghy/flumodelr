@@ -1,3 +1,10 @@
+# Version 0.0.7 08-08-2018  
+
+  * added additional unit tests  
+  * fixed errors in 05- vignette  
+  * modified fluglm to accept negative binomial option  
+  * modified viral option to accept multiple viral types  
+
 # Version 0.0.6 01-12-2018  
 
   * fixed author typo 

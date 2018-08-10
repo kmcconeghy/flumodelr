@@ -19,7 +19,8 @@ Imports:
     broom (>= 0.4.2),
     magrittr (>= 1.5.0),
     forecast (>= 8.2.0),
-    stats
+    stats,
+    MASS
 Suggests:
     knitr,
     microbenchmark,
@@ -37,5 +38,5 @@ LazyDataCompression: xz
 BugReports: https://github.com/kmcconeghy/flumodelr/issues
 License: GPL-3
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace", "collate"))
