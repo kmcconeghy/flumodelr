@@ -1,7 +1,7 @@
 #' @title flum: General modeling function for Attributable Influenza Mortality
 #' 
 #' @description General function wrapper to perform a variety of forecasted 
-#' model. The output will always be a set of fitted values.
+#' models. The output will always be a set of fitted values.
 #'
 #' @usage flum(data=NULL, model="serflm", ...)
 #'               
@@ -12,10 +12,10 @@
 #' include "ird" (see ?ird), "serflm" (see ?serflm), virology model (vignette('05-modserf', 
 #' package = "flumodelr")), "arima" (see ?flurima).  
 #' 
-#' @param ... Extra arguments will depend on model requested, see examples and vignettes.
+#' @param ... Extra arguments depending on model requested, see examples and vignettes.
 #' 
 #' @return an object of class data.frame, input + y0 (fitted values), threshold 
-#' if applicable, and computed excess mortality.  
+#' if applicable, and computed excess morbidity  
 #' 
 #' @export
 #' 

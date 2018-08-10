@@ -4,7 +4,7 @@
 #' and peri-influenza season, or between influenza season and
 #' summer season
 #' 
-#' @usage ird (data=NULL, outc=NULL, time=NULL, viral=NULL, 
+#' @usage ird(data=NULL, outc=NULL, time=NULL, viral=NULL, 
 #'             period=52, respStart=27, high=0.1, fluStart=40,
 #'             fluStop=18)
 #' 
@@ -134,6 +134,12 @@ ird <- function(data=NULL,
   return(data)
   
 }
+
+#' @title rb: Compute differences in ird model
+#' 
+#' @description Computes the marginal mean difference across influenza season
+#' 
+#' @usage rb(data=NULL, outc=NULL, echo=F)
 #' @export  
 rb <- function(data, outc, echo=F){ 
   
@@ -165,7 +171,12 @@ rb <- function(data, outc, echo=F){
     levels(flu_rates$high_act) <- c(TRUE,FALSE)
     return(flu_rates)
 }
-
+#' @title gr: Bar graph for ird models  
+#' 
+#' @description Outputs simple bar chart for incidence rate difference
+#' models  
+#' 
+#' @usage rb(data=NULL, outc=NULL, echo=F)
 #' @export  
 gr <- function(data){
   ggplot(data, aes(x = season, y = perc_fludeaths_fluseason, fill=high_act))+

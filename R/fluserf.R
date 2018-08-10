@@ -1,7 +1,6 @@
 #' @title fluserf: Fit a Serfling Model on Time Series Data
 #' 
-#' @description Performs a cyclical linear regression model, 
-#' or 'fluserf' model
+#' @description Performs a cyclical linear regression model
 #'
 #' @usage fluserf(data=NULL, outc=NULL, epi=NULL, time=NULL, 
 #'               period=52, echo=F)
