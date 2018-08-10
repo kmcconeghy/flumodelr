@@ -33,8 +33,7 @@ an object of class data.frame, input + y0 (fitted values), y0_ul
 the upper serfling threshold
 }
 \description{
-Performs a cyclical linear regression model,
-or 'fluserf' model
+Performs a cyclical linear regression model
 }
 \examples{
 require(flumodelr)

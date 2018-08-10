@@ -14,15 +14,15 @@ epidemic indicator, and measure of influenza morbidity}
 include "ird" (see ?ird), "serflm" (see ?serflm), virology model (vignette('05-modserf',
 package = "flumodelr")), "arima" (see ?flurima).}
 
-\item{...}{Extra arguments will depend on model requested, see examples and vignettes.}
+\item{...}{Extra arguments depending on model requested, see examples and vignettes.}
 }
 \value{
 an object of class data.frame, input + y0 (fitted values), threshold
-if applicable, and computed excess mortality.
+if applicable, and computed excess morbidity
 }
 \description{
 General function wrapper to perform a variety of forecasted
-model. The output will always be a set of fitted values.
+models. The output will always be a set of fitted values.
 }
 \examples{
 require(flumodelr)

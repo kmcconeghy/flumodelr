@@ -4,7 +4,7 @@
 \alias{ird}
 \title{ird: Perform incidence rate-difference models}
 \usage{
-ird (data=NULL, outc=NULL, time=NULL, viral=NULL, 
+ird(data=NULL, outc=NULL, time=NULL, viral=NULL, 
             period=52, respStart=27, high=0.1, fluStart=40,
             fluStop=18)
 }
