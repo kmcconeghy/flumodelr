@@ -149,31 +149,30 @@ fludta_mod <- flum(fludta, model="fluserf",
 
 fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 
-## ---- eval=FALSE---------------------------------------------------------
-#  flum(fludta, model="fluglm",
-#                     outc=fludeaths, time=yrweek_dt,
-#                     viral = "prop_flupos")[, c(1:3, 7:9)]
+## ------------------------------------------------------------------------
+flum(fludta, model="fluglm", 
+                   outc=fludeaths, time=yrweek_dt, 
+                   viral = "prop_flupos")[, c(1:3, 7:9)]
 
-## ---- eval=FALSE---------------------------------------------------------
-#  ## Without polynomial terms
-#  flum(fludta, model="fluglm",
-#       outc=fludeaths, time=yrweek_dt,
-#       viral = "prop_flupos", poly=F)[, c(1:3, 7:9)]
+## ------------------------------------------------------------------------
+## Without polynomial terms
+flum(fludta, model="fluglm", 
+     outc=fludeaths, time=yrweek_dt, 
+     viral = "prop_flupos", poly=F)[, c(1:3, 7:9)]
 
-## ---- eval=FALSE---------------------------------------------------------
-#  ## Epidemic period, non-specified
-#  flum(fludta, model="fluglm",
-#       outc=fludeaths, time=yrweek_dt,
-#       season=T)[, c(1:3, 7:9)]
+## ------------------------------------------------------------------------
+## Epidemic period, non-specified
+flum(fludta, model="fluglm", 
+     outc=fludeaths, time=yrweek_dt, 
+     season=T)[, c(1:3, 7:9)]
 
-## ---- eval=FALSE---------------------------------------------------------
-#  ## Epidemic period specified
-#  fludta_mod <- ird(data=fludta,
-#                 outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
-#  
-#  fluglm(data=fludta_mod, model="fluglm",
-#         outc=fludeaths, time=yrweek_dt,
-#         season=high)[, c(1:3, 7:10)]
+## ------------------------------------------------------------------------
+## Epidemic period specified
+fludta_mod <- ird(data=fludta, 
+               outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+
+flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=yrweek_dt, 
+       season=high)[, c(1:3, 10:12)]
 
 ## ----eval=FALSE----------------------------------------------------------
 #  ## Poisson model with offset term
@@ -182,12 +181,12 @@ fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 #       time = yrweek_dt, season=T,
 #       family=poisson, offset=log(alldeaths))[, c(1:3, 7:9)]
 
-## ----eval=FALSE----------------------------------------------------------
-#  ## Negative binomial model with offset term
-#  flum(fludta,
-#       model="flunb", outc = fludeaths,
-#       time = yrweek_dt, season=T,
-#       family=poisson, offset=log(alldeaths))[, c(1:3, 7:9)]
+## ------------------------------------------------------------------------
+## Negative binomial model with offset term
+flum(fludta, 
+     model="flunb", outc = fludeaths, 
+     time = yrweek_dt, season=T, 
+     offset=log(alldeaths))[, c(1:3, 7:9)] 
 
 ## ------------------------------------------------------------------------
 sessioninfo::session_info()
