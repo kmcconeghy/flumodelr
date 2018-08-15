@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CDC WHO NREVSS Laboratory Data � nrevss • flumodelr</title>
+<title>CDC WHO NREVSS Laboratory Data — nrevss • flumodelr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,47 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="CDC WHO NREVSS Laboratory Data — nrevss" />
+
+<meta property="og:description" content="Description from CDC Flu Portal Dashboard:
+Virologic Surveillance — Approximately 110 U.S. World Health Organization (WHO)
+Collaborating Laboratories and 270 National Respiratory and Enteric Virus
+Surveillance System (NREVSS) laboratories, which include both public health
+and clinical laboratories, located throughout the United States participate
+in virologic surveillance for influenza. All public health and clinical
+laboratories report the total number of respiratory specimens tested
+and the number positive for influenza each week to CDC, along with age
+or age group of the person, if available. Beginning in the 2015-16 season,
+reports from public health and clinical laboratories were presented separately
+in the weekly influenza update, FluView. Data from clinical laboratories
+include the weekly total number of specimens tested, the number of positive
+influenza tests, and the percent positive by influenza type.
+Data presented from public health laboratories include the weekly
+total number of specimens tested, the number of positive influenza tests,
+and the number by influenza virus type, influenza A subtype, and
+influenza B lineage. In addition, the age group distribution of
+influenza positive tests are also summarized in Fluview. A subset of
+the influenza viruses collected by public health laboratories are sent to
+CDC for further characterization, including antiviral resistance
+testing and antigenic and/or genetic characterization, and this
+information is presented in the antiviral resistance and
+virus characterization sections of the FluView report." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +81,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">flumodelr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">flumodelr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -85,7 +123,7 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -97,6 +135,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -104,15 +143,18 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>CDC WHO NREVSS Laboratory Data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/kmcconeghy/flumodelr/blob/master/R/nrevss.R'><code>R/nrevss.R</code></a></small>
+    <div class="hidden name"><code>nrevss.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Description from CDC Flu Portal Dashboard:
-Virologic Surveillance � Approximately 110 U.S. World Health Organization (WHO)
+Virologic Surveillance — Approximately 110 U.S. World Health Organization (WHO)
 Collaborating Laboratories and 270 National Respiratory and Enteric Virus
 Surveillance System (NREVSS) laboratories, which include both public health
 and clinical laboratories, located throughout the United States participate
@@ -135,6 +177,7 @@ testing and antigenic and/or genetic characterization, and this
 information is presented in the antiviral resistance and
 virus characterization sections of the FluView report.</p>
     
+    </div>
 
     <pre class="usage"><span class='no'>nrevss</span></pre>
         
@@ -180,11 +223,14 @@ virus characterization sections of the FluView report.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

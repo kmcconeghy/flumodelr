@@ -1,0 +1,10 @@
+pandoc: 1.19.2.1
+pkgdown: 1.1.0
+pkgdown_sha: ~
+articles:
+  01-introduction: 01-introduction.html
+  02-data: 02-data.html
+  03-ratediff: 03-ratediff.html
+  04-serfling: 04-serfling.html
+  05-modserf: 05-modserf.html
+

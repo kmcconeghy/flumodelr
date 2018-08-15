@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ird: Perform incidence rate-difference models � ird • flumodelr</title>
+<title>ird: Perform incidence rate-difference models — ird • flumodelr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,27 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="ird: Perform incidence rate-difference models — ird" />
+
+<meta property="og:description" content="Calculates the rate difference between influenza season
+and peri-influenza season, or between influenza season and
+summer season" />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +61,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">flumodelr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">flumodelr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -85,7 +103,7 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -97,6 +115,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -104,23 +123,27 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>ird: Perform incidence rate-difference models</h1>
+    <small class="dont-index">Source: <a href='https://github.com/kmcconeghy/flumodelr/blob/master/R/ird.R'><code>R/ird.R</code></a></small>
+    <div class="hidden name"><code>ird.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Calculates the rate difference between influenza season
 and peri-influenza season, or between influenza season and
 summer season</p>
     
+    </div>
 
-    <pre class="usage"><span class='fu'>ird</span> (<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>viral</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>ird</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>viral</span><span class='kw'>=</span><span class='kw'>NULL</span>,
             <span class='kw'>period</span><span class='kw'>=</span><span class='fl'>52</span>, <span class='kw'>respStart</span><span class='kw'>=</span><span class='fl'>27</span>, <span class='kw'>high</span><span class='kw'>=</span><span class='fl'>0.1</span>, <span class='kw'>fluStart</span><span class='kw'>=</span><span class='fl'>40</span>,
             <span class='kw'>fluStop</span><span class='kw'>=</span><span class='fl'>18</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -184,7 +207,7 @@ value is 18. This corresponds with the end of April.</p></td>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Thompson WW, Weintraub E, Dhankhar P, Cheng PY, Brammer L,
-Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated
+Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza‐associated
 deaths made using four different methods. Influenza and other
 respiratory viruses. 2009 Jan 1;3(1):37-49.
 /urlhttp://onlinelibrary.wiley.com/doi/10.1111/j.1750-2659.2009.00073.x/full</p>
@@ -194,23 +217,23 @@ respiratory viruses. 2009 Jan 1;3(1):37-49.
     <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
 <span class='no'>fludta</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
 <span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>ird</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>perc_fludeaths</span>, <span class='kw'>viral</span><span class='kw'>=</span><span class='no'>prop_flupos</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='no'>yrweek_dt</span>)
-<span class='no'>flu_rates</span> <span class='kw'>&lt;-</span> <span class='fu'>rb</span>(<span class='no'>flu_fit</span>, <span class='no'>perc_fludeaths</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Column `fluseason`/`high` has different attributes on LHS and RHS of join</span></div><div class='input'>
+<span class='no'>flu_rates</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rb.html'>rb</a></span>(<span class='no'>flu_fit</span>, <span class='no'>perc_fludeaths</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Column `fluseason`/`high` has different attributes on LHS and RHS of join</span></div><div class='input'>
 <span class='no'>flu_rates</span></div><div class='output co'>#&gt; # A tibble: 12 x 4
 #&gt; # Groups:   season [?]
 #&gt;    season high_act perc_fludeaths_fluseason perc_fludeaths_viral_act
 #&gt;     &lt;dbl&gt; &lt;lgl&gt;                       &lt;dbl&gt;                    &lt;dbl&gt;
-#&gt;  1  2010. FALSE                        7.00                     6.83
-#&gt;  2  2010. TRUE                         7.54                     8.05
-#&gt;  3  2011. FALSE                        6.19                     6.47
-#&gt;  4  2011. TRUE                         6.96                     7.06
-#&gt;  5  2012. FALSE                        6.01                     6.10
-#&gt;  6  2012. TRUE                         7.27                     7.67
-#&gt;  7  2013. FALSE                        5.76                     5.75
-#&gt;  8  2013. TRUE                         6.81                     7.19
-#&gt;  9  2014. FALSE                        5.74                     5.71
-#&gt; 10  2014. TRUE                         6.79                     7.37
-#&gt; 11  2015. FALSE                        5.50                     5.51
-#&gt; 12  2015. TRUE                         5.54                    NA   </div><div class='input'>
+#&gt;  1   2010 FALSE                        7.00                     6.83
+#&gt;  2   2010 TRUE                         7.54                     8.05
+#&gt;  3   2011 FALSE                        6.19                     6.47
+#&gt;  4   2011 TRUE                         6.96                     7.06
+#&gt;  5   2012 FALSE                        6.01                     6.10
+#&gt;  6   2012 TRUE                         7.27                     7.67
+#&gt;  7   2013 FALSE                        5.76                     5.75
+#&gt;  8   2013 TRUE                         6.81                     7.19
+#&gt;  9   2014 FALSE                        5.74                     5.71
+#&gt; 10   2014 TRUE                         6.79                     7.37
+#&gt; 11   2015 FALSE                        5.50                     5.51
+#&gt; 12   2015 TRUE                         5.54                    NA   </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -234,11 +257,14 @@ respiratory viruses. 2009 Jan 1;3(1):37-49.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

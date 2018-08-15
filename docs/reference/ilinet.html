@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CDC Outpatient Influenza Surveillance - ILINET � ilinet • flumodelr</title>
+<title>CDC Outpatient Influenza Surveillance - ILINET — ilinet • flumodelr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,40 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="CDC Outpatient Influenza Surveillance - ILINET — ilinet" />
+
+<meta property="og:description" content="Description from CDC Flu Portal Dashboard
+Information on patient visits to health care providers for
+influenza-like illness is collected through the U.S.
+Outpatient Influenza-like Illness Surveillance Network, ILINet.
+ILINet consists of approximately 3,200 outpatient healthcare
+providers in all 50 states, Puerto Rico, the District of Columbia
+and the U.S. Virgin Islands reporting over
+36 million patient visits each year. Each week, approximately 2,000
+outpatient healthcare providers around the country report data to
+CDC on the total number of patients seen and the number of those
+patients with influenza-like illness, ILI, by age group, 0-4 years,
+5-24 years, 25-49 years, 50-64 years, and ≥ 65 years. For this system,
+ILI is defined as fever, temperature of 100°F, 37.8°C, or greater,
+and a cough and/or a sore throat in the absence of a known cause
+other than influenza. Sites with electronic records use an equivalent
+definition as determined by state public health authorities." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +74,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">flumodelr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">flumodelr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -85,7 +116,7 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -97,6 +128,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -104,12 +136,15 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>CDC Outpatient Influenza Surveillance - ILINET</h1>
+    <small class="dont-index">Source: <a href='https://github.com/kmcconeghy/flumodelr/blob/master/R/ilinet.R'><code>R/ilinet.R</code></a></small>
+    <div class="hidden name"><code>ilinet.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Description from CDC Flu Portal Dashboard
 Information on patient visits to health care providers for
@@ -122,12 +157,13 @@ and the U.S. Virgin Islands reporting over
 outpatient healthcare providers around the country report data to
 CDC on the total number of patients seen and the number of those
 patients with influenza-like illness, ILI, by age group, 0-4 years,
-5-24 years, 25-49 years, 50-64 years, and = 65 years. For this system,
-ILI is defined as fever, temperature of 100�F, 37.8�C, or greater,
+5-24 years, 25-49 years, 50-64 years, and ≥ 65 years. For this system,
+ILI is defined as fever, temperature of 100°F, 37.8°C, or greater,
 and a cough and/or a sore throat in the absence of a known cause
 other than influenza. Sites with electronic records use an equivalent
 definition as determined by state public health authorities.</p>
     
+    </div>
 
     <pre class="usage"><span class='no'>ilinet</span></pre>
         
@@ -173,11 +209,14 @@ definition as determined by state public health authorities.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

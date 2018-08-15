@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>fluserf: Fit a Serfling Model on Time Series Data — fluserf • flumodelr</title>
+<title>flunb: Generate fitted prediction values with negative binomial
+model. — flunb • flumodelr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +31,11 @@
 
 
 
-<meta property="og:title" content="fluserf: Fit a Serfling Model on Time Series Data — fluserf" />
+<meta property="og:title" content="flunb: Generate fitted prediction values with negative binomial
+model. — flunb" />
 
-<meta property="og:description" content="Performs a cyclical linear regression model" />
+<meta property="og:description" content="Similar to fluglm, but glm does not have a negative
+binomial option so this function calls MASS::glm.nb separately." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -124,19 +127,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>fluserf: Fit a Serfling Model on Time Series Data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/kmcconeghy/flumodelr/blob/master/R/fluserf.R'><code>R/fluserf.R</code></a></small>
-    <div class="hidden name"><code>fluserf.Rd</code></div>
+    <h1>flunb: Generate fitted prediction values with negative binomial
+model.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/kmcconeghy/flumodelr/blob/master/R/flunb.R'><code>R/flunb.R</code></a></small>
+    <div class="hidden name"><code>flunb.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Performs a cyclical linear regression model</p>
+    <p>Similar to fluglm, but glm does not have a negative
+binomial option so this function calls MASS::glm.nb separately.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>fluserf</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>epi</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='kw'>NULL</span>,
-              <span class='kw'>period</span><span class='kw'>=</span><span class='fl'>52</span>, <span class='kw'>echo</span><span class='kw'>=</span><span class='no'>F</span>)</pre>
+    <pre class="usage"><span class='fu'>flunb</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+              <span class='kw'>period</span><span class='kw'>=</span><span class='fl'>52</span>, <span class='kw'>echo</span><span class='kw'>=</span><span class='no'>F</span>, <span class='kw'>poly</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>model.form</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+              <span class='kw'>season</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>viral</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+              <span class='kw'>int_type</span><span class='kw'>=</span><span class='st'>"ci"</span>, <span class='kw'>alpha</span><span class='kw'>=</span><span class='fl'>0.1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -152,9 +159,12 @@ epidemic indicator, and measure of influenza morbidity</p></td>
 the outcome variable of interest</p></td>
     </tr>
     <tr>
-      <th>epi</th>
-      <td><p>an unquoted name of a column in data object (e.g. epi)
-or if null will default to Sept - May.</p></td>
+      <th>season</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>viral</th>
+      <td><p>a string vector naming 1 or more viral specimens</p></td>
     </tr>
     <tr>
       <th>time</th>
@@ -168,43 +178,57 @@ to a unit of time, must be unique (i.e. non-repeating)</p></td>
     </tr>
     <tr>
       <th>echo</th>
-      <td><p>A logical parameter, if T. Will print variables used in model.</p></td>
+      <td><p>A logical, if T will print variables used in model.</p></td>
+    </tr>
+    <tr>
+      <th>poly</th>
+      <td><p>A logical, if T will include a quadratic, cubic and
+quartic term.</p></td>
+    </tr>
+    <tr>
+      <th>model_form</th>
+      <td><p>An object of type formula, allowing for user-specified
+model to be passed on to glm(). Default missing.</p></td>
+    </tr>
+    <tr>
+      <th>int_type</th>
+      <td><p>Specifies type of upper interval to be output, currently
+only allows for confidence intervals. Prediction intervals to be added,
+but are only approximate for Poisson families.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>Specify level for one-sided test to compute upper limit interval.
-default is 0.05</p></td>
+      <td><p>The threshold for CI interval, default is 0.05 (one-sided).</p></td>
+    </tr>
+    <tr>
+      <th>offset</th>
+      <td><p>Specify if offset term to be used, must specify log(object)</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>other options passed on to glm model (e.g. family=poisson, see ?glm)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>an object of class data.frame, input + y0 (fitted values), y0_ul
-the upper serfling threshold</p>
+the upper threshold</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Serfling RE. Methods for current statistical analysis of
-excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun;
-78(6): 494 - 506.
-/urlhttps://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/</p>
+    <p>Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L,
+Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated
+deaths made using four different methods. Influenza Other Respir
+Viruses. 2009 Jan;3(1):37-49.
+/urlhttps://www.ncbi.nlm.nih.gov/pubmed/19453440</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
 <span class='no'>fludta</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
-<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fluserf</span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>)
-
-<span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 10
-#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos epi  
-#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt; &lt;lgl&gt;
-#&gt; 1  2010    42       726     11269           6.44 2010-10-17      0.0133 TRUE 
-#&gt; 2  2010    43       720     11204           6.43 2010-10-24      0.0193 TRUE 
-#&gt; 3  2010    44       739     11115           6.65 2010-10-31      0.0173 TRUE 
-#&gt; 4  2010    45       724     10321           7.01 2010-11-07      0.0231 TRUE 
-#&gt; 5  2010    46       740     11506           6.43 2010-11-14      0.0327 TRUE 
-#&gt; 6  2010    47       516      8543           6.04 2010-11-21      0.0399 TRUE 
-#&gt; # ... with 2 more variables: y0 &lt;dbl&gt;, y0_ul &lt;dbl&gt;</div><div class='input'>
+<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>flunb</span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval_tidy(xs[[i]], unique_output): object 'result' not found</span></div><div class='input'>
+<span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; <span class='error'>Error in head(flu_fit): object 'flu_fit' not found</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

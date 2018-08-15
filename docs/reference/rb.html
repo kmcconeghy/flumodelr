@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sample dataset for examples. Derived from CDC 122 cities dataset. — fludta • flumodelr</title>
+<title>rb: Compute differences in ird model — rb • flumodelr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Sample dataset for examples. Derived from CDC 122 cities dataset. — fludta" />
+<meta property="og:title" content="rb: Compute differences in ird model — rb" />
 
-<meta property="og:description" content="The dataset is a simple year-week dataset of influenza deaths." />
+<meta property="og:description" content="Computes the marginal mean difference across influenza season" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -124,45 +124,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Sample dataset for examples. Derived from CDC 122 cities dataset.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/kmcconeghy/flumodelr/blob/master/R/fludta.R'><code>R/fludta.R</code></a></small>
-    <div class="hidden name"><code>fludta.Rd</code></div>
+    <h1>rb: Compute differences in ird model</h1>
+    <small class="dont-index">Source: <a href='https://github.com/kmcconeghy/flumodelr/blob/master/R/ird.R'><code>R/ird.R</code></a></small>
+    <div class="hidden name"><code>rb.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The dataset is a simple year-week dataset of influenza deaths.</p>
+    <p>Computes the marginal mean difference across influenza season</p>
     
     </div>
 
-    <pre class="usage"><span class='no'>fludta</span></pre>
+    <pre class="usage"><span class='fu'>rb</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>echo</span><span class='kw'>=</span><span class='no'>F</span>)</pre>
         
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>A data frame with 2847 rows and 4 variables:</p><dl class='dl-horizontal'>
-<dt>year</dt><dd><p>observation year, integer</p></dd>
-<dt>week</dt><dd><p>observation week, integer</p></dd>
-<dt>fludeaths</dt><dd><p>No. of deaths attributed to Pneumonia / Influenza</p></dd>
-<dt>alldeaths</dt><dd><p>No. of deaths due to any cause</p></dd>
-<dt>perc_fludeaths</dt><dd><p>fludeaths / alldeaths * 100</p></dd>
-<dt>yrweek_dt</dt><dd><p>year-week-day of rate, Date</p></dd>
-<dt>prop_flupos</dt><dd><p>No. of influenza positive isolates / total no. tested, from NREVSS data, see ?nrevss, the data was linked with the cdc122 data with a 2 week lead to account for delays in reporting</p></dd>
-</dl>
-    
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
-
-    <p><a href='https://data.cdc.gov/dataset/Deaths-in-122-U-S-cities-1962-2016-122-Cities-Mort/mr8w-325u'>https://data.cdc.gov/dataset/Deaths-in-122-U-S-cities-1962-2016-122-Cities-Mort/mr8w-325u</a></p>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      
-      <li><a href="#format">Format</a></li>
-
-      <li><a href="#source">Source</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>
