@@ -34,6 +34,8 @@
 #'               
 #' fluplot(flu_fit, xvar=yrweek_dt, yvar=fludeaths)
 #' 
+#' @import rlang ggplot2 
+#' 
  
 fluplot <- function(data=NULL, xvar=NULL, yvar=NULL, 
                     baseline=y0, threshold=y0_ul,

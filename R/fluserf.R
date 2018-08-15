@@ -43,6 +43,8 @@
 #' 78(6): 494 - 506.  
 #' /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/} 
 #' 
+#' @import rlang dplyr magrittr
+#' 
 fluserf <- function(data=NULL, outc=NULL, epi=NULL, time=NULL, 
                    period=52, echo=F, alpha=0.05) {
   #sanity checks
