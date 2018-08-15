@@ -3,14 +3,13 @@
 #' @description General function wrapper to perform a variety of forecasted 
 #' models. The output will always be a set of fitted values.
 #'
-#' @usage flum(data=NULL, model="serflm", ...)
+#' @usage flum(data=NULL, model=NULL, ...)
 #'               
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
 #' 
 #' @param model A character of length 1, indicates which model to fit. Options
-#' include "ird" (see ?ird), "serflm" (see ?serflm), virology model (vignette('05-modserf', 
-#' package = "flumodelr")), "arima" (see ?flurima).  
+#' include "ird" (see ?ird), "serflm" (see ?serflm), "fluglm", "flunb", "arima" (see ?flurima).  
 #' 
 #' @param ... Extra arguments depending on model requested, see examples and vignettes.
 #' 
@@ -32,6 +31,8 @@
 #' deaths made using four different methods. 
 #' Influenza Other Respir Viruses. 2009 Jan;3(1):37-49. 
 #' /url{https://www.ncbi.nlm.nih.gov/pubmed/19453440}  
+#' 
+#' @import rlang dplyr magrittr
 #' 
 flum <- function(data=NULL, model=NULL, ...) {
   

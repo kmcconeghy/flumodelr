@@ -3,10 +3,10 @@
 #' @description Similar to serflm, but allows for more 
 #' specifications. 
 #'
-#' @usage fluglm(data=NULL, outc=NULL, time=NULL, 
-#'               period=52, echo=F, poly=T, model.form=NULL,
-#'               season = NULL, viral=NULL, 
-#'               int_type="ci", alpha=0.1)
+#' @usage fluglm(data=NULL, outc=NULL, season, viral, 
+#'               time=NULL, period=52, echo=F, poly=T, 
+#'               model_form=NULL, int_type="ci", alpha=0.05, offset = NULL,
+#'               ...)
 #'               
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
@@ -61,6 +61,8 @@
 #' Viruses. 2009 Jan;3(1):37-49. 
 #' /url{https://www.ncbi.nlm.nih.gov/pubmed/19453440}
 #' 
+#' @import rlang dplyr magrittr lubridate 
+#' 
 fluglm <- function(data=NULL, outc=NULL, 
                    season, viral, 
                    time=NULL, period=52, 
@@ -79,9 +81,10 @@ fluglm <- function(data=NULL, outc=NULL,
         season_eq <- enquo(season)
       } 
   
+  # sanity
   if (!missing(season) & !missing(viral)) stop("'season' and 'viral' 
                                                cannot both be specified")
-    
+  if (all(missing(season), missing(viral))) stop("neither 'season', 'viral' not specified")  
   #set-up data
     data <- data %>% dplyr::arrange(., UQ(time_eq))
       
@@ -124,22 +127,22 @@ fluglm <- function(data=NULL, outc=NULL,
     }
     fluglm.season <- function() {
       #if ==T, then default epi variable specified
-      if(is.name(season)) {
-        season_eq <- enquo(season) (season==T) 
-        } else { 
-        data <- data %>%
-          dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | 
-                                        month(!!time_eq)<=5, 
-                                      T, F))  
-        season_eq <- quo(epi)
+        if (rlang::quo_text(season_eq)=='T') {
+          
+          data <- data %>%
+            dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | 
+                                          month(!!time_eq)<=5, 
+                                        T, F))  
+          epi <- 'epi'
+          season_eq <- quo(epi)
         } 
-      return(season_eq)
+      
       #SEASONAL MODEL
       if (echo==T) print(paste0("Model formula: ", flu_form))
       
-      base_data <- base_data %>%
+      base_data <- data %>%
         dplyr::filter(!!season_eq==F)
-      
+
       #compute baseline regression 
       argslist <- list(formula=flu_form, 
                        data=base_data,
@@ -151,7 +154,7 @@ fluglm <- function(data=NULL, outc=NULL,
                 newdata=data, 
                 se.fit=TRUE, 
                 type="link")
-      
+
       upr <- pred$fit + (qnorm(1-alpha) * pred$se.fit)
       y0 <- base_fit$family$linkinv(pred$fit) #fitted values
       y0_ul <- base_fit$family$linkinv(upr)
