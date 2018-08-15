@@ -61,6 +61,8 @@
 #' respiratory viruses. 2009 Jan 1;3(1):37-49.
 #' /url{http://onlinelibrary.wiley.com/doi/10.1111/j.1750-2659.2009.00073.x/full} 
 #' 
+#' @import rlang dplyr magrittr 
+#' 
 ird <- function(data=NULL, 
                 outc=NULL, 
                 time=NULL,
@@ -141,6 +143,7 @@ ird <- function(data=NULL,
 #' 
 #' @usage rb(data=NULL, outc=NULL, echo=F)
 #' @export  
+#' @import rlang 
 rb <- function(data, outc, echo=F){ 
   
   #tidy evaluation  
@@ -178,6 +181,7 @@ rb <- function(data, outc, echo=F){
 #' 
 #' @usage rb(data=NULL, outc=NULL, echo=F)
 #' @export  
+#' @import ggplot2
 gr <- function(data){
   ggplot(data, aes(x = season, y = perc_fludeaths_fluseason, fill=high_act))+
     geom_bar(stat="identity", position = position_dodge(), colour="black")
