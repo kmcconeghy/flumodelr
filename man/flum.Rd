@@ -4,15 +4,14 @@
 \alias{flum}
 \title{flum: General modeling function for Attributable Influenza Mortality}
 \usage{
-flum(data=NULL, model="serflm", ...)
+flum(data=NULL, model=NULL, ...)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
 epidemic indicator, and measure of influenza morbidity}
 
 \item{model}{A character of length 1, indicates which model to fit. Options
-include "ird" (see ?ird), "serflm" (see ?serflm), virology model (vignette('05-modserf',
-package = "flumodelr")), "arima" (see ?flurima).}
+include "ird" (see ?ird), "serflm" (see ?serflm), "fluglm", "flunb", "arima" (see ?flurima).}
 
 \item{...}{Extra arguments depending on model requested, see examples and vignettes.}
 }
