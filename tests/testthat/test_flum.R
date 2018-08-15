@@ -1,25 +1,60 @@
 library(tidyverse, quietly = T, warn.conflicts = F)
 library(lubridate, quietly = T, warn.conflicts = F)
+fludta <- flumodelr::fludta
 
 context("flum")
-
+   
 test_that("flum computes incidence rate difference", {
-  d <- flumodelr::fludta 
-  d_ird <- flum(fludta, model="ird", 
-                 outc=perc_fludeaths, time=yrweek_dt) 
+  
+  
+  d <- flum(fludta, model="ird", 
+                     outc=perc_fludeaths, time=yrweek_dt,
+                     viral=prop_flupos)
+  
+  #load data
+  dnames <- c("year", "week", "fludeaths", "alldeaths", 
+              "perc_fludeaths", "yrweek_dt", "prop_flupos",
+              "season", "high", "fluseason")
+  
+  #Tests
+  expect_s3_class(d, "data.frame")
+  expect_that(dnames, equals(names(d)))
+  expect_equal(nrow(d), 261L)
+  expect_type(d$high, "logical")
+  expect_type(d$fluseason, "logical")
+  
+})
+
+test_that("flum computes fluserf model", {
+  d <- flum(fludta, model="fluserf", 
+                     outc=perc_fludeaths, time=yrweek_dt)
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
               "perc_fludeaths", "yrweek_dt", "prop_flupos",
               "epi", "y0", "y0_ul")
   
   #Tests
-  expect_s3_class(d_gaus, "data.frame")
-  expect_that(dnames, equals(names(d_gaus)))
-  expect_type(d_gaus$y0, "double")
-  expect_type(d_gaus$y0_ul, "double")
+  expect_s3_class(d, "data.frame")
+  expect_equal(nrow(d), 261L)
+  expect_that(dnames, equals(names(d)))
+  expect_type(d$y0, "double")
+  expect_type(d$y0_ul, "double")
 })
-
-fludta <- flumodelr::fludta  
-
-fludta_mod <- flum(fludta, model="ird", 
-                   outc=perc_fludeaths, time=yrweek_dt)
+  
+test_that("flum computes fluglm model", {
+  d <- flum(fludta, model="fluglm", 
+                     outc=perc_fludeaths, time=yrweek_dt,
+                     viral='prop_flupos')
+  
+  #load data
+  dnames <- c("year", "week", "fludeaths", "alldeaths", 
+              "perc_fludeaths", "yrweek_dt", "prop_flupos",
+              "y0", "y0_ul")
+  
+  #Tests
+  expect_s3_class(d, "data.frame")
+  expect_equal(nrow(d), 261L)
+  expect_that(dnames, equals(names(d)))
+  expect_type(d$y0, "double")
+  expect_type(d$y0_ul, "double")
+})
