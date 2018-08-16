@@ -6,7 +6,7 @@
 \usage{
 ird(data=NULL, outc=NULL, time=NULL, viral=NULL, 
             period=52, respStart=27, high=0.1, fluStart=40,
-            fluStop=18)
+            fluStop=18, echo=F)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,

@@ -4,8 +4,7 @@
 \alias{fludiff}
 \title{fludiff: Compute excess mortality}
 \usage{
-fludiff(data = NULL, obsvar = NULL, fitvar = NULL, def = "fit",
-  serfrule = F)
+fludiff(data = NULL, obsvar = NULL, fitvar = NULL, serfrule = F)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain observed, fitted variables}

@@ -4,7 +4,7 @@
 \alias{rb}
 \title{rb: Compute differences in ird model}
 \usage{
-rb(data=NULL, outc=NULL, echo=F)
+rb(data, outc, echo=F)
 }
 \description{
 Computes the marginal mean difference across influenza season

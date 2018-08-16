@@ -6,6 +6,9 @@
 \usage{
 test_prop(x)
 }
+\arguments{
+\item{x}{A numeric vector}
+}
 \description{
 test_prop: Evaluate if numeric vector is a proportion
 }

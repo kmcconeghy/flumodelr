@@ -5,7 +5,7 @@
 \title{fluserf: Fit a Serfling Model on Time Series Data}
 \usage{
 fluserf(data=NULL, outc=NULL, epi=NULL, time=NULL, 
-              period=52, echo=F)
+              period=52, echo=F, alpha=.05)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,

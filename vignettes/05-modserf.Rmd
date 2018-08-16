@@ -265,7 +265,7 @@ flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=yrweek_dt,
 ```
 
 You can pass arguments to the glm() call, like specifying a Poisson model.  
-```{r eval=FALSE}
+```{r, }
 ## Poisson model with offset term
 flum(fludta, 
      model="fluglm", outc = fludeaths, 

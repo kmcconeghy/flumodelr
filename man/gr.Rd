@@ -4,7 +4,7 @@
 \alias{gr}
 \title{gr: Bar graph for ird models}
 \usage{
-rb(data=NULL, outc=NULL, echo=F)
+gr(data)
 }
 \description{
 Outputs simple bar chart for incidence rate difference

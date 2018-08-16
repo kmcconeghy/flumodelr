@@ -5,10 +5,9 @@
 \title{flunb: Generate fitted prediction values with negative binomial
 model.}
 \usage{
-flunb(data=NULL, outc=NULL, time=NULL, 
-              period=52, echo=F, poly=T, model.form=NULL,
-              season = NULL, viral=NULL, 
-              int_type="ci", alpha=0.1)
+flunb(data=NULL, outc=NULL, season, viral, time=NULL, 
+              period=52, echo=F, poly=T, model_form=NULL,
+              int_type="ci", alpha=0.05, offset=NULL, ...)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
@@ -17,7 +16,8 @@ epidemic indicator, and measure of influenza morbidity}
 \item{outc}{an unquoted name of a column in data which corresponds to
 the outcome variable of interest}
 
-\item{season}{}
+\item{season}{Either 'T' (where the epidemic baseline model will be done based on month of year),
+or the name of a column which is a logical vector flagging a given week as epidemic or not}
 
 \item{viral}{a string vector naming 1 or more viral specimens}
 

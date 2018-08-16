@@ -14,7 +14,8 @@
 #' @param outc an unquoted name of a column in data which corresponds to 
 #' the outcome variable of interest
 #' 
-#' @param season  
+#' @param season Either 'T' (where the epidemic baseline model will be done based on month of year),
+#'  or the name of a column which is a logical vector flagging a given week as epidemic or not
 #' 
 #' @param viral a string vector naming 1 or more viral specimens   
 #' 
@@ -61,7 +62,7 @@
 #' Viruses. 2009 Jan;3(1):37-49. 
 #' /url{https://www.ncbi.nlm.nih.gov/pubmed/19453440}
 #' 
-#' @import rlang dplyr magrittr lubridate 
+#' @import rlang 
 #' 
 fluglm <- function(data=NULL, outc=NULL, 
                    season, viral, 
@@ -86,7 +87,7 @@ fluglm <- function(data=NULL, outc=NULL,
                                                cannot both be specified")
   if (all(missing(season), missing(viral))) stop("neither 'season', 'viral' not specified")  
   #set-up data
-    data <- data %>% dplyr::arrange(., UQ(time_eq))
+    data <- data %>% dplyr::arrange(UQ(time_eq))
       
     data <- data %>%
       dplyr::mutate(t_unit = row_number(),
@@ -96,21 +97,21 @@ fluglm <- function(data=NULL, outc=NULL,
   #parameters  
     if (echo==T) {
       cat("Setting regression parameters...\n")
-      cat(" 'outc' variable is:", rlang::quo_text(outc_eq), "\n")
-      if (!missing(season)) {cat(" 'epi' variable is:", rlang::quo_text(season_eq), "\n")}
+      cat(" 'outc' variable is:", quo_text(outc_eq), "\n")
+      if (!missing(season)) {cat(" 'epi' variable is:", quo_text(season_eq), "\n")}
       if (!missing(viral)) {cat(" 'viral' variables:", paste0(viral, sep=", "), "\n")}
-      cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
+      cat(" 'time' variable is:", quo_text(time_eq), "\n")
       cat("  time period is:", period, "\n")
     }
     
     fluglm.model <- function() {
       #build model formula
-      flu_form <- paste0(rlang::quo_text(outc_eq), 
+      flu_form <- paste0(quo_text(outc_eq), 
                          " ~ ", "t_unit", "+ sin_f1", "+ cos_f1")
       ## Offset term
       if (offset_eq!=quo(NULL)) {
         flu_form <- paste0(flu_form, 
-                           "+ offset(", rlang::quo_text(offset_eq), ")")
+                           "+ offset(",quo_text(offset_eq), ")")
       }
       
       ## Add polynomials
@@ -127,7 +128,7 @@ fluglm <- function(data=NULL, outc=NULL,
     }
     fluglm.season <- function() {
       #if ==T, then default epi variable specified
-        if (rlang::quo_text(season_eq)=='T') {
+        if (quo_text(season_eq)=='T') {
           
           data <- data %>%
             dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | 
@@ -149,7 +150,7 @@ fluglm <- function(data=NULL, outc=NULL,
                        na.action = na.exclude,
                        ...)
       
-      base_fit <- do.call(glm, args=argslist)  
+      base_fit <- do.call(stats::glm, args=argslist)  
       pred <- predict(base_fit, 
                 newdata=data, 
                 se.fit=TRUE, 
@@ -180,7 +181,7 @@ fluglm <- function(data=NULL, outc=NULL,
                        na.action = na.exclude,
                        ...)
       
-      base_fit <- do.call(glm, args=argslist)  
+      base_fit <- do.call(stats::glm, args=argslist)  
       
       ## Fitted values + prediction interval
       dta_noviral <- data

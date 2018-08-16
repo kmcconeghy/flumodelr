@@ -6,7 +6,7 @@ Date: 2017-11-30
 Authors@R: c(person(given = "Kevin W.", family = "McConeghy", role = c("aut", "cre", "cph"), email = "kevin_mcconeghy@brown.edu"), person(given = "Rob", family = "Van Aalst", role = c("aut", "cph")), person(given = "Andrew", family = "Zullo", role = c("aut", "cph")), person(given = "Nina", family="Joyce", role=c("aut", "cph")))
 Maintainer: Kevin W. McConeghy <kevin_mcconeghy@brown.edu>
 URL: https://github.com/kmcconeghy/flumodelr
-Depends: R (>= 3.4.2),
+Depends: R (>= 3.4.2.0),
   tidyverse, 
   lubridate (>= 1.6.0),
 Imports:

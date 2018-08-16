@@ -6,7 +6,7 @@
 #' 
 #' @usage ird(data=NULL, outc=NULL, time=NULL, viral=NULL, 
 #'             period=52, respStart=27, high=0.1, fluStart=40,
-#'             fluStop=18)
+#'             fluStop=18, echo=F)
 #' 
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
@@ -61,7 +61,7 @@
 #' respiratory viruses. 2009 Jan 1;3(1):37-49.
 #' /url{http://onlinelibrary.wiley.com/doi/10.1111/j.1750-2659.2009.00073.x/full} 
 #' 
-#' @import rlang dplyr magrittr 
+#' @import rlang 
 #' 
 ird <- function(data=NULL, 
                 outc=NULL, 
@@ -141,9 +141,10 @@ ird <- function(data=NULL,
 #' 
 #' @description Computes the marginal mean difference across influenza season
 #' 
-#' @usage rb(data=NULL, outc=NULL, echo=F)
+#' @usage rb(data, outc, echo=F)
 #' @export  
 #' @import rlang 
+#' 
 rb <- function(data, outc, echo=F){ 
   
   #tidy evaluation  
@@ -179,7 +180,7 @@ rb <- function(data, outc, echo=F){
 #' @description Outputs simple bar chart for incidence rate difference
 #' models  
 #' 
-#' @usage rb(data=NULL, outc=NULL, echo=F)
+#' @usage gr(data)
 #' @export  
 #' @import ggplot2
 gr <- function(data){

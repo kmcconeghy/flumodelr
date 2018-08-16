@@ -4,10 +4,9 @@
 #' @description Similar to fluglm, but glm does not have a negative
 #' binomial option so this function calls MASS::glm.nb separately.
 #'
-#' @usage flunb(data=NULL, outc=NULL, time=NULL, 
-#'               period=52, echo=F, poly=T, model.form=NULL,
-#'               season = NULL, viral=NULL, 
-#'               int_type="ci", alpha=0.1)
+#' @usage flunb(data=NULL, outc=NULL, season, viral, time=NULL, 
+#'               period=52, echo=F, poly=T, model_form=NULL,
+#'               int_type="ci", alpha=0.05, offset=NULL, ...)
 #'               
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
@@ -15,7 +14,8 @@
 #' @param outc an unquoted name of a column in data which corresponds to 
 #' the outcome variable of interest
 #' 
-#' @param season  
+#' @param season Either 'T' (where the epidemic baseline model will be done based on month of year),
+#'  or the name of a column which is a logical vector flagging a given week as epidemic or not 
 #' 
 #' @param viral a string vector naming 1 or more viral specimens   
 #' 
@@ -62,7 +62,7 @@
 #' Viruses. 2009 Jan;3(1):37-49. 
 #' /url{https://www.ncbi.nlm.nih.gov/pubmed/19453440}
 #' 
-#' @import rlang dplyr magrittr MASS  
+#' @import rlang  
 #' 
 flunb <- function(data=NULL, outc=NULL, 
                    season, viral, 

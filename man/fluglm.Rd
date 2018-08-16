@@ -16,7 +16,8 @@ epidemic indicator, and measure of influenza morbidity}
 \item{outc}{an unquoted name of a column in data which corresponds to
 the outcome variable of interest}
 
-\item{season}{}
+\item{season}{Either 'T' (where the epidemic baseline model will be done based on month of year),
+or the name of a column which is a logical vector flagging a given week as epidemic or not}
 
 \item{viral}{a string vector naming 1 or more viral specimens}
 

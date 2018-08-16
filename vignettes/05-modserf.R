@@ -174,12 +174,12 @@ fludta_mod <- ird(data=fludta,
 flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=yrweek_dt, 
        season=high)[, c(1:3, 10:12)]
 
-## ----eval=FALSE----------------------------------------------------------
-#  ## Poisson model with offset term
-#  flum(fludta,
-#       model="fluglm", outc = fludeaths,
-#       time = yrweek_dt, season=T,
-#       family=poisson, offset=log(alldeaths))[, c(1:3, 7:9)]
+## ------------------------------------------------------------------------
+## Poisson model with offset term
+flum(fludta, 
+     model="fluglm", outc = fludeaths, 
+     time = yrweek_dt, season=T, 
+     family=poisson, offset=log(alldeaths))[, c(1:3, 7:9)] 
 
 ## ------------------------------------------------------------------------
 ## Negative binomial model with offset term

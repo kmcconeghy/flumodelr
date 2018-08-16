@@ -26,9 +26,9 @@
 #'               
 #' excess_fludeaths <- fludiff(flu_fit, xvar=yrweek_dt, yvar=fludeaths)
 #' 
-#' @import rlang dplyr magrittr
+#' @import rlang 
 
-fludiff <- function(data=NULL, obsvar=NULL, fitvar=NULL, def="fit", serfrule=F) {
+fludiff <- function(data=NULL, obsvar=NULL, fitvar=NULL, serfrule=F) {
   
   #tidy evaluation  
   obs_eq <- enquo(obsvar)

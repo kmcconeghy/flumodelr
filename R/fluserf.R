@@ -3,7 +3,7 @@
 #' @description Performs a cyclical linear regression model
 #'
 #' @usage fluserf(data=NULL, outc=NULL, epi=NULL, time=NULL, 
-#'               period=52, echo=F)
+#'               period=52, echo=F, alpha=.05)
 #'               
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
@@ -43,7 +43,7 @@
 #' 78(6): 494 - 506.  
 #' /url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/} 
 #' 
-#' @import rlang dplyr magrittr
+#' @import rlang stats
 #' 
 fluserf <- function(data=NULL, outc=NULL, epi=NULL, time=NULL, 
                    period=52, echo=F, alpha=0.05) {
@@ -70,13 +70,13 @@ fluserf <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
     #parameters  
       if (echo==T) {
         cat("Setting regression parameters...\n")
-        cat(" 'outc' variable is:", rlang::quo_text(outc_eq), "\n")
-        cat(" 'epi' variable is:", rlang::quo_text(epi_eq), "\n")
-        cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
+        cat(" 'outc' variable is:", quo_text(outc_eq), "\n")
+        cat(" 'epi' variable is:", quo_text(epi_eq), "\n")
+        cat(" 'time' variable is:", quo_text(time_eq), "\n")
         cat("  time period is:", period, "\n")
       }
       
-  data <- data %>% dplyr::arrange(., UQ(time_eq))
+  data <- data %>% dplyr::arrange(UQ(time_eq))
     
   data <- data %>%
       dplyr::mutate(t_unit = row_number(),
@@ -86,12 +86,12 @@ fluserf <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
 
   #build model formula
     flu.form <- as.formula(
-      paste0(rlang::quo_text(outc_eq), " ~ ", "t_unit", "+ sin_f1", "+ cos_f1"))
+      paste0(quo_text(outc_eq), " ~ ", "t_unit", "+ sin_f1", "+ cos_f1"))
   
   #compute baseline regression  
     base_fit <- data %>%
       dplyr::filter(UQ(epi_eq)==F) %>% #Must UQ, !! doesnt work
-      glm(flu.form, family=gaussian, data=., na.action = na.exclude)  
+      stats::glm(flu.form, family=gaussian, data=., na.action = na.exclude)  
     
     #parameters  
     if (echo==T) {

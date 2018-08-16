@@ -12,7 +12,7 @@
 
 <meta name="author" content="Kevin W. McConeghy" />
 
-<meta name="date" content="2018-08-15" />
+<meta name="date" content="2018-08-16" />
 
 <title>Modified Serfling Models</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Modified Serfling Models</h1>
 <h4 class="author"><em>Kevin W. McConeghy</em></h4>
-<h4 class="date"><em>2018-08-15</em></h4>
+<h4 class="date"><em>2018-08-16</em></h4>
 
 
 
@@ -316,7 +316,15 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw">ird</span>(<span class
 <span class="kw">flum</span>(fludta, 
      <span class="dt">model=</span><span class="st">&quot;fluglm&quot;</span>, <span class="dt">outc =</span> fludeaths, 
      <span class="dt">time =</span> yrweek_dt, <span class="dt">season=</span>T, 
-     <span class="dt">family=</span>poisson, <span class="dt">offset=</span><span class="kw">log</span>(alldeaths))[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">7</span><span class="op">:</span><span class="dv">9</span>)] </code></pre></div>
+     <span class="dt">family=</span>poisson, <span class="dt">offset=</span><span class="kw">log</span>(alldeaths))[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">7</span><span class="op">:</span><span class="dv">9</span>)] 
+<span class="co">#&gt; # A tibble: 261 x 6</span>
+<span class="co">#&gt;    year  week fludeaths prop_flupos    y0 y0_ul</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2010    42       726      0.0133  797.  911.</span>
+<span class="co">#&gt; 2  2010    43       720      0.0193  799.  909.</span>
+<span class="co">#&gt; 3  2010    44       739      0.0173  799.  906.</span>
+<span class="co">#&gt; 4  2010    45       724      0.0231  749.  846.</span>
+<span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p>A negative binomial model can be called from the MASS::glm.nb function. The output is the same.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Negative binomial model with offset term
 <span class="kw">flum</span>(fludta, 
@@ -346,7 +354,7 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw">ird</span>(<span class
 <span class="co">#&gt;  language (EN)                        </span>
 <span class="co">#&gt;  collate  C                           </span>
 <span class="co">#&gt;  tz       America/New_York            </span>
-<span class="co">#&gt;  date     2018-08-15                  </span>
+<span class="co">#&gt;  date     2018-08-16                  </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; - Packages --------------------------------------------------------------</span>
 <span class="co">#&gt;  package     * version  date       source        </span>
@@ -367,7 +375,7 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw">ird</span>(<span class
 <span class="co">#&gt;  digest        0.6.15   2018-01-28 CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  dplyr       * 0.7.6    2018-06-29 CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  evaluate      0.11     2018-07-17 CRAN (R 3.5.1)</span>
-<span class="co">#&gt;  fansi         0.2.3    2018-05-06 CRAN (R 3.5.1)</span>
+<span class="co">#&gt;  fansi         0.3.0    2018-08-13 CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  flumodelr   * 0.0.6    &lt;NA&gt;       local         </span>
 <span class="co">#&gt;  forcats     * 0.3.0    2018-02-19 CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  forecast      8.4      2018-06-21 CRAN (R 3.5.1)</span>
@@ -394,7 +402,7 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw">ird</span>(<span class
 <span class="co">#&gt;  nlme          3.1-137  2018-04-07 CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  nnet          7.3-12   2016-02-02 CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  pillar        1.3.0    2018-07-14 CRAN (R 3.5.1)</span>
-<span class="co">#&gt;  pkgconfig     2.0.1    2017-03-21 CRAN (R 3.5.1)</span>
+<span class="co">#&gt;  pkgconfig     2.0.2    2018-08-16 CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  plyr          1.8.4    2016-06-08 CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  purrr       * 0.2.5    2018-05-29 CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  quadprog      1.5-5    2013-04-17 CRAN (R 3.5.0)</span>

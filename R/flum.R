@@ -32,7 +32,7 @@
 #' Influenza Other Respir Viruses. 2009 Jan;3(1):37-49. 
 #' /url{https://www.ncbi.nlm.nih.gov/pubmed/19453440}  
 #' 
-#' @import rlang dplyr magrittr
+#' @import rlang 
 #' 
 flum <- function(data=NULL, model=NULL, ...) {
   
