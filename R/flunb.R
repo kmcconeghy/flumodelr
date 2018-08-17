@@ -180,7 +180,7 @@ flunb <- function(data=NULL, outc=NULL,
                      na.action = na.exclude,
                      ...)
     
-    base_fit <- do.call(MASS:glm.nb, args=argslist)  
+    base_fit <- do.call(MASS::glm.nb, args=argslist)  
     
     ## Fitted values + prediction interval
     dta_noviral <- data
