@@ -140,10 +140,9 @@ binomial option so this function calls MASS::glm.nb separately.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>flunb</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='kw'>NULL</span>,
-              <span class='kw'>period</span><span class='kw'>=</span><span class='fl'>52</span>, <span class='kw'>echo</span><span class='kw'>=</span><span class='no'>F</span>, <span class='kw'>poly</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>model.form</span><span class='kw'>=</span><span class='kw'>NULL</span>,
-              <span class='kw'>season</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>viral</span><span class='kw'>=</span><span class='kw'>NULL</span>,
-              <span class='kw'>int_type</span><span class='kw'>=</span><span class='st'>"ci"</span>, <span class='kw'>alpha</span><span class='kw'>=</span><span class='fl'>0.1</span>)</pre>
+    <pre class="usage"><span class='fu'>flunb</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='no'>season</span>, <span class='no'>viral</span>, <span class='kw'>time</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+              <span class='kw'>period</span><span class='kw'>=</span><span class='fl'>52</span>, <span class='kw'>echo</span><span class='kw'>=</span><span class='no'>F</span>, <span class='kw'>poly</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>model_form</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+              <span class='kw'>int_type</span><span class='kw'>=</span><span class='st'>"ci"</span>, <span class='kw'>alpha</span><span class='kw'>=</span><span class='fl'>0.05</span>, <span class='kw'>offset</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -160,7 +159,8 @@ the outcome variable of interest</p></td>
     </tr>
     <tr>
       <th>season</th>
-      <td></td>
+      <td><p>Either 'T' (where the epidemic baseline model will be done based on month of year),
+or the name of a column which is a logical vector flagging a given week as epidemic or not</p></td>
     </tr>
     <tr>
       <th>viral</th>
