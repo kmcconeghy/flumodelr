@@ -2,6 +2,7 @@ library(tidyverse, quietly = T, warn.conflicts = F)
 library(lubridate, quietly = T, warn.conflicts = F)
 fludta <- flumodelr::fludta
 
+
 context("flum")
    
 test_that("flum computes incidence rate difference", {
@@ -49,12 +50,13 @@ test_that("flum computes fluglm model", {
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
               "perc_fludeaths", "yrweek_dt", "prop_flupos",
-              "y0", "y0_ul")
+              "fit", "upper", 'lower')
   
   #Tests
   expect_s3_class(d, "data.frame")
   expect_equal(nrow(d), 261L)
   expect_that(dnames, equals(names(d)))
-  expect_type(d$y0, "double")
-  expect_type(d$y0_ul, "double")
+  expect_type(d$fit, "double")
+  expect_type(d$upper, "double")
+  expect_type(d$lower, "double")
 })

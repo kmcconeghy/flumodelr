@@ -43,8 +43,7 @@
 #' 
 #' @param ... other options passed on to glm model (e.g. family=poisson, see ?glm)  
 #'   
-#' @return an object of class data.frame, input + y0 (fitted values), y0_ul 
-#' the upper threshold
+#' @return an object of class data.frame, fit, upper and lower confidence bounds
 #' 
 #' @export
 #' 
@@ -156,10 +155,15 @@ fluglm <- function(data=NULL, outc=NULL,
                 se.fit=TRUE, 
                 type="link")
 
-      upr <- pred$fit + (qnorm(1-alpha) * pred$se.fit)
-      y0 <- base_fit$family$linkinv(pred$fit) #fitted values
-      y0_ul <- base_fit$family$linkinv(upr)
-      res <- list(base_fit = base_fit, y0 = y0, y0_ul = y0_ul) 
+      fitted <- base_fit$family$linkinv(pred$fit)
+      upper <- pred$fit + (qnorm(1-alpha) * pred$se.fit)
+      lower <- pred$fit - (qnorm(1-alpha) * pred$se.fit)
+      upper.fit <- base_fit$family$linkinv(upper)
+      lower.fit <- base_fit$family$linkinv(lower)
+
+      res <- list(base_fit = base_fit, fitted = fitted, 
+                  upper.fit = upper.fit,
+                  lower.fit = lower.fit) 
       return(res)
     }
     fluglm.viral <- function() {
@@ -195,11 +199,15 @@ fluglm <- function(data=NULL, outc=NULL,
                 se.fit=TRUE, 
                 type="link")
       
-      upr <- pred_noviral$fit + (qnorm(1-alpha) * pred_noviral$se.fit)
-      y0 <- base_fit$family$linkinv(pred_noviral$fit) #fitted values
-      y0_ul <- base_fit$family$linkinv(upr) 
-      res <- list(base_fit = base_fit, y0 = y0, y0_ul = y0_ul) 
-      return(res)
+      fitted <- base_fit$family$linkinv(pred_noviral$fit)
+      upper <- pred_noviral$fit + (qnorm(1-alpha) * pred_noviral$se.fit)
+      lower <- pred_noviral$fit - (qnorm(1-alpha) * pred_noviral$se.fit)
+      upper.fit <- base_fit$family$linkinv(upper)
+      lower.fit <- base_fit$family$linkinv(lower)
+      
+      res <- list(base_fit = base_fit, fitted = fitted, 
+                  upper.fit = upper.fit,
+                  lower.fit = lower.fit) 
     }
     
   ## Run Model  
@@ -213,7 +221,9 @@ fluglm <- function(data=NULL, outc=NULL,
   }
   
   data <- data %>%
-    tibble::add_column(., y0 = result$y0, y0_ul = result$y0_ul) %>%
+    tibble::add_column(., fit = result$fitted, 
+                       upper = result$upper.fit,
+                       lower = result$lower.fit) %>%
     dplyr::select(-t_unit, -theta, -sin_f1, -cos_f1)
   
   #return results

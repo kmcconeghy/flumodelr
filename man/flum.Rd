@@ -16,7 +16,7 @@ include "ird" (see ?ird), "serflm" (see ?serflm), "fluglm", "flunb", "arima" (se
 \item{...}{Extra arguments depending on model requested, see examples and vignettes.}
 }
 \value{
-an object of class data.frame, input + y0 (fitted values), threshold
+an object of class data.frame, with fitted values, threshold
 if applicable, and computed excess morbidity
 }
 \description{

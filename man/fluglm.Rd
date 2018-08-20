@@ -46,8 +46,7 @@ but are only approximate for Poisson families.}
 \item{...}{other options passed on to glm model (e.g. family=poisson, see ?glm)}
 }
 \value{
-an object of class data.frame, input + y0 (fitted values), y0_ul
-the upper threshold
+an object of class data.frame, fit, upper and lower confidence bounds
 }
 \description{
 Similar to serflm, but allows for more

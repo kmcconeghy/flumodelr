@@ -152,19 +152,19 @@ fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 ## ------------------------------------------------------------------------
 flum(fludta, model="fluglm", 
                    outc=fludeaths, time=yrweek_dt, 
-                   viral = "prop_flupos")[, c(1:3, 7:9)]
+                   viral = "prop_flupos")[, c(1:3, 7:10)]
 
 ## ------------------------------------------------------------------------
 ## Without polynomial terms
 flum(fludta, model="fluglm", 
      outc=fludeaths, time=yrweek_dt, 
-     viral = "prop_flupos", poly=F)[, c(1:3, 7:9)]
+     viral = "prop_flupos", poly=F)[, c(1:3, 7:10)]
 
 ## ------------------------------------------------------------------------
 ## Epidemic period, non-specified
 flum(fludta, model="fluglm", 
      outc=fludeaths, time=yrweek_dt, 
-     season=T)[, c(1:3, 7:9)]
+     season=T)[, c(1:3, 7:10)]
 
 ## ------------------------------------------------------------------------
 ## Epidemic period specified
@@ -172,21 +172,21 @@ fludta_mod <- ird(data=fludta,
                outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
 
 flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=yrweek_dt, 
-       season=high)[, c(1:3, 10:12)]
+       season=high)[, c(1:3, 10:13)]
 
 ## ------------------------------------------------------------------------
 ## Poisson model with offset term
 flum(fludta, 
      model="fluglm", outc = fludeaths, 
      time = yrweek_dt, season=T, 
-     family=poisson, offset=log(alldeaths))[, c(1:3, 7:9)] 
+     family=poisson, offset=log(alldeaths))[, c(1:3, 7:10)] 
 
-## ------------------------------------------------------------------------
-## Negative binomial model with offset term
-flum(fludta, 
-     model="flunb", outc = fludeaths, 
-     time = yrweek_dt, season=T, 
-     offset=log(alldeaths))[, c(1:3, 7:9)] 
+## ---- eval=FALSE---------------------------------------------------------
+#  ## Negative binomial model with offset term
+#  flum(fludta,
+#       model="flunb", outc = fludeaths,
+#       time = yrweek_dt, season=T,
+#       offset=log(alldeaths))[, c(1:3, 7:10)]
 
 ## ------------------------------------------------------------------------
 sessioninfo::session_info()
