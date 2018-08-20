@@ -181,12 +181,12 @@ flum(fludta,
      time = yrweek_dt, season=T, 
      family=poisson, offset=log(alldeaths))[, c(1:3, 7:10)] 
 
-## ---- eval=FALSE---------------------------------------------------------
-#  ## Negative binomial model with offset term
-#  flum(fludta,
-#       model="flunb", outc = fludeaths,
-#       time = yrweek_dt, season=T,
-#       offset=log(alldeaths))[, c(1:3, 7:10)]
+## ------------------------------------------------------------------------
+## Negative binomial model with offset term
+flum(fludta, 
+     model="flunb", outc = fludeaths, 
+     time = yrweek_dt, season=T, 
+     offset=log(alldeaths))[, c(1:3, 7:10)] 
 
 ## ------------------------------------------------------------------------
 sessioninfo::session_info()

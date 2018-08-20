@@ -330,7 +330,15 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw">ird</span>(<span class
 <span class="kw">flum</span>(fludta, 
      <span class="dt">model=</span><span class="st">&quot;flunb&quot;</span>, <span class="dt">outc =</span> fludeaths, 
      <span class="dt">time =</span> yrweek_dt, <span class="dt">season=</span>T, 
-     <span class="dt">offset=</span><span class="kw">log</span>(alldeaths))[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">7</span><span class="op">:</span><span class="dv">10</span>)] </code></pre></div>
+     <span class="dt">offset=</span><span class="kw">log</span>(alldeaths))[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">7</span><span class="op">:</span><span class="dv">10</span>)] 
+<span class="co">#&gt; # A tibble: 261 x 7</span>
+<span class="co">#&gt;    year  week fludeaths prop_flupos   fit upper lower</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  2010    42       726      0.0133  796.  922.  687.</span>
+<span class="co">#&gt; 2  2010    43       720      0.0193  797.  920.  692.</span>
+<span class="co">#&gt; 3  2010    44       739      0.0173  798.  916.  695.</span>
+<span class="co">#&gt; 4  2010    45       724      0.0231  748.  856.  654.</span>
+<span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 </div>
 </div>
 </div>
