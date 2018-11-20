@@ -157,8 +157,10 @@ the outcome variable of interest</p></td>
     </tr>
     <tr>
       <th>season</th>
-      <td><p>Either 'T' (where the epidemic baseline model will be done based on month of year),
-or the name of a column which is a logical vector flagging a given week as epidemic or not</p></td>
+      <td><p>Either 'T', where the epidemic baseline model will be created
+assuming time variable is a date, and Oct-May is epidemic season, or the
+name of a column which is a logical vector flagging a given week as
+epidemic or not</p></td>
     </tr>
     <tr>
       <th>viral</th>
@@ -180,8 +182,8 @@ to a unit of time, must be unique (i.e. non-repeating)</p></td>
     </tr>
     <tr>
       <th>poly</th>
-      <td><p>A logical, if T will include a quadratic, cubic and
-quartic term.</p></td>
+      <td><p>A logical, if T will include a quadratic, cubic,
+quartic and quintic term.</p></td>
     </tr>
     <tr>
       <th>model_form</th>
@@ -229,7 +231,7 @@ Viruses. 2009 Jan;3(1):37-49.
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
 <span class='no'>fludta</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
-<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fluglm</span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>, <span class='kw'>season</span><span class='kw'>=</span><span class='no'>T</span>)
+<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fluglm</span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>week_in_order</span>, <span class='kw'>season</span><span class='kw'>=</span><span class='no'>epi</span>)
 
 <span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 6
 #&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr

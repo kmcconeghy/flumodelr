@@ -16,8 +16,10 @@ epidemic indicator, and measure of influenza morbidity}
 \item{outc}{an unquoted name of a column in data which corresponds to
 the outcome variable of interest}
 
-\item{season}{Either 'T' (where the epidemic baseline model will be done based on month of year),
-or the name of a column which is a logical vector flagging a given week as epidemic or not}
+\item{season}{Either 'T', where the epidemic baseline model will be created
+assuming time variable is a date, and Oct-May is epidemic season, or the
+name of a column which is a logical vector flagging a given week as
+epidemic or not}
 
 \item{viral}{a string vector naming 1 or more viral specimens}
 
@@ -29,8 +31,8 @@ to a unit of time, must be unique (i.e. non-repeating)}
 
 \item{echo}{A logical, if T will print variables used in model.}
 
-\item{poly}{A logical, if T will include a quadratic, cubic and
-quartic term.}
+\item{poly}{A logical, if T will include a quadratic, cubic,
+quartic and quintic term.}
 
 \item{model_form}{An object of type formula, allowing for user-specified
 model to be passed on to glm(). Default missing.}
@@ -58,7 +60,7 @@ specifications.
 \examples{
 require(flumodelr)
 fludta <- flumodelr::fludta
-flu_fit <- fluglm(fludta, outc = fludeaths, time = yrweek_dt, season=T)  
+flu_fit <- fluglm(fludta, outc = fludeaths, time = week_in_order, season=epi)  
               
 head(flu_fit)
 

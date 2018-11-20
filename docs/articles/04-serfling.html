@@ -191,14 +191,15 @@ fit &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</span>
 
 fludta <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(year<span class="op">&gt;=</span><span class="dv">2010</span>)
-<span class="co">#&gt; # A tibble: 261 x 8</span>
+<span class="co">#&gt; # A tibble: 261 x 9</span>
 <span class="co">#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  2010    42       726     11269           6.44 2010-10-17      0.0133</span>
 <span class="co">#&gt; 2  2010    43       720     11204           6.43 2010-10-24      0.0193</span>
 <span class="co">#&gt; 3  2010    44       739     11115           6.65 2010-10-31      0.0173</span>
 <span class="co">#&gt; 4  2010    45       724     10321           7.01 2010-11-07      0.0231</span>
-<span class="co">#&gt; # ... with 257 more rows, and 1 more variable: epi &lt;lgl&gt;</span></code></pre></div>
+<span class="co">#&gt; # ... with 257 more rows, and 2 more variables: week_in_order &lt;int&gt;,</span>
+<span class="co">#&gt; #   epi &lt;lgl&gt;</span></code></pre></div>
 <p>We see that there is now an indicator for Oct - May.</p>
 </div>
 <div id="step-2--fit-predicted-outcome-and-epidemic-threshold" class="section level3">
@@ -322,15 +323,15 @@ df_serf_excess <span class="op">%&gt;%</span><span class="st"> </span><span clas
 ##fit serfling model
 flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fluserf.html">fluserf</a></span>(<span class="dt">data=</span>fludta, <span class="dt">outc=</span>perc_fludeaths, <span class="dt">time=</span>yrweek_dt)
 flu_fit
-<span class="co">#&gt; # A tibble: 261 x 10</span>
+<span class="co">#&gt; # A tibble: 261 x 11</span>
 <span class="co">#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  2010    42       726     11269           6.44 2010-10-17      0.0133</span>
 <span class="co">#&gt; 2  2010    43       720     11204           6.43 2010-10-24      0.0193</span>
 <span class="co">#&gt; 3  2010    44       739     11115           6.65 2010-10-31      0.0173</span>
 <span class="co">#&gt; 4  2010    45       724     10321           7.01 2010-11-07      0.0231</span>
-<span class="co">#&gt; # ... with 257 more rows, and 3 more variables: epi &lt;lgl&gt;, y0 &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   y0_ul &lt;dbl&gt;</span></code></pre></div>
+<span class="co">#&gt; # ... with 257 more rows, and 4 more variables: week_in_order &lt;int&gt;,</span>
+<span class="co">#&gt; #   epi &lt;lgl&gt;, y0 &lt;dbl&gt;, y0_ul &lt;dbl&gt;</span></code></pre></div>
 <div id="plot-function-fluplot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#plot-function-fluplot" class="anchor"></a>Plot function fluplot</h3>

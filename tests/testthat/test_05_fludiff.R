@@ -4,12 +4,12 @@ context("fludiff")
 
 test_that("fludiff output is canon", {
   d <- flumodelr::fludta 
-  d_pred <- fluserf(data=d, outc=perc_fludeaths, time=yrweek_dt)
+  d_pred <- fluserf(data=d, outc   = perc_fludeaths, time = yrweek_dt)
   d_diff <- fludiff(d_pred, obsvar = perc_fludeaths, fitvar = y0_ul)
   
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
-              "perc_fludeaths", "yrweek_dt", "prop_flupos",
+              "perc_fludeaths", "yrweek_dt", "prop_flupos", "week_in_order",
               "epi", "y0", "y0_ul", "y_diff")
   
   #Tests

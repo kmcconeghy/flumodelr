@@ -13,6 +13,8 @@
 \item{perc_fludeaths}{fludeaths / alldeaths * 100}
 \item{yrweek_dt}{year-week-day of rate, Date}
 \item{prop_flupos}{No. of influenza positive isolates / total no. tested, from NREVSS data, see ?nrevss, the data was linked with the cdc122 data with a 2 week lead to account for delays in reporting}
+\item{week_in_order}{A ordered count of weeks from beginning to end of dataset}
+\item{epi}{A logical vector indicating epidemic seasons}
 }}
 \source{
 \url{https://data.cdc.gov/dataset/Deaths-in-122-U-S-cities-1962-2016-122-Cities-Mort/mr8w-325u}

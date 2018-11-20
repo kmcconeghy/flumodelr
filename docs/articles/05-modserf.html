@@ -127,14 +127,15 @@
 <a href="#influenza-data" class="anchor"></a>Influenza data</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta &lt;-<span class="st"> </span>flumodelr<span class="op">::</span>fludta
 fludta
-<span class="co">#&gt; # A tibble: 261 x 7</span>
+<span class="co">#&gt; # A tibble: 261 x 9</span>
 <span class="co">#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  2010    42       726     11269           6.44 2010-10-17      0.0133</span>
 <span class="co">#&gt; 2  2010    43       720     11204           6.43 2010-10-24      0.0193</span>
 <span class="co">#&gt; 3  2010    44       739     11115           6.65 2010-10-31      0.0173</span>
 <span class="co">#&gt; 4  2010    45       724     10321           7.01 2010-11-07      0.0231</span>
-<span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
+<span class="co">#&gt; # ... with 257 more rows, and 2 more variables: week_in_order &lt;int&gt;,</span>
+<span class="co">#&gt; #   epi &lt;lgl&gt;</span></code></pre></div>
 </div>
 </div>
 <div id="general-estimation-procedure-performed-by-flum" class="section level2">
@@ -210,14 +211,15 @@ fludta
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta_fitted &lt;-<span class="st"> </span>fludta <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_column</span>(., <span class="dt">y0=</span>base_pred<span class="op">$</span>fit[,<span class="dv">1</span>], <span class="dt">y0_ul=</span>base_pred<span class="op">$</span>fit[,<span class="dv">3</span>]) 
 fludta_fitted
-<span class="co">#&gt; # A tibble: 261 x 9</span>
+<span class="co">#&gt; # A tibble: 261 x 11</span>
 <span class="co">#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  2010    42       726     11269           6.44 2010-10-17      0.0133</span>
 <span class="co">#&gt; 2  2010    43       720     11204           6.43 2010-10-24      0.0193</span>
 <span class="co">#&gt; 3  2010    44       739     11115           6.65 2010-10-31      0.0173</span>
 <span class="co">#&gt; 4  2010    45       724     10321           7.01 2010-11-07      0.0231</span>
-<span class="co">#&gt; # ... with 257 more rows, and 2 more variables: y0 &lt;dbl&gt;, y0_ul &lt;dbl&gt;</span></code></pre></div>
+<span class="co">#&gt; # ... with 257 more rows, and 4 more variables: week_in_order &lt;int&gt;,</span>
+<span class="co">#&gt; #   epi &lt;lgl&gt;, y0 &lt;dbl&gt;, y0_ul &lt;dbl&gt;</span></code></pre></div>
 <p><img src="05-modserf_files/figure-html/unnamed-chunk-9-1.png" width="672"><strong>% of Deaths from P&amp;I</strong> - No. of influenza / pneumonia deaths per 100,000 people.<br>
 **“Expected %** - A fit of the cyclical regression model, (one Fourier term).<br><strong>Epidemic Threshold</strong> - 90% Upper Prediction Interval (1.64 SD)</p>
 <p>This model differs from the original Serfling regressions because of it’s use of influenza virology to generate a counterfactual vs. using an off-season secular trend.</p>
@@ -231,15 +233,15 @@ fludta_fitted
 <p>You can either report the deaths in excess of the one-sided 95% prediction interval, which are sometimes described as epidemics or severe periods of influenza morbidity and mortality.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_excess &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fludiff.html">fludiff</a></span>(fludta_fitted, <span class="dt">obsvar=</span>perc_fludeaths, <span class="dt">fitvar=</span>y0_ul)
 df_excess
-<span class="co">#&gt; # A tibble: 261 x 10</span>
+<span class="co">#&gt; # A tibble: 261 x 12</span>
 <span class="co">#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  2010    42       726     11269           6.44 2010-10-17      0.0133</span>
 <span class="co">#&gt; 2  2010    43       720     11204           6.43 2010-10-24      0.0193</span>
 <span class="co">#&gt; 3  2010    44       739     11115           6.65 2010-10-31      0.0173</span>
 <span class="co">#&gt; 4  2010    45       724     10321           7.01 2010-11-07      0.0231</span>
-<span class="co">#&gt; # ... with 257 more rows, and 3 more variables: y0 &lt;dbl&gt;, y0_ul &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   y_diff &lt;dbl&gt;</span></code></pre></div>
+<span class="co">#&gt; # ... with 257 more rows, and 5 more variables: week_in_order &lt;int&gt;,</span>
+<span class="co">#&gt; #   epi &lt;lgl&gt;, y0 &lt;dbl&gt;, y0_ul &lt;dbl&gt;, y_diff &lt;dbl&gt;</span></code></pre></div>
 <p><img src="05-modserf_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
 </div>
 <div id="attributable-influenza-mortality" class="section level3">
@@ -248,15 +250,15 @@ df_excess
 <p>Alternatively, you can simply take the excess deaths above the predicted line and report these as deaths attributable to influenza. Since they are in excess of the predicted deaths in the absence of influenza (i.e. no influenza positive isolates).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_excess &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fludiff.html">fludiff</a></span>(fludta_fitted, <span class="dt">obsvar=</span>perc_fludeaths, <span class="dt">fitvar=</span>y0)
 df_excess
-<span class="co">#&gt; # A tibble: 261 x 10</span>
+<span class="co">#&gt; # A tibble: 261 x 12</span>
 <span class="co">#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  2010    42       726     11269           6.44 2010-10-17      0.0133</span>
 <span class="co">#&gt; 2  2010    43       720     11204           6.43 2010-10-24      0.0193</span>
 <span class="co">#&gt; 3  2010    44       739     11115           6.65 2010-10-31      0.0173</span>
 <span class="co">#&gt; 4  2010    45       724     10321           7.01 2010-11-07      0.0231</span>
-<span class="co">#&gt; # ... with 257 more rows, and 3 more variables: y0 &lt;dbl&gt;, y0_ul &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   y_diff &lt;dbl&gt;</span></code></pre></div>
+<span class="co">#&gt; # ... with 257 more rows, and 5 more variables: week_in_order &lt;int&gt;,</span>
+<span class="co">#&gt; #   epi &lt;lgl&gt;, y0 &lt;dbl&gt;, y0_ul &lt;dbl&gt;, y_diff &lt;dbl&gt;</span></code></pre></div>
 <p><img src="05-modserf_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
 </div>
 </div>
@@ -304,8 +306,8 @@ fludta_mod <span class="op">%&gt;%</span><span class="st"> </span><span class="k
 <p>You can specify virology data using viral option, which accepts a string vector of length any. The function will search for named columns in the data using that string and build a model formula which includes them.</p>
 <p>Any viral data called here should be a proportional value, i.e. float between 0-1.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/flum.html">flum</a></span>(fludta, <span class="dt">model=</span><span class="st">"fluglm"</span>, 
-                   <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt, 
-                   <span class="dt">viral =</span> <span class="st">"prop_flupos"</span>)
+            <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>week_in_order, 
+            <span class="dt">viral =</span> <span class="st">"prop_flupos"</span>)
 <span class="co">#&gt; # A tibble: 261 x 6</span>
 <span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
 <span class="co">#&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;</span>
@@ -321,7 +323,7 @@ fludta_mod <span class="op">%&gt;%</span><span class="st"> </span><span class="k
 <p>If excluding the polynomial terms is desired:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Without polynomial terms
 <span class="kw"><a href="../reference/flum.html">flum</a></span>(fludta, <span class="dt">model=</span><span class="st">"fluglm"</span>, 
-     <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt, 
+     <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>week_in_order, 
      <span class="dt">viral =</span> <span class="st">"prop_flupos"</span>, <span class="dt">poly=</span>F)
 <span class="co">#&gt; # A tibble: 261 x 6</span>
 <span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
@@ -334,22 +336,24 @@ fludta_mod <span class="op">%&gt;%</span><span class="st"> </span><span class="k
 <p>Perform a seasonal baseline model using Sept - May as season-period.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Epidemic period, non-specified
 <span class="kw"><a href="../reference/flum.html">flum</a></span>(fludta, <span class="dt">model=</span><span class="st">"fluglm"</span>, 
-     <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt, 
+     <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>week_in_order, 
      <span class="dt">season=</span>T)
+<span class="co">#&gt; Warning in predict.lm(object, newdata, se.fit, scale = residual.scale, type</span>
+<span class="co">#&gt; = ifelse(type == : prediction from a rank-deficient fit may be misleading</span>
 <span class="co">#&gt; # A tibble: 261 x 6</span>
 <span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
 <span class="co">#&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1     678.         745.         612.    1325.        1729.         921.</span>
-<span class="co">#&gt; 2     700.         762.         637.    1309.        1694.         925.</span>
-<span class="co">#&gt; 3     722.         780.         664.    1295.        1661.         930.</span>
-<span class="co">#&gt; 4     745.         799.         691.    1282.        1630.         935.</span>
+<span class="co">#&gt; 1     678.         745.         612.   -7250.          NaN          NaN</span>
+<span class="co">#&gt; 2     700.         762.         637.   -4576.          NaN          NaN</span>
+<span class="co">#&gt; 3     722.         780.         664.   -2537.          NaN          NaN</span>
+<span class="co">#&gt; 4     745.         799.         691.   -1062.          NaN          NaN</span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p>Identify your own epidemic period, then call flum() to use it. Season is default NULL, but if a named variable in fludta_mod, the model will search for and use it as the baseline.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Epidemic period specified
 fludta_mod &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ird.html">ird</a></span>(<span class="dt">data=</span>fludta, 
-               <span class="dt">outc =</span> perc_fludeaths, <span class="dt">viral=</span>prop_flupos, <span class="dt">time=</span>yrweek_dt)
+               <span class="dt">outc =</span> perc_fludeaths, <span class="dt">viral=</span>prop_flupos, <span class="dt">time=</span>week_in_order)
 
-<span class="kw"><a href="../reference/flum.html">flum</a></span>(<span class="dt">data=</span>fludta_mod, <span class="dt">model=</span><span class="st">"fluglm"</span>, <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt, 
+<span class="kw"><a href="../reference/flum.html">flum</a></span>(<span class="dt">data=</span>fludta_mod, <span class="dt">model=</span><span class="st">"fluglm"</span>, <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>week_in_order, 
        <span class="dt">season=</span>high)
 <span class="co">#&gt; # A tibble: 261 x 6</span>
 <span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
@@ -363,21 +367,23 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Poisson model with offset term
 <span class="kw"><a href="../reference/flum.html">flum</a></span>(fludta, 
      <span class="dt">model=</span><span class="st">"fluglm"</span>, <span class="dt">outc =</span> fludeaths, 
-     <span class="dt">time =</span> yrweek_dt, <span class="dt">season=</span>T, 
+     <span class="dt">time =</span> week_in_order, <span class="dt">season=</span>T, 
      <span class="dt">family=</span>poisson, <span class="dt">offset=</span><span class="kw">log</span>(alldeaths))
+<span class="co">#&gt; Warning in predict.lm(object, newdata, se.fit, scale = residual.scale, type</span>
+<span class="co">#&gt; = ifelse(type == : prediction from a rank-deficient fit may be misleading</span>
 <span class="co">#&gt; # A tibble: 261 x 6</span>
 <span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
 <span class="co">#&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1     706.         722.         690.    1600.        2356.        1086.</span>
-<span class="co">#&gt; 2     715.         730.         700.    1548.        2238.        1071.</span>
-<span class="co">#&gt; 3     723.         737.         709.    1498.        2127.        1055.</span>
-<span class="co">#&gt; 4     685.         697.         673.    1359.        1896.         974.</span>
+<span class="co">#&gt; 1     706.         722.         690.    3124.   217492635.       0.0449</span>
+<span class="co">#&gt; 2     715.         730.         700.    1484.     1220742.       1.80  </span>
+<span class="co">#&gt; 3     723.         737.         709.     921.       33835.      25.1   </span>
+<span class="co">#&gt; 4     685.         697.         673.     666.        3335.     133.    </span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p>A negative binomial model can be called from the MASS::glm.nb function using <code>glmnb=T</code> option. The output is the same.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Negative binomial model with offset term
 <span class="kw"><a href="../reference/flum.html">flum</a></span>(fludta, 
      <span class="dt">model=</span><span class="st">"fluglm"</span>, <span class="dt">outc =</span> fludeaths, 
-     <span class="dt">time =</span> yrweek_dt, <span class="dt">viral=</span><span class="st">'prop_flupos'</span>,
+     <span class="dt">time =</span> week_in_order, <span class="dt">viral=</span><span class="st">'prop_flupos'</span>,
      <span class="dt">glmnb =</span> T)
 <span class="co">#&gt; # A tibble: 261 x 6</span>
 <span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>

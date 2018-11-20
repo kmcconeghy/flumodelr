@@ -13,7 +13,7 @@ test_that("flum computes incidence rate difference", {
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
               "perc_fludeaths", "yrweek_dt", "prop_flupos",
-              "season", "high", "fluseason")
+              "week_in_order", "epi", "season", "high", "fluseason")
   
   #Tests
   expect_s3_class(d, "data.frame")
@@ -30,7 +30,7 @@ test_that("flum computes fluserf model", {
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
               "perc_fludeaths", "yrweek_dt", "prop_flupos",
-              "epi", "y0", "y0_ul")
+              "week_in_order", "epi", "y0", "y0_ul")
   
   #Tests
   expect_s3_class(d, "data.frame")
@@ -42,7 +42,7 @@ test_that("flum computes fluserf model", {
 
 test_that("flum computes fluglm model", {
   d <- flum(fludta, model="fluglm", 
-            outc=perc_fludeaths, time=yrweek_dt,
+            outc=perc_fludeaths, time=week_in_order,
             viral='prop_flupos')
   
   nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')

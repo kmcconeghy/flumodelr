@@ -1,11 +1,10 @@
 library(flumodelr)
-flu_dta <- flumodelr::fludta
 
 context("fluglm")
 
 test_that("test fluglm function - season ", {
   
-  d <- fluglm(flu_dta, outc = fludeaths, season=T, time = yrweek_dt)  
+  d <- fluglm(fludta, outc = fludeaths, season=epi, time = week_in_order)  
   nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')
   
   #Tests
@@ -24,7 +23,7 @@ test_that("test fluglm function - season ", {
 
 test_that("test fluglm function - viral ", {
   
-  d <- fluglm(fludta, outc = fludeaths, viral='prop_flupos', time = yrweek_dt)  
+  d <- fluglm(fludta, outc = fludeaths, viral='prop_flupos', time = week_in_order)  
   nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')
   
   #Tests
@@ -43,7 +42,7 @@ test_that("test fluglm function - viral ", {
 
 test_that("test fluglm function - neg binomial ", {
   
-  d <- fluglm(fludta, outc = fludeaths, viral='prop_flupos', time = yrweek_dt,
+  d <- fluglm(fludta, outc = fludeaths, viral='prop_flupos', time = week_in_order,
               glmnb=T)  
   nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')
   
@@ -64,8 +63,8 @@ test_that("test fluglm function - neg binomial ", {
 test_that("test fluglm function - poisson", {
   d <- fluglm(fludta, 
               outc = fludeaths, 
-              time = yrweek_dt, 
-              season =T,
+              time = week_in_order, 
+              season =epi,
               offset = log(alldeaths),
               family = poisson) #nonsense variabl for testing
   

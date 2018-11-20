@@ -11,7 +11,7 @@ test_that("fluserf computes correct estimates", {
 
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
-              "perc_fludeaths", "yrweek_dt", "prop_flupos",
+              "perc_fludeaths", "yrweek_dt", "prop_flupos", "week_in_order", 
               "epi", "y0", "y0_ul")
   
   #Tests

@@ -231,8 +231,8 @@ between 0-1.
 
 ```{r, }
 flum(fludta, model="fluglm", 
-                   outc=fludeaths, time=yrweek_dt, 
-                   viral = "prop_flupos")
+            outc=fludeaths, time=week_in_order, 
+            viral = "prop_flupos")
 ```
 
 ### Other options  
@@ -241,7 +241,7 @@ If excluding the polynomial terms is desired:
 ```{r, }
 ## Without polynomial terms
 flum(fludta, model="fluglm", 
-     outc=fludeaths, time=yrweek_dt, 
+     outc=fludeaths, time=week_in_order, 
      viral = "prop_flupos", poly=F)
 ```
 
@@ -249,7 +249,7 @@ Perform a seasonal baseline model using Sept - May as season-period.
 ```{r, }
 ## Epidemic period, non-specified
 flum(fludta, model="fluglm", 
-     outc=fludeaths, time=yrweek_dt, 
+     outc=fludeaths, time=week_in_order, 
      season=T)
 ```
 
@@ -259,9 +259,9 @@ for and use it as the baseline.
 ```{r, }
 ## Epidemic period specified
 fludta_mod <- ird(data=fludta, 
-               outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+               outc = perc_fludeaths, viral=prop_flupos, time=week_in_order)
 
-flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=yrweek_dt, 
+flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=week_in_order, 
        season=high)
 ```
 
@@ -270,7 +270,7 @@ You can pass arguments to the glm() call, like specifying a Poisson model.
 ## Poisson model with offset term
 flum(fludta, 
      model="fluglm", outc = fludeaths, 
-     time = yrweek_dt, season=T, 
+     time = week_in_order, season=T, 
      family=poisson, offset=log(alldeaths))
 ```
 
@@ -280,7 +280,7 @@ A negative binomial model can be called from the MASS::glm.nb function using
 ## Negative binomial model with offset term
 flum(fludta, 
      model="fluglm", outc = fludeaths, 
-     time = yrweek_dt, viral='prop_flupos',
+     time = week_in_order, viral='prop_flupos',
      glmnb = T)
 ```
 

@@ -128,7 +128,7 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <a href="#example-data" class="anchor"></a>Example data</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta &lt;-<span class="st"> </span>fludta
 fludta</code></pre></div>
-<pre><code>## # A tibble: 261 x 7
+<pre><code>## # A tibble: 261 x 9
 ##     year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos
 ##    &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt;
 ##  1  2010    42       726     11269           6.44 2010-10-17      0.0133
@@ -141,7 +141,8 @@ fludta</code></pre></div>
 ##  8  2010    49       863     12578           6.86 2010-12-05      0.0837
 ##  9  2010    50       816     12029           6.78 2010-12-12      0.0863
 ## 10  2010    51       713      9655           7.38 2010-12-19      0.130 
-## # ... with 251 more rows</code></pre>
+## # ... with 251 more rows, and 2 more variables: week_in_order &lt;int&gt;,
+## #   epi &lt;lgl&gt;</code></pre>
 </div>
 <div id="fit-traditional-serfling-model" class="section level3">
 <h3 class="hasAnchor">

@@ -14,8 +14,10 @@
 #' @param outc an unquoted name of a column in data which corresponds to 
 #' the outcome variable of interest
 #' 
-#' @param season Either 'T' (where the epidemic baseline model will be done based on month of year),
-#'  or the name of a column which is a logical vector flagging a given week as epidemic or not
+#' @param season Either 'T', where the epidemic baseline model will be created 
+#' assuming time variable is a date, and Oct-May is epidemic season, or the 
+#' name of a column which is a logical vector flagging a given week as 
+#' epidemic or not
 #' 
 #' @param viral a string vector naming 1 or more viral specimens   
 #' 
@@ -27,8 +29,8 @@
 #'   
 #' @param echo A logical, if T will print variables used in model.  
 #' 
-#' @param poly A logical, if T will include a quadratic, cubic and 
-#' quartic term.  
+#' @param poly A logical, if T will include a quadratic, cubic,  
+#' quartic and quintic term.  
 #' 
 #' @param model_form An object of type formula, allowing for user-specified 
 #' model to be passed on to glm(). Default missing.    
@@ -53,7 +55,7 @@
 #' @examples
 #' require(flumodelr)
 #' fludta <- flumodelr::fludta
-#' flu_fit <- fluglm(fludta, outc = fludeaths, time = yrweek_dt, season=T)  
+#' flu_fit <- fluglm(fludta, outc = fludeaths, time = week_in_order, season=epi)  
 #'               
 #' head(flu_fit)
 #' 
@@ -96,11 +98,12 @@ fluglm <- function(data=NULL, outc=NULL,
   if (all(missing(season), missing(viral))) stop("neither 'season', 'viral' 
                                                  specified") 
     
-  #set-up data
-    data <- data %>% dplyr::arrange(UQ(time_eq))
+  #set-up data  
+    ## prepare time_var
+    data <- data %>% dplyr::arrange(!!time_eq)
       
     data <- dplyr::mutate(data, 
-                    t_unit = row_number(),
+                    t_unit = !!time_eq,
                     theta = 2*t_unit/period,
                     sin_f1 = sinpi(theta),
                     cos_f1 = cospi(theta))
@@ -171,13 +174,6 @@ fluglm <- function(data=NULL, outc=NULL,
     if (!missing(viral)) {
       flu_form <- paste0(flu_form, "+ ", paste(viral, collapse=" + "))
       if (echo==T) { print( paste0("Model formula: ", flu_form))}
-      
-      ## check viral parameters are canon  
-      for (i in viral) {
-        if (any(sapply(data[, i], test_prop))==F) {
-          warning('variable: ', i, 'exceeds boundary 0 - 1')
-        }
-      }
       
       #build argument list  
       argslist <- list(formula=flu_form, 

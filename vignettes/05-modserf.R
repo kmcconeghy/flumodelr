@@ -152,41 +152,41 @@ fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
 
 ## ------------------------------------------------------------------------
 flum(fludta, model="fluglm", 
-                   outc=fludeaths, time=yrweek_dt, 
-                   viral = "prop_flupos")
+            outc=fludeaths, time=week_in_order, 
+            viral = "prop_flupos")
 
 ## ------------------------------------------------------------------------
 ## Without polynomial terms
 flum(fludta, model="fluglm", 
-     outc=fludeaths, time=yrweek_dt, 
+     outc=fludeaths, time=week_in_order, 
      viral = "prop_flupos", poly=F)
 
 ## ------------------------------------------------------------------------
 ## Epidemic period, non-specified
 flum(fludta, model="fluglm", 
-     outc=fludeaths, time=yrweek_dt, 
+     outc=fludeaths, time=week_in_order, 
      season=T)
 
 ## ------------------------------------------------------------------------
 ## Epidemic period specified
 fludta_mod <- ird(data=fludta, 
-               outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+               outc = perc_fludeaths, viral=prop_flupos, time=week_in_order)
 
-flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=yrweek_dt, 
+flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=week_in_order, 
        season=high)
 
 ## ------------------------------------------------------------------------
 ## Poisson model with offset term
 flum(fludta, 
      model="fluglm", outc = fludeaths, 
-     time = yrweek_dt, season=T, 
+     time = week_in_order, season=T, 
      family=poisson, offset=log(alldeaths))
 
 ## ------------------------------------------------------------------------
 ## Negative binomial model with offset term
 flum(fludta, 
      model="fluglm", outc = fludeaths, 
-     time = yrweek_dt, viral='prop_flupos',
+     time = week_in_order, viral='prop_flupos',
      glmnb = T)
 
 ## ------------------------------------------------------------------------

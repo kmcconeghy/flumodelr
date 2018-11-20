@@ -115,7 +115,9 @@ head(df.ILI)
       na.omit() %>% #drop missing
       ungroup() %>%
       inner_join(., nrevss2[,c('yrweek_dt', 'prop_flupos')], 
-                 by=c('yrweek_dt')) #visual inspection
+                 by=c('yrweek_dt')) %>% #visual inspection
+      mutate(week_in_order = row_number(),
+             epi = if_else(month(yrweek_dt)>=10 | month(yrweek_dt)<=5, T, F))
 
     #--Save for package
     use_data(fludta, overwrite = T)

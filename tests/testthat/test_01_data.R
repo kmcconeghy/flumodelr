@@ -4,7 +4,8 @@ test_that("fludta properly formatted", {
   #load data
   d <- flumodelr::fludta
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
-              "perc_fludeaths", "yrweek_dt", "prop_flupos")
+              "perc_fludeaths", "yrweek_dt", "prop_flupos",
+              "week_in_order", "epi")
   
   #Tests
   expect_s3_class(d, "data.frame")
