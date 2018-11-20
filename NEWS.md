@@ -1,3 +1,8 @@
+# Version 0.0.8 11-20-2018
+  * rewrote and consolidate code for fluglm
+  * updated tidy eval for most recent version of rlang
+  
+
 # Version 0.0.7 08-08-2018  
 
   * added additional unit tests  

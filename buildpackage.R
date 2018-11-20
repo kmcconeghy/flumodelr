@@ -6,7 +6,6 @@ setwd("~/GitHub/flumodelr")
 devtools::document()
 devtools::build()
 devtools::test()
-
 devtools::check()
 
 

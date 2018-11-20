@@ -38,5 +38,5 @@ LazyDataCompression: xz
 BugReports: https://github.com/kmcconeghy/flumodelr/issues
 License: GPL-3
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace", "collate"))
