@@ -2,7 +2,7 @@
 #' 
 #' @description Performs a cyclical linear regression model
 #'
-#' @usage fluserf(data=NULL, outc=NULL, epi=NULL, time=NULL, 
+#' @usage fluserf(data=NULL, outc=NULL, epi, time=NULL, 
 #'               period=52, echo=F, alpha=.05)
 #'               
 #' @param data A dataframe class object, must contain time variable, 
@@ -45,7 +45,7 @@
 #' 
 #' @import rlang stats
 #' 
-fluserf <- function(data=NULL, outc=NULL, epi=NULL, time=NULL, 
+fluserf <- function(data=NULL, outc=NULL, epi, time=NULL, 
                    period=52, echo=F, alpha=0.05) {
   #sanity checks
     #df is data.frame
@@ -58,7 +58,7 @@ fluserf <- function(data=NULL, outc=NULL, epi=NULL, time=NULL,
 
     #If no epi variable then, generate automatic period from Sept - May. 
       #write epi object as name
-      if (epi_eq==quo(NULL)) {
+      if (missing(epi)) {
         data <- data %>%
           dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | 
                                       month(!!time_eq)<=5, 

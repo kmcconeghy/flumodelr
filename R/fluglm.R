@@ -5,8 +5,8 @@
 #'
 #' @usage fluglm(data=NULL, outc=NULL, season, viral, 
 #'               time=NULL, period=52, echo=F, poly=T, 
-#'               model_form=NULL, int_type="ci", alpha=0.05, offset = NULL,
-#'               ...)
+#'               model_form='none', int_type="ci", alpha=0.05, offset,
+#'               glmnb=F, ...)
 #'               
 #' @param data A dataframe class object, must contain time variable, 
 #' epidemic indicator, and measure of influenza morbidity
@@ -41,6 +41,9 @@
 #' 
 #' @param offset Specify if offset term to be used, must specify log(object)  
 #' 
+#' @param glmnb Logical, if True will run a negative binomial model using 
+#'              MASS::nb.glm
+#'              
 #' @param ... other options passed on to glm model (e.g. family=poisson, see ?glm)  
 #'   
 #' @return an object of class data.frame, fit, upper and lower confidence bounds
@@ -50,7 +53,7 @@
 #' @examples
 #' require(flumodelr)
 #' fludta <- flumodelr::fludta
-#' flu_fit <- fluglm(fludta, outc = fludeaths, time = yrweek_dt)  
+#' flu_fit <- fluglm(fludta, outc = fludeaths, time = yrweek_dt, season=T)  
 #'               
 #' head(flu_fit)
 #' 
@@ -61,21 +64,27 @@
 #' Viruses. 2009 Jan;3(1):37-49. 
 #' /url{https://www.ncbi.nlm.nih.gov/pubmed/19453440}
 #' 
-#' @import rlang 
+#' @import rlang dplyr
 #' 
 fluglm <- function(data=NULL, outc=NULL, 
                    season, viral, 
                    time=NULL, period=52, 
-                   echo=F, poly=T, model_form=NULL, 
-                   int_type="ci", alpha=0.05, offset=NULL, ...) {
+                   echo=F, poly=T, model_form='none', 
+                   int_type="ci", alpha=0.05, offset, 
+                   glmnb=F, ...) {
   #df is data.frame
   stopifnot(is.data.frame(data)) 
   
   #tidy evaluation  
     outc_eq <- enquo(outc)
     time_eq <- enquo(time)
-    offset_eq <- enquo(offset)  
-    if (missing(season)) {
+    if ( missing(offset)) {
+      offset_eq <- quo(NULL)
+    } else {
+      offset_eq <- enquo(offset)
+    } 
+
+   if ( missing(season)) {
       season_eq <- NULL 
       } else {
         season_eq <- enquo(season)
@@ -84,15 +93,17 @@ fluglm <- function(data=NULL, outc=NULL,
   # sanity
   if (!missing(season) & !missing(viral)) stop("'season' and 'viral' 
                                                cannot both be specified")
-  if (all(missing(season), missing(viral))) stop("neither 'season', 'viral' not specified")  
+  if (all(missing(season), missing(viral))) stop("neither 'season', 'viral' 
+                                                 specified") 
+    
   #set-up data
     data <- data %>% dplyr::arrange(UQ(time_eq))
       
-    data <- data %>%
-      dplyr::mutate(t_unit = row_number(),
-                      theta = 2*t_unit/period,
-                      sin_f1 = sinpi(theta),
-                      cos_f1 = cospi(theta))
+    data <- dplyr::mutate(data, 
+                    t_unit = row_number(),
+                    theta = 2*t_unit/period,
+                    sin_f1 = sinpi(theta),
+                    cos_f1 = cospi(theta))
   #parameters  
     if (echo==T) {
       cat("Setting regression parameters...\n")
@@ -103,74 +114,48 @@ fluglm <- function(data=NULL, outc=NULL,
       cat("  time period is:", period, "\n")
     }
     
-    fluglm.model <- function() {
-      #build model formula
-      flu_form <- paste0(quo_text(outc_eq), 
-                         " ~ ", "t_unit", "+ sin_f1", "+ cos_f1")
-      ## Offset term
-      if (offset_eq!=quo(NULL)) {
-        flu_form <- paste0(flu_form, 
-                           "+ offset(",quo_text(offset_eq), ")")
-      }
+  ## Run Model  
+    #Build glm formula  
+    flu_form <- mk_flu_form(outc=!!outc_eq, 
+                            offset=!!offset_eq, 
+                            poly=poly,
+                            model_form = model_form)
+    
+    #Seasonal model  
+    if (!missing(season)) {
+      if (rlang::quo_text(season_eq)=='T') {
       
-      ## Add polynomials
-      if (poly==T) {
-        flu_form <- paste0(flu_form, "+ I(t_unit^2) + I(t_unit^3) + I(t_unit^4)")
-      }
-      
-      ## If user-specified formula  
-      if (is.null(model_form)==F) {
-        return(model_form)
-      } else {
-        return(flu_form)
-      }
-    }
-    fluglm.season <- function() {
-      #if ==T, then default epi variable specified
-        if (quo_text(season_eq)=='T') {
-          
-          data <- data %>%
-            dplyr::mutate(epi = if_else(month(!!time_eq)>=10 | 
-                                          month(!!time_eq)<=5, 
-                                        T, F))  
-          epi <- 'epi'
-          season_eq <- quo(epi)
-        } 
-      
+      data <- mutate(data,
+                     epi = if_else(month(!!time_eq)>=10 | month(!!time_eq)<=5, 
+                                   T, F))  
+      epi <- 'epi'
+      season_eq <- quo(epi)
+      } 
+    
       #SEASONAL MODEL
       if (echo==T) print(paste0("Model formula: ", flu_form))
       
-      base_data <- data %>%
-        dplyr::filter(!!season_eq==F)
-
+      new_data <- dplyr::filter(data, !!season_eq==F)  
+      
       #compute baseline regression 
       argslist <- list(formula=flu_form, 
-                       data=base_data,
+                       data=new_data,
                        na.action = na.exclude,
                        ...)
       
-      base_fit <- do.call(stats::glm, args=argslist)  
-      pred <- predict(base_fit, 
-                newdata=data, 
-                se.fit=TRUE, 
-                type="link")
-
-      fitted <- base_fit$family$linkinv(pred$fit)
-      upper <- pred$fit + (qnorm(1-alpha) * pred$se.fit)
-      lower <- pred$fit - (qnorm(1-alpha) * pred$se.fit)
-      upper.fit <- base_fit$family$linkinv(upper)
-      lower.fit <- base_fit$family$linkinv(lower)
-
-      res <- list(base_fit = base_fit, fitted = fitted, 
-                  upper.fit = upper.fit,
-                  lower.fit = lower.fit) 
-      return(res)
+      base_fit <- if (!glmnb) {
+        do.call(glm, args=argslist) 
+        } else if (glmnb) {
+        do.call(MASS::glm.nb, args=argslist) 
+        } 
+      
+      result <- get_fitvals(base_fit, data)
     }
-    fluglm.viral <- function() {
-      #VIROLOGY MODEL
-      flu_form <- paste0(flu_form, 
-                         "+ ", paste(viral, collapse=" + "))
-      if (echo==T) {print(paste0("Model formula: ", flu_form))}
+    
+    #VIROLOGY MODEL
+    if (!missing(viral)) {
+      flu_form <- paste0(flu_form, "+ ", paste(viral, collapse=" + "))
+      if (echo==T) { print( paste0("Model formula: ", flu_form))}
       
       ## check viral parameters are canon  
       for (i in viral) {
@@ -179,49 +164,32 @@ fluglm <- function(data=NULL, outc=NULL,
         }
       }
       
-      #compute baseline regression 
+      #build argument list  
       argslist <- list(formula=flu_form, 
                        data=data,
                        na.action = na.exclude,
                        ...)
       
-      base_fit <- do.call(stats::glm, args=argslist)  
+      #run regression  
+      base_fit <- if (!glmnb) {
+                    do.call(glm, args=argslist) 
+                  } else if (glmnb) {
+                              do.call(MASS::glm.nb, args=argslist) 
+                    }  
       
       ## Fitted values + prediction interval
       dta_noviral <- data
-      dta_noviral[, viral] <- sapply(dta_noviral[, viral], 
-                                     function(x) x=0)
+      dta_noviral[, viral] <- sapply(dta_noviral[, viral], function(x) x=0)
       
-      
-      pred_noviral <- dta_noviral %>%
-        predict(base_fit, 
-                newdata=., 
-                se.fit=TRUE, 
-                type="link")
-      
-      fitted <- base_fit$family$linkinv(pred_noviral$fit)
-      upper <- pred_noviral$fit + (qnorm(1-alpha) * pred_noviral$se.fit)
-      lower <- pred_noviral$fit - (qnorm(1-alpha) * pred_noviral$se.fit)
-      upper.fit <- base_fit$family$linkinv(upper)
-      lower.fit <- base_fit$family$linkinv(lower)
-      
-      res <- list(base_fit = base_fit, fitted = fitted, 
-                  upper.fit = upper.fit,
-                  lower.fit = lower.fit) 
+      result <- get_fitvals(base_fit, dta_noviral)
     }
-    
-  ## Run Model  
-    flu_form <- fluglm.model()
-    if (!missing(season)) result <- fluglm.season()
-    if (!missing(viral)) result <- fluglm.viral()
 
   #Report 
   if (echo==T) {
     print(summary(result$base_fit))
   }
   
-  data <- data %>%
-    tibble::add_column(., fit = result$fitted, 
+  data <- tibble::add_column(data, fit = result$fitted, 
                        upper = result$upper.fit,
                        lower = result$lower.fit) %>%
     dplyr::select(-t_unit, -theta, -sin_f1, -cos_f1)

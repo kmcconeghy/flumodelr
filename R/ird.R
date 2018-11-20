@@ -4,7 +4,7 @@
 #' and peri-influenza season, or between influenza season and
 #' summer season
 #' 
-#' @usage ird(data=NULL, outc=NULL, time=NULL, viral=NULL, 
+#' @usage ird(data=NULL, outc=NULL, time=NULL, viral, 
 #'             period=52, respStart=27, high=0.1, fluStart=40,
 #'             fluStop=18, echo=F)
 #' 
@@ -61,12 +61,12 @@
 #' respiratory viruses. 2009 Jan 1;3(1):37-49.
 #' /url{http://onlinelibrary.wiley.com/doi/10.1111/j.1750-2659.2009.00073.x/full} 
 #' 
-#' @import rlang 
+#' @import rlang dplyr
 #' 
 ird <- function(data=NULL, 
                 outc=NULL, 
                 time=NULL,
-                viral=NULL,
+                viral,
                 period=52,
                 respStart=27,
                 high=0.1,
@@ -89,14 +89,12 @@ ird <- function(data=NULL,
     time_eq <- enquo(time)
     viral_eq <- enquo(viral)
   
-    #If no epi variable then, generate automatic period from Sept - May. 
-    #write epi object as name
-    if (viral_eq==quo(NULL)) {
+    if (missing(viral)) {
       viral <- "missing"
       viral_eq <- quo(viral)
-    } else {viral_eq <- enquo(viral)}
+    } else { viral_eq <- enquo(viral) }
     
-  data <- data %>% dplyr::arrange(., UQ(time_eq))
+  data <- data %>% dplyr::arrange(., !!time_eq)
   
   
   #parameters  
@@ -123,7 +121,7 @@ ird <- function(data=NULL,
     }
   
     #
-    if(viral_eq!="missing") data$high <- mapply(findhigh, data[rlang::quo_text(viral_eq)])
+    if(!missing(viral)) data$high <- mapply(findhigh, data[rlang::quo_text(viral_eq)])
     
     #find influenza versus summer baseline period
     findflu <- function (calweek, fluStart=40, fluStop=18){
@@ -143,7 +141,7 @@ ird <- function(data=NULL,
 #' 
 #' @usage rb(data, outc, echo=F)
 #' @export  
-#' @import rlang 
+#' @import rlang dplyr
 #' 
 rb <- function(data, outc, echo=F){ 
   
@@ -180,6 +178,7 @@ rb <- function(data, outc, echo=F){
 #' @description Outputs simple bar chart for incidence rate difference
 #' models  
 #' 
+#' @param data A formatted dataset created irb() rb() commands
 #' @usage gr(data)
 #' @export  
 #' @import ggplot2
