@@ -26,7 +26,7 @@ models. The output will always be a set of fitted values.
 \examples{
 require(flumodelr)
 fludta <- flumodelr::fludta
-flu_fit <- flum(fludta, model="serflm", outc = fludeaths, time = yrweek_dt)  
+flu_fit <- flum(fludta, model="fluserf", outc = fludeaths, time = yrweek_dt)  
               
 head(flu_fit)
 

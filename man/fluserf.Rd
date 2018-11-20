@@ -4,7 +4,7 @@
 \alias{fluserf}
 \title{fluserf: Fit a Serfling Model on Time Series Data}
 \usage{
-fluserf(data=NULL, outc=NULL, epi=NULL, time=NULL, 
+fluserf(data=NULL, outc=NULL, epi, time=NULL, 
               period=52, echo=F, alpha=.05)
 }
 \arguments{

@@ -139,8 +139,8 @@ specifications.</p>
 
     <pre class="usage"><span class='fu'>fluglm</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>outc</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='no'>season</span>, <span class='no'>viral</span>,
               <span class='kw'>time</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>period</span><span class='kw'>=</span><span class='fl'>52</span>, <span class='kw'>echo</span><span class='kw'>=</span><span class='no'>F</span>, <span class='kw'>poly</span><span class='kw'>=</span><span class='no'>T</span>,
-              <span class='kw'>model_form</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>int_type</span><span class='kw'>=</span><span class='st'>"ci"</span>, <span class='kw'>alpha</span><span class='kw'>=</span><span class='fl'>0.05</span>, <span class='kw'>offset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-              <span class='no'>...</span>)</pre>
+              <span class='kw'>model_form</span><span class='kw'>=</span><span class='st'>'none'</span>, <span class='kw'>int_type</span><span class='kw'>=</span><span class='st'>"ci"</span>, <span class='kw'>alpha</span><span class='kw'>=</span><span class='fl'>0.05</span>, <span class='no'>offset</span>,
+              <span class='kw'>glmnb</span><span class='kw'>=</span><span class='no'>F</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -203,6 +203,11 @@ but are only approximate for Poisson families.</p></td>
       <td><p>Specify if offset term to be used, must specify log(object)</p></td>
     </tr>
     <tr>
+      <th>glmnb</th>
+      <td><p>Logical, if True will run a negative binomial model using
+MASS::nb.glm</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>other options passed on to glm model (e.g. family=poisson, see ?glm)</p></td>
     </tr>
@@ -224,8 +229,18 @@ Viruses. 2009 Jan;3(1):37-49.
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
 <span class='no'>fludta</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
-<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fluglm</span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>)</div><div class='output co'>#&gt; <span class='error'>Error in fluglm(fludta, outc = fludeaths, time = yrweek_dt): neither 'season', 'viral' not specified</span></div><div class='input'>
-<span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; <span class='error'>Error in head(flu_fit): object 'flu_fit' not found</span></div><div class='input'>
+<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fluglm</span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>, <span class='kw'>season</span><span class='kw'>=</span><span class='no'>T</span>)
+
+<span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 11
+#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos epi  
+#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt; &lt;lgl&gt;
+#&gt; 1  2010    42       726     11269           6.44 2010-10-17      0.0133 TRUE 
+#&gt; 2  2010    43       720     11204           6.43 2010-10-24      0.0193 TRUE 
+#&gt; 3  2010    44       739     11115           6.65 2010-10-31      0.0173 TRUE 
+#&gt; 4  2010    45       724     10321           7.01 2010-11-07      0.0231 TRUE 
+#&gt; 5  2010    46       740     11506           6.43 2010-11-14      0.0327 TRUE 
+#&gt; 6  2010    47       516      8543           6.04 2010-11-21      0.0399 TRUE 
+#&gt; # ... with 3 more variables: fit &lt;dbl&gt;, upper &lt;dbl&gt;, lower &lt;dbl&gt;</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

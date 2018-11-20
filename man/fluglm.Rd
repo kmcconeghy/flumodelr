@@ -6,8 +6,8 @@
 \usage{
 fluglm(data=NULL, outc=NULL, season, viral, 
               time=NULL, period=52, echo=F, poly=T, 
-              model_form=NULL, int_type="ci", alpha=0.05, offset = NULL,
-              ...)
+              model_form='none', int_type="ci", alpha=0.05, offset,
+              glmnb=F, ...)
 }
 \arguments{
 \item{data}{A dataframe class object, must contain time variable,
@@ -43,6 +43,9 @@ but are only approximate for Poisson families.}
 
 \item{offset}{Specify if offset term to be used, must specify log(object)}
 
+\item{glmnb}{Logical, if True will run a negative binomial model using
+MASS::nb.glm}
+
 \item{...}{other options passed on to glm model (e.g. family=poisson, see ?glm)}
 }
 \value{
@@ -55,7 +58,7 @@ specifications.
 \examples{
 require(flumodelr)
 fludta <- flumodelr::fludta
-flu_fit <- fluglm(fludta, outc = fludeaths, time = yrweek_dt)  
+flu_fit <- fluglm(fludta, outc = fludeaths, time = yrweek_dt, season=T)  
               
 head(flu_fit)
 

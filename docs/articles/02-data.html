@@ -94,7 +94,7 @@
       <h1>flumodelr: Data</h1>
                         <h4 class="author">Kevin W. McConeghy</h4>
             
-            <h4 class="date">2018-08-20</h4>
+            <h4 class="date">2018-11-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/kmcconeghy/flumodelr/blob/master/vignettes/02-data.Rmd"><code>vignettes/02-data.Rmd</code></a></small>
       <div class="hidden name"><code>02-data.Rmd</code></div>
@@ -116,6 +116,10 @@
 </blockquote>
 <p><a href="https://www.cdc.gov/flu/weekly/overview.htm" class="uri">https://www.cdc.gov/flu/weekly/overview.htm</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cdc122 &lt;-<span class="st"> </span>(flumodelr<span class="op">::</span>cdc122city)  
+<span class="co">#&gt; Warning: replacing previous import 'dplyr::filter' by 'stats::filter' when</span>
+<span class="co">#&gt; loading 'flumodelr'</span>
+<span class="co">#&gt; Warning: replacing previous import 'dplyr::lag' by 'stats::lag' when</span>
+<span class="co">#&gt; loading 'flumodelr'</span>
 <span class="kw">dim</span>(cdc122)
 <span class="co">#&gt; [1] 346342      8</span>
 cdc122

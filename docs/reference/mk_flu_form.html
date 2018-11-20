@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>flum: General modeling function for Attributable Influenza Mortality — flum • flumodelr</title>
+<title>mk_flu_form: Build model formula for internal use — mk_flu_form • flumodelr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,10 +30,11 @@
 
 
 
-<meta property="og:title" content="flum: General modeling function for Attributable Influenza Mortality — flum" />
+<meta property="og:title" content="mk_flu_form: Build model formula for internal use — mk_flu_form" />
 
-<meta property="og:description" content="General function wrapper to perform a variety of forecasted
-models. The output will always be a set of fitted values." />
+<meta property="og:description" content="This function is not meant to be called directly, it takes input
+from user-called functions and builds a formula class object for use in
+regression commands." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -125,81 +126,33 @@ models. The output will always be a set of fitted values." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>flum: General modeling function for Attributable Influenza Mortality</h1>
-    <small class="dont-index">Source: <a href='https://github.com/kmcconeghy/flumodelr/blob/master/R/flum.R'><code>R/flum.R</code></a></small>
-    <div class="hidden name"><code>flum.Rd</code></div>
+    <h1>mk_flu_form: Build model formula for internal use</h1>
+    <small class="dont-index">Source: <a href='https://github.com/kmcconeghy/flumodelr/blob/master/R/mk_flu_form.R'><code>R/mk_flu_form.R</code></a></small>
+    <div class="hidden name"><code>mk_flu_form.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>General function wrapper to perform a variety of forecasted
-models. The output will always be a set of fitted values.</p>
+    <p>This function is not meant to be called directly, it takes input
+from user-called functions and builds a formula class object for use in
+regression commands.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>flum</span>(<span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>model</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>data</th>
-      <td><p>A dataframe class object, must contain time variable,
-epidemic indicator, and measure of influenza morbidity</p></td>
-    </tr>
-    <tr>
-      <th>model</th>
-      <td><p>A character of length 1, indicates which model to fit. Options
-include "ird" (see ?ird), "serflm" (see ?serflm), "fluglm", "flunb", "arima" (see ?flurima).</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Extra arguments depending on model requested, see examples and vignettes.</p></td>
-    </tr>
-    </table>
-    
+    <pre class="usage"><span class='fu'>mk_flu_form</span>(<span class='no'>outc</span>, <span class='no'>offset</span>, <span class='no'>poly</span>, <span class='no'>model_form</span>)</pre>
+        
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an object of class data.frame, with fitted values, threshold
-if applicable, and computed excess morbidity</p>
-    
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L,
-Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated
-deaths made using four different methods.
-Influenza Other Respir Viruses. 2009 Jan;3(1):37-49.
-/urlhttps://www.ncbi.nlm.nih.gov/pubmed/19453440</p>
+    <p>an object of class formula</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
-<span class='no'>fludta</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
-<span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>flum</span>(<span class='no'>fludta</span>, <span class='kw'>model</span><span class='kw'>=</span><span class='st'>"fluserf"</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>)
-
-<span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 10
-#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos epi  
-#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt; &lt;lgl&gt;
-#&gt; 1  2010    42       726     11269           6.44 2010-10-17      0.0133 TRUE 
-#&gt; 2  2010    43       720     11204           6.43 2010-10-24      0.0193 TRUE 
-#&gt; 3  2010    44       739     11115           6.65 2010-10-31      0.0173 TRUE 
-#&gt; 4  2010    45       724     10321           7.01 2010-11-07      0.0231 TRUE 
-#&gt; 5  2010    46       740     11506           6.43 2010-11-14      0.0327 TRUE 
-#&gt; 6  2010    47       516      8543           6.04 2010-11-21      0.0399 TRUE 
-#&gt; # ... with 2 more variables: y0 &lt;dbl&gt;, y0_ul &lt;dbl&gt;</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#references">References</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>

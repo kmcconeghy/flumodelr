@@ -28,9 +28,7 @@ procedure and computes difference between observed and predicted mortality.
 \examples{
 require(flumodelr)
 df <- flumodelr::fludta
-serf_fit <- fluglm(fludta, outc = fludeaths , time = yrweek_dt,
-offset = log(alldeaths), )  
-              
-excess_fludeaths <- fludiff(flu_fit, xvar=yrweek_dt, yvar=fludeaths)
+serf_fit <- fluserf(fludta, outc =fludeaths, time =yrweek_dt)  
+excess_fludeaths <- fludiff(serf_fit, obsvar=fludeaths, fitvar=y0)
 
 }

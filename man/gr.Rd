@@ -6,6 +6,9 @@
 \usage{
 gr(data)
 }
+\arguments{
+\item{data}{A formatted dataset created irb() rb() commands}
+}
 \description{
 Outputs simple bar chart for incidence rate difference
 models

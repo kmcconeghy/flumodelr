@@ -94,7 +94,7 @@
       <h1>Incidence rate-difference models</h1>
                         <h4 class="author">Rob van Aalst</h4>
             
-            <h4 class="date">2018-08-20</h4>
+            <h4 class="date">2018-11-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/kmcconeghy/flumodelr/blob/master/vignettes/03-ratediff.Rmd"><code>vignettes/03-ratediff.Rmd</code></a></small>
       <div class="hidden name"><code>03-ratediff.Rmd</code></div>
@@ -135,8 +135,18 @@
 <div id="step-1--ird-function" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-1--ird-function" class="anchor"></a>Step 1. ird() function</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta_mod &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ird.html">ird</a></span>(<span class="dt">data=</span>fludta, 
-               <span class="dt">outc =</span> perc_fludeaths, <span class="dt">viral=</span>prop_flupos, <span class="dt">time=</span>yrweek_dt)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fludta_mod &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ird.html">ird</a></span>(<span class="dt">data =</span>fludta, 
+                  <span class="dt">outc =</span>perc_fludeaths, 
+                  <span class="dt">viral=</span>prop_flupos, 
+                  <span class="dt">time =</span>yrweek_dt,
+                  <span class="dt">echo=</span>T)
+<span class="co">#&gt; incidence rate-difference model </span>
+<span class="co">#&gt;  ============================================================ </span>
+<span class="co">#&gt; Setting ird parameters...</span>
+<span class="co">#&gt;  'outc' argument is: perc_fludeaths </span>
+<span class="co">#&gt;  'time' variable is: yrweek_dt </span>
+<span class="co">#&gt;  'viral' variable is: prop_flupos </span>
+<span class="co">#&gt;   time period is: 52</span></code></pre></div>
 <p>The initial function prepares the dataset to compute differences.</p>
 </div>
 <div id="step-2--rb-function" class="section level3">

@@ -171,10 +171,8 @@ mortality.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>flumodelr</span>)
 <span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
-<span class='no'>serf_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fluglm.html'>fluglm</a></span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span> , <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>,
-<span class='kw'>offset</span> <span class='kw'>=</span> <span class='fu'>log</span>(<span class='no'>alldeaths</span>), )</div><div class='output co'>#&gt; <span class='error'>Error in fluglm(fludta, outc = fludeaths, time = yrweek_dt, offset = log(alldeaths),     ): neither 'season', 'viral' not specified</span></div><div class='input'>
-<span class='no'>excess_fludeaths</span> <span class='kw'>&lt;-</span> <span class='fu'>fludiff</span>(<span class='no'>flu_fit</span>, <span class='kw'>xvar</span><span class='kw'>=</span><span class='no'>yrweek_dt</span>, <span class='kw'>yvar</span><span class='kw'>=</span><span class='no'>fludeaths</span>)</div><div class='output co'>#&gt; <span class='error'>Error in fludiff(flu_fit, xvar = yrweek_dt, yvar = fludeaths): unused arguments (xvar = yrweek_dt, yvar = fludeaths)</span></div><div class='input'>
-</div></pre>
+<span class='no'>serf_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fluserf.html'>fluserf</a></span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span><span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span><span class='no'>yrweek_dt</span>)
+<span class='no'>excess_fludeaths</span> <span class='kw'>&lt;-</span> <span class='fu'>fludiff</span>(<span class='no'>serf_fit</span>, <span class='kw'>obsvar</span><span class='kw'>=</span><span class='no'>fludeaths</span>, <span class='kw'>fitvar</span><span class='kw'>=</span><span class='no'>y0</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
