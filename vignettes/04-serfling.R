@@ -69,7 +69,7 @@ fludta <- fludta %>%
   mutate(epi = if_else(month(yrweek_dt)>=10 | month(yrweek_dt)<=5, T, F))  
 
 fludta %>%
-  filter(year>=2010)
+  dplyr::filter(year>=2010)
 
 ## ------------------------------------------------------------------------
 ## Compute fourier terms

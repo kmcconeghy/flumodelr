@@ -13,8 +13,11 @@ library(flumodelr)
 fludta <- flumodelr::fludta
 
 ## ------------------------------------------------------------------------
-fludta_mod <- ird(data=fludta, 
-               outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+fludta_mod <- ird(data =fludta, 
+                  outc =perc_fludeaths, 
+                  viral=prop_flupos, 
+                  time =yrweek_dt,
+                  echo=T)
 
 ## ------------------------------------------------------------------------
 fludta_rates <- rb(data=fludta_mod, outc = perc_fludeaths)

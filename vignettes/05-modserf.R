@@ -54,7 +54,8 @@ fludta_mod <- fludta_mod %>%
 
 ## ------------------------------------------------------------------------
 base_fit <- fludta_mod %>%
-  lm(perc_fludeaths ~ week2 + week_2 + week_3 + week_4 + prop_flupos + sin_f1 + cos_f1, data=., na.action = na.exclude)
+  lm(perc_fludeaths ~ week2 + week_2 + week_3 + week_4 + week_5 +
+       prop_flupos + sin_f1 + cos_f1, data=., na.action = na.exclude)
 summary(base_fit)
 
 ## ------------------------------------------------------------------------
@@ -184,9 +185,9 @@ flum(fludta,
 ## ------------------------------------------------------------------------
 ## Negative binomial model with offset term
 flum(fludta, 
-     model="flunb", outc = fludeaths, 
-     time = yrweek_dt, season=T, 
-     offset=log(alldeaths))[, c(1:3, 7:10)] 
+     model="fluglm", outc = fludeaths, 
+     time = yrweek_dt, viral='prop_flupos',
+     glmnb = T)[, c(1:3, 7:10)] 
 
 ## ------------------------------------------------------------------------
 sessioninfo::session_info()

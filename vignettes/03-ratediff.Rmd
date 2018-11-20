@@ -55,8 +55,11 @@ NOTE FOR ROB: I think in the vignette, you should dissect the function for the r
 
 ### Step 1. ird() function
 ```{r }
-fludta_mod <- ird(data=fludta, 
-               outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+fludta_mod <- ird(data =fludta, 
+                  outc =perc_fludeaths, 
+                  viral=prop_flupos, 
+                  time =yrweek_dt,
+                  echo=T)
 ```
 
 The initial function prepares the dataset to compute differences.  
