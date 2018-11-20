@@ -5,51 +5,60 @@ context("fluglm")
 
 test_that("test fluglm function - season ", {
   
-  d <- fluglm(fludta, outc = fludeaths, season=T, time = yrweek_dt)  
-  nms <- c('epi', 'fit', 'upper', 'lower')
+  d <- fluglm(flu_dta, outc = fludeaths, season=T, time = yrweek_dt)  
+  nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')
   
   #Tests
   expect_s3_class(d, "data.frame")
   expect_true(all(nms %in% names(d)))
-  expect_type(d$fit, "double")
-  expect_type(d$upper, "double")  
-  expect_type(d$lower, "double")
-  expect_gte(min(d$fit), 0)
-  expect_gte(min(d$upper), 0)
-  expect_true(all(!is.na(d$fit)))
+  expect_type(d$flu_pred, "double")
+  expect_type(d$flu_pred_upr, "double")  
+  expect_type(d$flu_pred_lwr, "double")
+  expect_type(d$flu_base, "double")
+  expect_type(d$flu_base_upr, "double")  
+  expect_type(d$flu_base_lwr, "double")
+  expect_gte(min(d$flu_pred), 0)
+  expect_gte(min(d$flu_base), 0)
+  expect_true(all(!is.na(d$flu_pred)))
 })
 
 test_that("test fluglm function - viral ", {
   
   d <- fluglm(fludta, outc = fludeaths, viral='prop_flupos', time = yrweek_dt)  
-  nms <- c('fit', 'upper', 'lower')
+  nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')
   
   #Tests
   expect_s3_class(d, "data.frame")
   expect_true(all(nms %in% names(d)))
-  expect_type(d$fit, "double")
-  expect_type(d$upper, "double")  
-  expect_type(d$lower, "double")
-  expect_gte(min(d$fit), 0)
-  expect_gte(min(d$upper), 0)
-  expect_true(all(!is.na(d$fit)))
+  expect_type(d$flu_pred, "double")
+  expect_type(d$flu_pred_upr, "double")  
+  expect_type(d$flu_pred_lwr, "double")
+  expect_type(d$flu_base, "double")
+  expect_type(d$flu_base_upr, "double")  
+  expect_type(d$flu_base_lwr, "double")
+  expect_gte(min(d$flu_pred), 0)
+  expect_gte(min(d$flu_base), 0)
+  expect_true(all(!is.na(d$flu_pred)))
 })
 
 test_that("test fluglm function - neg binomial ", {
   
   d <- fluglm(fludta, outc = fludeaths, viral='prop_flupos', time = yrweek_dt,
               glmnb=T)  
-  nms <- c('fit', 'upper', 'lower')
+  nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')
   
   #Tests
   expect_s3_class(d, "data.frame")
   expect_true(all(nms %in% names(d)))
-  expect_type(d$fit, "double")
-  expect_type(d$upper, "double")  
-  expect_type(d$lower, "double")
-  expect_gte(min(d$fit), 0)
-  expect_gte(min(d$upper), 0)
-  expect_true(all(!is.na(d$fit)))
+  expect_type(d$flu_pred, "double")
+  expect_type(d$flu_pred_upr, "double")  
+  expect_type(d$flu_pred_lwr, "double")
+  expect_type(d$flu_base, "double")
+  expect_type(d$flu_base_upr, "double")  
+  expect_type(d$flu_base_lwr, "double")
+  expect_gte(min(d$flu_pred), 0)
+  expect_gte(min(d$flu_base), 0)
+  expect_true(all(!is.na(d$flu_pred)))
 })
 
 test_that("test fluglm function - poisson", {
@@ -60,16 +69,19 @@ test_that("test fluglm function - poisson", {
               offset = log(alldeaths),
               family = poisson) #nonsense variabl for testing
   
-  nms <- c('fit', 'upper', 'lower')
+  nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')
   
   #Tests
   expect_s3_class(d, "data.frame")
   expect_true(all(nms %in% names(d)))
-  expect_type(d$fit, "double")
-  expect_type(d$upper, "double")  
-  expect_type(d$lower, "double")
-  expect_gte(min(d$fit), 0)
-  expect_gte(min(d$upper), 0)
-  expect_true(all(!is.na(d$fit)))
+  expect_type(d$flu_pred, "double")
+  expect_type(d$flu_pred_upr, "double")  
+  expect_type(d$flu_pred_lwr, "double")
+  expect_type(d$flu_base, "double")
+  expect_type(d$flu_base_upr, "double")  
+  expect_type(d$flu_base_lwr, "double")
+  expect_gte(min(d$flu_pred), 0)
+  expect_gte(min(d$flu_base), 0)
+  expect_true(all(!is.na(d$flu_pred)))
 })
   

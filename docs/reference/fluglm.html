@@ -62,7 +62,7 @@ specifications." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">flumodelr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.8</span>
       </span>
     </div>
 
@@ -231,16 +231,15 @@ Viruses. 2009 Jan;3(1):37-49.
 <span class='no'>fludta</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>flumodelr</span><span class='kw ns'>::</span><span class='no'><a href='http://www.rdocumentation.org/packages/flumodelr/topics/fludta'>fludta</a></span>
 <span class='no'>flu_fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fluglm</span>(<span class='no'>fludta</span>, <span class='kw'>outc</span> <span class='kw'>=</span> <span class='no'>fludeaths</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>yrweek_dt</span>, <span class='kw'>season</span><span class='kw'>=</span><span class='no'>T</span>)
 
-<span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 11
-#&gt;    year  week fludeaths alldeaths perc_fludeaths yrweek_dt  prop_flupos epi  
-#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;           &lt;dbl&gt; &lt;lgl&gt;
-#&gt; 1  2010    42       726     11269           6.44 2010-10-17      0.0133 TRUE 
-#&gt; 2  2010    43       720     11204           6.43 2010-10-24      0.0193 TRUE 
-#&gt; 3  2010    44       739     11115           6.65 2010-10-31      0.0173 TRUE 
-#&gt; 4  2010    45       724     10321           7.01 2010-11-07      0.0231 TRUE 
-#&gt; 5  2010    46       740     11506           6.43 2010-11-14      0.0327 TRUE 
-#&gt; 6  2010    47       516      8543           6.04 2010-11-21      0.0399 TRUE 
-#&gt; # ... with 3 more variables: fit &lt;dbl&gt;, upper &lt;dbl&gt;, lower &lt;dbl&gt;</div><div class='input'>
+<span class='fu'>head</span>(<span class='no'>flu_fit</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 6
+#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr
+#&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+#&gt; 1     678.         745.         612.    1325.        1729.         921.
+#&gt; 2     700.         762.         637.    1309.        1694.         925.
+#&gt; 3     722.         780.         664.    1295.        1661.         930.
+#&gt; 4     745.         799.         691.    1282.        1630.         935.
+#&gt; 5     768.         819.         718.    1271.        1601.         940.
+#&gt; 6     792.         839.         745.    1259.        1573.         945.</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

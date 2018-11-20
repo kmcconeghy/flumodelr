@@ -4,7 +4,7 @@
 \alias{get_fitvals}
 \title{get_fitvals: extract fit values from glm fit object}
 \usage{
-get_fitvals <- function(glm.fit, data)
+get_fitvals(glm.fit, data, alpha=0.05)
 }
 \arguments{
 \item{alpha}{The threshold for CI interval, default is 0.05 (one-sided).}

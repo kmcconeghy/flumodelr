@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">flumodelr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.8</span>
       </span>
     </div>
 
@@ -305,14 +305,14 @@ fludta_mod <span class="op">%&gt;%</span><span class="st"> </span><span class="k
 <p>Any viral data called here should be a proportional value, i.e. float between 0-1.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/flum.html">flum</a></span>(fludta, <span class="dt">model=</span><span class="st">"fluglm"</span>, 
                    <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt, 
-                   <span class="dt">viral =</span> <span class="st">"prop_flupos"</span>)[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">7</span><span class="op">:</span><span class="dv">10</span>)]
-<span class="co">#&gt; # A tibble: 261 x 7</span>
-<span class="co">#&gt;    year  week fludeaths prop_flupos   fit upper lower</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42       726      0.0133  631.  694.  567.</span>
-<span class="co">#&gt; 2  2010    43       720      0.0193  647.  706.  587.</span>
-<span class="co">#&gt; 3  2010    44       739      0.0173  663.  719.  608.</span>
-<span class="co">#&gt; 4  2010    45       724      0.0231  681.  733.  628.</span>
+                   <span class="dt">viral =</span> <span class="st">"prop_flupos"</span>)
+<span class="co">#&gt; # A tibble: 261 x 6</span>
+<span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
+<span class="co">#&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     639.         702.         576.     631.         694.         567.</span>
+<span class="co">#&gt; 2     659.         718.         600.     647.         706.         587.</span>
+<span class="co">#&gt; 3     675.         730.         619.     663.         719.         608.</span>
+<span class="co">#&gt; 4     695.         747.         644.     681.         733.         628.</span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 </div>
 <div id="other-options" class="section level3">
@@ -322,27 +322,27 @@ fludta_mod <span class="op">%&gt;%</span><span class="st"> </span><span class="k
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Without polynomial terms
 <span class="kw"><a href="../reference/flum.html">flum</a></span>(fludta, <span class="dt">model=</span><span class="st">"fluglm"</span>, 
      <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt, 
-     <span class="dt">viral =</span> <span class="st">"prop_flupos"</span>, <span class="dt">poly=</span>F)[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">7</span><span class="op">:</span><span class="dv">10</span>)]
-<span class="co">#&gt; # A tibble: 261 x 7</span>
-<span class="co">#&gt;    year  week fludeaths prop_flupos   fit upper lower</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42       726      0.0133  645.  672.  619.</span>
-<span class="co">#&gt; 2  2010    43       720      0.0193  658.  685.  632.</span>
-<span class="co">#&gt; 3  2010    44       739      0.0173  672.  699.  645.</span>
-<span class="co">#&gt; 4  2010    45       724      0.0231  686.  714.  659.</span>
+     <span class="dt">viral =</span> <span class="st">"prop_flupos"</span>, <span class="dt">poly=</span>F)
+<span class="co">#&gt; # A tibble: 261 x 6</span>
+<span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
+<span class="co">#&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     653.         679.         628.     645.         672.         619.</span>
+<span class="co">#&gt; 2     670.         695.         644.     658.         685.         632.</span>
+<span class="co">#&gt; 3     682.         708.         656.     672.         699.         645.</span>
+<span class="co">#&gt; 4     700.         726.         674.     686.         714.         659.</span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p>Perform a seasonal baseline model using Sept - May as season-period.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Epidemic period, non-specified
 <span class="kw"><a href="../reference/flum.html">flum</a></span>(fludta, <span class="dt">model=</span><span class="st">"fluglm"</span>, 
      <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt, 
-     <span class="dt">season=</span>T)[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">7</span><span class="op">:</span><span class="dv">10</span>)]
-<span class="co">#&gt; # A tibble: 261 x 7</span>
-<span class="co">#&gt;    year  week fludeaths prop_flupos epi     fit upper</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;       &lt;dbl&gt; &lt;lgl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42       726      0.0133 TRUE  1325. 1729.</span>
-<span class="co">#&gt; 2  2010    43       720      0.0193 TRUE  1309. 1694.</span>
-<span class="co">#&gt; 3  2010    44       739      0.0173 TRUE  1295. 1661.</span>
-<span class="co">#&gt; 4  2010    45       724      0.0231 TRUE  1282. 1630.</span>
+     <span class="dt">season=</span>T)
+<span class="co">#&gt; # A tibble: 261 x 6</span>
+<span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
+<span class="co">#&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     678.         745.         612.    1325.        1729.         921.</span>
+<span class="co">#&gt; 2     700.         762.         637.    1309.        1694.         925.</span>
+<span class="co">#&gt; 3     722.         780.         664.    1295.        1661.         930.</span>
+<span class="co">#&gt; 4     745.         799.         691.    1282.        1630.         935.</span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p>Identify your own epidemic period, then call flum() to use it. Season is default NULL, but if a named variable in fludta_mod, the model will search for and use it as the baseline.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Epidemic period specified
@@ -350,42 +350,42 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
                <span class="dt">outc =</span> perc_fludeaths, <span class="dt">viral=</span>prop_flupos, <span class="dt">time=</span>yrweek_dt)
 
 <span class="kw"><a href="../reference/flum.html">flum</a></span>(<span class="dt">data=</span>fludta_mod, <span class="dt">model=</span><span class="st">"fluglm"</span>, <span class="dt">outc=</span>fludeaths, <span class="dt">time=</span>yrweek_dt, 
-       <span class="dt">season=</span>high)[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">10</span><span class="op">:</span><span class="dv">13</span>)]
-<span class="co">#&gt; # A tibble: 261 x 7</span>
-<span class="co">#&gt;    year  week fludeaths fluseason   fit upper lower</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42       726 TRUE       697.  737.  657.</span>
-<span class="co">#&gt; 2  2010    43       720 TRUE       706.  744.  669.</span>
-<span class="co">#&gt; 3  2010    44       739 TRUE       717.  752.  682.</span>
-<span class="co">#&gt; 4  2010    45       724 TRUE       728.  761.  695.</span>
+       <span class="dt">season=</span>high)
+<span class="co">#&gt; # A tibble: 261 x 6</span>
+<span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
+<span class="co">#&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     678.         745.         612.     697.         737.         657.</span>
+<span class="co">#&gt; 2     700.         762.         637.     706.         744.         669.</span>
+<span class="co">#&gt; 3     722.         780.         664.     717.         752.         682.</span>
+<span class="co">#&gt; 4     745.         799.         691.     728.         761.         695.</span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p>You can pass arguments to the glm() call, like specifying a Poisson model.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Poisson model with offset term
 <span class="kw"><a href="../reference/flum.html">flum</a></span>(fludta, 
      <span class="dt">model=</span><span class="st">"fluglm"</span>, <span class="dt">outc =</span> fludeaths, 
      <span class="dt">time =</span> yrweek_dt, <span class="dt">season=</span>T, 
-     <span class="dt">family=</span>poisson, <span class="dt">offset=</span><span class="kw">log</span>(alldeaths))[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">7</span><span class="op">:</span><span class="dv">10</span>)] 
-<span class="co">#&gt; # A tibble: 261 x 7</span>
-<span class="co">#&gt;    year  week fludeaths prop_flupos epi     fit upper</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;       &lt;dbl&gt; &lt;lgl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42       726      0.0133 TRUE  1600. 2356.</span>
-<span class="co">#&gt; 2  2010    43       720      0.0193 TRUE  1548. 2238.</span>
-<span class="co">#&gt; 3  2010    44       739      0.0173 TRUE  1498. 2127.</span>
-<span class="co">#&gt; 4  2010    45       724      0.0231 TRUE  1359. 1896.</span>
+     <span class="dt">family=</span>poisson, <span class="dt">offset=</span><span class="kw">log</span>(alldeaths))
+<span class="co">#&gt; # A tibble: 261 x 6</span>
+<span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
+<span class="co">#&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     706.         722.         690.    1600.        2356.        1086.</span>
+<span class="co">#&gt; 2     715.         730.         700.    1548.        2238.        1071.</span>
+<span class="co">#&gt; 3     723.         737.         709.    1498.        2127.        1055.</span>
+<span class="co">#&gt; 4     685.         697.         673.    1359.        1896.         974.</span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 <p>A negative binomial model can be called from the MASS::glm.nb function using <code>glmnb=T</code> option. The output is the same.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Negative binomial model with offset term
 <span class="kw"><a href="../reference/flum.html">flum</a></span>(fludta, 
      <span class="dt">model=</span><span class="st">"fluglm"</span>, <span class="dt">outc =</span> fludeaths, 
      <span class="dt">time =</span> yrweek_dt, <span class="dt">viral=</span><span class="st">'prop_flupos'</span>,
-     <span class="dt">glmnb =</span> T)[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">7</span><span class="op">:</span><span class="dv">10</span>)] 
-<span class="co">#&gt; # A tibble: 261 x 7</span>
-<span class="co">#&gt;    year  week fludeaths prop_flupos   fit upper lower</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;     &lt;int&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  2010    42       726      0.0133  645.  693.  599.</span>
-<span class="co">#&gt; 2  2010    43       720      0.0193  658.  705.  615.</span>
-<span class="co">#&gt; 3  2010    44       739      0.0173  673.  717.  631.</span>
-<span class="co">#&gt; 4  2010    45       724      0.0231  688.  731.  647.</span>
+     <span class="dt">glmnb =</span> T)
+<span class="co">#&gt; # A tibble: 261 x 6</span>
+<span class="co">#&gt;   flu_pred flu_pred_upr flu_pred_lwr flu_base flu_base_upr flu_base_lwr</span>
+<span class="co">#&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     650.         699.         605.     645.         693.         599.</span>
+<span class="co">#&gt; 2     667.         713.         623.     658.         705.         615.</span>
+<span class="co">#&gt; 3     681.         725.         639.     673.         717.         631.</span>
+<span class="co">#&gt; 4     699.         742.         658.     688.         731.         647.</span>
 <span class="co">#&gt; # ... with 257 more rows</span></code></pre></div>
 </div>
 </div>
@@ -423,7 +423,7 @@ fludta_mod &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <span class="co">#&gt;  dplyr       * 0.7.8   2018-11-10 [1] CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  evaluate      0.12    2018-10-09 [1] CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  fansi         0.4.0   2018-10-05 [1] CRAN (R 3.5.1)</span>
-<span class="co">#&gt;  flumodelr   * 0.0.6   2018-11-20 [1] local         </span>
+<span class="co">#&gt;  flumodelr   * 0.0.8   2018-11-20 [1] local         </span>
 <span class="co">#&gt;  forcats     * 0.3.0   2018-02-19 [1] CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  fs            1.2.6   2018-08-23 [1] CRAN (R 3.5.1)</span>
 <span class="co">#&gt;  ggplot2     * 3.1.0   2018-10-25 [1] CRAN (R 3.5.1)</span>

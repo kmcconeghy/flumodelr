@@ -45,17 +45,19 @@ test_that("flum computes fluglm model", {
             outc=perc_fludeaths, time=yrweek_dt,
             viral='prop_flupos')
   
-  #load data
-  dnames <- c("year", "week", "fludeaths", "alldeaths", 
-              "perc_fludeaths", "yrweek_dt", "prop_flupos",
-              "fit", "upper", 'lower')
+  nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')
   
   #Tests
   expect_s3_class(d, "data.frame")
-  expect_equal(nrow(d), 261L)
-  expect_that(dnames, equals(names(d)))
-  expect_type(d$fit, "double")
-  expect_type(d$upper, "double")
-  expect_type(d$lower, "double")
+  expect_true(all(nms %in% names(d)))
+  expect_type(d$flu_pred, "double")
+  expect_type(d$flu_pred_upr, "double")  
+  expect_type(d$flu_pred_lwr, "double")
+  expect_type(d$flu_base, "double")
+  expect_type(d$flu_base_upr, "double")  
+  expect_type(d$flu_base_lwr, "double")
+  expect_gte(min(d$flu_pred), 0)
+  expect_gte(min(d$flu_base), 0)
+  expect_true(all(!is.na(d$flu_pred)))
 })
   

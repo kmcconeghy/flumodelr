@@ -125,31 +125,46 @@ fluglm <- function(data=NULL, outc=NULL,
     if (!missing(season)) {
       if (rlang::quo_text(season_eq)=='T') {
       
-      data <- mutate(data,
-                     epi = if_else(month(!!time_eq)>=10 | month(!!time_eq)<=5, 
-                                   T, F))  
-      epi <- 'epi'
-      season_eq <- quo(epi)
+        data <- mutate(data,
+                       epi = if_else(month(!!time_eq)>=10 | month(!!time_eq)<=5, 
+                                     T, F))  
+        epi <- 'epi'
+        season_eq <- quo(epi)
       } 
     
       #SEASONAL MODEL
       if (echo==T) print(paste0("Model formula: ", flu_form))
       
-      new_data <- dplyr::filter(data, !!season_eq==F)  
-      
-      #compute baseline regression 
+      # Full Model fitted values  
       argslist <- list(formula=flu_form, 
-                       data=new_data,
+                       data=data,
                        na.action = na.exclude,
                        ...)
       
       base_fit <- if (!glmnb) {
         do.call(glm, args=argslist) 
         } else if (glmnb) {
-        do.call(MASS::glm.nb, args=argslist) 
+          do.call(MASS::glm.nb, args=argslist) 
         } 
       
-      result <- get_fitvals(base_fit, data)
+      #fit
+        result_1 <- get_fitvals(base_fit, data)
+      
+      #compute baseline regression 
+        new_data <- dplyr::filter(data, !!season_eq==F)  
+        argslist <- list(formula=flu_form, 
+                         data=new_data,
+                         na.action = na.exclude,
+                         ...)
+        
+        base_fit <- if (!glmnb) {
+          do.call(glm, args=argslist) 
+          } else if (glmnb) {
+          do.call(MASS::glm.nb, args=argslist) 
+          } 
+        
+        #fit baseline
+          result_0 <- get_fitvals(base_fit, data)
     }
     
     #VIROLOGY MODEL
@@ -179,23 +194,29 @@ fluglm <- function(data=NULL, outc=NULL,
       
       ## Fitted values + prediction interval
       dta_noviral <- data
-      dta_noviral[, viral] <- sapply(dta_noviral[, viral], function(x) x=0)
+      dta_noviral[, viral] <- sapply(data[, viral], function(x) x=0)
       
-      result <- get_fitvals(base_fit, dta_noviral)
+      #fit baseline
+      result_0 <- get_fitvals(base_fit, dta_noviral)
+      
+      #fit
+      result_1 <- get_fitvals(base_fit, data)
     }
-
-  #Report 
-  if (echo==T) {
-    print(summary(result$base_fit))
-  }
-  
-  data <- tibble::add_column(data, fit = result$fitted, 
-                       upper = result$upper.fit,
-                       lower = result$lower.fit) %>%
-    dplyr::select(-t_unit, -theta, -sin_f1, -cos_f1)
+    
+    #Report 
+    if (echo==T) {
+      print(summary(base_fit))
+    }
+    
+    fit <- bind_cols(flu_pred     = result_1$fitted, 
+                     flu_pred_upr = result_1$upper.fit,
+                     flu_pred_lwr = result_1$lower.fit,
+                     flu_base     = result_0$fitted, 
+                     flu_base_upr = result_0$upper.fit,
+                     flu_base_lwr = result_0$lower.fit)
   
   #return results
-  return(data)
+  return(fit)
 }
 
 

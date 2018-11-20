@@ -3,7 +3,7 @@
 #' @description Helper function which extracts needed parameters from glm 
 #' fit object  
 #'
-#' @usage get_fitvals <- function(glm.fit, data)
+#' @usage get_fitvals(glm.fit, data, alpha=0.05)
 #' 
 #' @param alpha The threshold for CI interval, default is 0.05 (one-sided).  
 #' 
