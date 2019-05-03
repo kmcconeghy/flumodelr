@@ -49,7 +49,7 @@
 #' @examples
 #' require(flumodelr)
 #' fludta <- flumodelr::fludta
-#' flu_fit <- ird(data=fludta, outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+#' flu_fit <- ird(data=fludta, viral=prop_flupos, time=yrweek_dt)
 #' flu_rates <- rb(flu_fit, perc_fludeaths)
 #'               
 #' flu_rates
@@ -66,7 +66,7 @@
 ird <- function(data=NULL, 
                 outc=NULL, 
                 time=NULL,
-                viral,
+                viral=NULL,
                 period=52,
                 respStart=27,
                 high=0.1,
@@ -88,10 +88,10 @@ ird <- function(data=NULL,
     outc_eq <- enquo(outc)
     time_eq <- enquo(time)
     viral_eq <- enquo(viral)
+    high_eq <- enquo(high)
   
     if (missing(viral)) {
-      viral <- "missing"
-      viral_eq <- quo(viral)
+      viral_eq <- "missing"
     } else { viral_eq <- enquo(viral) }
     
   data <- data %>% dplyr::arrange(., !!time_eq)
@@ -103,6 +103,7 @@ ird <- function(data=NULL,
     cat(" 'outc' argument is:", rlang::quo_text(outc_eq), "\n")
     cat(" 'time' variable is:", rlang::quo_text(time_eq), "\n")
     cat(" 'viral' variable is:", rlang::quo_text(viral_eq), "\n")
+    cat(" 'high' variable is:", rlang::quo_text(high_eq), "\n")
     cat("  time period is:", period, "\n")
   }
   
@@ -113,7 +114,7 @@ ird <- function(data=NULL,
 
     data$season <- mapply(findseason, data$year, data$week)
     
-  #compute rate differences  
+  #Identify observation versus baseline periods 
   
     #find high versus low viral activity periods
     findhigh <- function (prop, high=0.1){
@@ -143,7 +144,7 @@ ird <- function(data=NULL,
 #' @export  
 #' @import rlang dplyr
 #' 
-rb <- function(data, outc, echo=F){ 
+rb <- function(data=NULL, outc=NULL, echo=F){ 
   
   #tidy evaluation  
     outc_eq <- enquo(outc)
@@ -155,38 +156,86 @@ rb <- function(data, outc, echo=F){
     }  
   
   #sum the outcomes
-    highrates <- data %>% 
-      group_by(season, high) %>% 
-      summarize(out_high = mean(!!outc_eq))
+    if("high" %in% names(data)) {highrates <- data %>% select(season, high, !!outc_eq) %>% group_by(season, high) %>% 
+                        summarize(out_high = mean(!!outc_eq))} #
   
-    flurates <- data %>% 
-      group_by(season, fluseason) %>% 
-      summarize(out_flu = mean(!!outc_eq))
+    flurates <- data %>%  select(season, fluseason, !!outc_eq) %>% group_by(season, fluseason) %>%
+                          summarize(out_flu = mean(!!outc_eq))
   
   #join the tables
-    flu_rates <- flurates %>% 
-      left_join(highrates, by = c("fluseason"="high", "season"))
+    if("high" %in% names(data)){
+    flu_rates <- flurates %>% left_join(highrates, by = c("fluseason"="high", "season"))
     
-    names(flu_rates) <- c("season", "high_act", 
+    names(flu_rates) <- c("season", "period", 
                           paste0(rlang::quo_text(outc_eq), "_fluseason"), 
-                          paste0(rlang::quo_text(outc_eq),"_viral_act"))
-    levels(flu_rates$high_act) <- c(TRUE,FALSE)
-    return(flu_rates)
+                          paste0(rlang::quo_text(outc_eq),"_viral_act"))}
+    
+    else{flu_rates <- flurates
+    names(flu_rates) <- c("season", "period", 
+                          paste0(rlang::quo_text(outc_eq), "_fluseason"))}
+    
+    flu_rates$period <- factor(if_else(flu_rates$period,"High","Low"))
+    flu_rates <- data.frame(flu_rates)
+
+  
+    
+   #calculate excess outcomes
+    period.high <- flu_rates %>% dplyr::filter(period == "High")
+    period.low <- flu_rates %>% dplyr::filter(period == "Low")
+    period.all <- period.high %>% inner_join(period.low, by = "season")
+    excess1 <- period.all[3] - period.all[6]
+    if("high" %in% names(data)){excess2 <- period.all[4] - period.all[7]}
+    
+   #add excess rates to flu_rates
+    period <- factor(rep("Excess", nrow(period.all)), levels = c("High", "Low", "Excess"))
+    if("high" %in% names(data)){add <- data.frame(period.all[1], period, excess1, excess2)}
+    else {add <- data.frame(period.all[1], period, excess1)}
+    names(add) <- names(flu_rates)
+    flu_rates <- rbind(add, flu_rates)
+    flu_rates <- as_tibble(flu_rates) %>% dplyr::arrange(season)
+ 
+return(flu_rates)  
+
 }
-#' @title gr: Bar graph for ird models  
+#' @title gr: Line graph for ird models  
 #' 
-#' @description Outputs simple bar chart for incidence rate difference
+#' @description Outputs simple line graph for incidence rate difference
 #' models  
 #' 
 #' @param data A formatted dataset created irb() rb() commands
 #' @usage gr(data)
 #' @export  
 #' @import ggplot2
-gr <- function(data){
-  ggplot(data, aes(x = season, y = perc_fludeaths_fluseason, fill=high_act))+
-    geom_bar(stat="identity", position = position_dodge(), colour="black")
-}
+gr <- function(data, outc, echo=F){
+  
+  #tidy evaluation  
+  outc_eq <- enquo(outc)
+  
+  #parameters 
+  if (echo==T) {
+    cat("Setting rb parameters...\n")
+    cat(" 'outc' argument is:", rlang::quo_text(outc_eq), "\n")
+  } 
+  
+  theme_set(theme_bw())
+  outc <- rlang::quo_text(outc_eq)
+  data$season <- as.Date(paste("1jan",data$season,sep=""), "%d%b%Y")
+  brks <- data$season[seq(1, length(data$season), 2)]
+  lbls <- lubridate::year(brks)
+
+  #define base graph
+  g <- ggplot(data, aes(x=season)) +
+        geom_line(aes(y = !!outc_eq, col = period)) +
+        labs(title="Incidence rate-difference", 
+         subtitle=outc, 
+         y="Number of outcomes", 
+         color=NULL) +  # title and caption
+        scale_x_date(labels = lbls, breaks = brks) +
+        scale_color_manual(labels = c("High", "Low", "Excess"), values = c("High"="blue", "Low"="green", "Excess" = "red")) +
+        theme(axis.text.x = element_text(angle = 0, vjust=0.5, size = 8),  # rotate x axis text
+        panel.grid.minor = element_blank())  # turn off minor grid
+ 
+  return(g)
+  }
 
 
-
-               

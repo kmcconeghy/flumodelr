@@ -72,7 +72,7 @@ We hope to increase the number of modelling options periodically including, baye
 
 # Authors  
 Kevin W. McConeghy, Pharm.D, M.S., Brown University School of Public Health, Dept. Health Services Research  
-Rob Van Aalst, Sanofi-Pasteur  
+Rob van Aalst, Sanofi Pasteur  
 Andrew Zullo, Pharm.D., MSc, Ph.D., Brown University School of Public Health, Dept. Health Services Research  
 Nina Joyce, Ph.D., Brown University School of Public Health, Dept. Health Services Research  
 
