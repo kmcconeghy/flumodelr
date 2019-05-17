@@ -50,28 +50,49 @@ that were above an epidemic threshold, and available US census data:
 
 annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (population).
 
-NOTE FOR ROB: I think in the vignette, you should dissect the function for the reader so they can see whats going on. See 04-serfling.Rmd, I dont just run serflm.R, I show step by step how it works.    
+### Example: peri-season adjusted influenza attributable mortality
+In this example we will estimate influenza attributable mortality using a peri-season adjustment. We will adjust mortality in weeks with high viral activity (a) with weeks when viral activity was low (b). All we have is a dataset with surveillance data ('prop_flupos') in a certain calendar 'year' and 'week', plus the observed number of all cause hospitalizations in that week ('alldeaths').
+```{r }
+fludta %>% select(year,week,alldeaths,prop_flupos,week)
+```
 
-
-### Step 1. ird() function
+### Step 2. ird() function
 ```{r }
 fludta_mod <- ird(data =fludta, 
-                  outc =perc_fludeaths, 
+                  outc =alldeaths, 
                   viral=prop_flupos, 
-                  time =yrweek_dt,
-                  echo=T)
+                  time =week,
+                  echo =T)
 ```
 
-The initial function prepares the dataset to compute differences.  
-
-### Step 2. rb() function  
+The initial function prepares the dataset by identifying periods of high and low viral activity in the respiratory season. It creates the table fludta_mod, adding 3 varables (columns): respiratory 'season', 'high[,"prop_flupos"]' (TRUE = high viral activity, FALSE = low viral activity), and 'fluseason' (TRUE = flu season, FALSE = summer-season baseline)
 ```{r }
-fludta_rates <- rb(data=fludta_mod, outc = perc_fludeaths)
+fludta_mod %>% select(year,week,alldeaths,prop_flupos,week, season, high, fluseason)
 ```
+
+Note that 'high[,"prop_flupos"]' will not be created if ird(viral= missing).
+
+### Step 2. rb() function
+```{r }
+fludta_rates <- rb(data =fludta_mod, outc =alldeaths, echo = T)
+```
+
+The rb() function aggregates the outcomes per time period (weeks in our example) to outcomes per respiratory season, stratified by period of high and low viral activity, and excess rates (period = "High" - period = "Low").
+
+```{r }
+fludta_rates
+```
+For 'alldeaths_fluseason', 'period' is defined by flu season (High = flu season, Low = summer-season baseline)
+For 'alldeaths_viral_act', 'period' is defined by viral activity (High = high viral activity, Low = low viral activity)
+
+Note that 'alldeaths_viral_act' will not be created if ird(viral= missing).
 
 ### Generate figure  
-```{r }
-gr(data=fludta_rates)
+```{r , fig.width=7}
+gr(data =fludta_rates, outc =alldeaths_fluseason, echo = FALSE )
 ```
 
 ## References
+
+
+

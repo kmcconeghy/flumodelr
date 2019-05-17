@@ -2,7 +2,7 @@
 #' 
 #' @description This models wraps ggplot2 commands into a standard 
 #' form for making cyclical trend line plots of influenza. Developed 
-#' only for convenience, the authors encourage individuals to make thier
+#' only for convenience, the authors encourage individuals to make their
 #' own customized graphs as appropriate.    
 #' 
 #' @param data A dataframe class object, must contain time variable, 
