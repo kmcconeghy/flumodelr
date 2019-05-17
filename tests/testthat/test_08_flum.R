@@ -12,7 +12,7 @@ test_that("flum computes incidence rate difference", {
   
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
-              "perc_fludeaths", "yrweek_dt", "prop_flupos",
+              "perc_fludeaths", "yrweek_dt", 'fluyr', "prop_flupos",
               "week_in_order", "epi", "season", "high", "fluseason")
   
   #Tests
@@ -29,7 +29,7 @@ test_that("flum computes fluserf model", {
             outc=perc_fludeaths, time=yrweek_dt)
   #load data
   dnames <- c("year", "week", "fludeaths", "alldeaths", 
-              "perc_fludeaths", "yrweek_dt", "prop_flupos",
+              "perc_fludeaths", "yrweek_dt", 'fluyr', "prop_flupos",
               "week_in_order", "epi", "y0", "y0_ul")
   
   #Tests

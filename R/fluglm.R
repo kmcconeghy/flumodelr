@@ -87,7 +87,7 @@ fluglm <- function(data=NULL, outc=NULL,
     } 
 
    if ( missing(season)) {
-      season_eq <- NULL 
+      season_eq <- quo(T) 
       } else {
         season_eq <- enquo(season)
       } 
@@ -151,7 +151,7 @@ fluglm <- function(data=NULL, outc=NULL,
         } 
       
       #fit
-        result_1 <- get_fitvals(base_fit, data)
+        result_1 <- glm_fitvals(base_fit, data)
       
       #compute baseline regression 
         new_data <- dplyr::filter(data, !!season_eq==F)  
@@ -167,7 +167,7 @@ fluglm <- function(data=NULL, outc=NULL,
           } 
         
         #fit baseline
-          result_0 <- get_fitvals(base_fit, data)
+          result_0 <- glm_fitvals(base_fit, data)
     }
     
     #VIROLOGY MODEL
@@ -193,10 +193,10 @@ fluglm <- function(data=NULL, outc=NULL,
       dta_noviral[, viral] <- sapply(data[, viral], function(x) x=0)
       
       #fit baseline
-      result_0 <- get_fitvals(base_fit, dta_noviral)
+      result_0 <- glm_fitvals(base_fit, dta_noviral)
       
       #fit
-      result_1 <- get_fitvals(base_fit, data)
+      result_1 <- glm_fitvals(base_fit, data)
     }
     
     #Report 

@@ -1,0 +1,121 @@
+---
+title: "Neural Networks"
+author: "Kevin W. McConeghy"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{flumodelr: 09-nnet}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+library(flumodelr)
+library(lubridate)
+library(scales)
+library(forecast)
+```
+
+# Generalized additive models (GAM)  
+
+### Influenza data  
+```{r }
+fludta <- flumodelr::fludta
+fludta
+```
+
+## GAM  
+```{r }
+gam_1 <- gam(fludeaths ~ s(week_in_order, bs='ps'), family=nb(), data=test)
+summary(gam_1)
+```
+
+```{r }
+plot(gam_1, shade=T)
+```
+
+## `flugam` function  
+
+### Using only off-season as baseline  
+
+```{r }
+fit <- fludta %>%
+  bind_cols(., flugam(data=fludta, outc=fludeaths, time=week_in_order, season=epi))
+```
+
+```{r }
+#Set up graph labels, line specs
+line_names <- c("Deaths From P&I", "Expected", "Baseline")
+line_cols <- c("#CC0000", "black", "black")
+line_types <- c(1, 1, 2)
+names(line_cols) <- line_names
+names(line_types) <- line_names
+
+ggplot(fit, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=fludeaths, colour=line_names[[1]], 
+                linetype=line_names[[1]]), size=0.8) +
+  geom_line(aes(y=flu_pred, colour=line_names[[2]], 
+                linetype=line_names[[2]]), size=0.8) +
+  geom_line(aes(y=flu_base_upr, colour=line_names[[3]], 
+                linetype=line_names[[3]]), size=0.8) +
+  scale_colour_manual("Line", breaks=line_names, values = line_cols) +
+  scale_linetype_manual("Line",  breaks=line_names, values = line_types) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("% of Deaths from P&I") + 
+  theme_light(base_size=14) +
+  theme(legend.text=element_text(size=10), 
+        plot.title = element_text(size=14)) +
+  labs(title="Figure 1. Pneumonia and Influenza Mortality",
+       caption="Generalized additive model - Seasonal only") +
+  guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
+
+```
+
+### Using viral data as baseline  
+```{r }
+fit <- fludta %>%
+  bind_cols(., flugam(data=fludta, outc=fludeaths, 
+                      time=week_in_order, viral='prop_flupos'))
+```
+
+```{r }
+#Set up graph labels, line specs
+line_names <- c("Deaths From P&I", "Expected", "Baseline")
+line_cols <- c("#CC0000", "black", "black")
+line_types <- c(1, 1, 2)
+names(line_cols) <- line_names
+names(line_types) <- line_names
+
+ggplot(fit, aes(x=yrweek_dt)) + 
+  geom_line(aes(y=fludeaths, colour=line_names[[1]], 
+                linetype=line_names[[1]]), size=0.8) +
+  geom_line(aes(y=flu_pred, colour=line_names[[2]], 
+                linetype=line_names[[2]]), size=0.8) +
+  geom_line(aes(y=flu_base_upr, colour=line_names[[3]], 
+                linetype=line_names[[3]]), size=0.8) +
+  scale_colour_manual("Line", breaks=line_names, values = line_cols) +
+  scale_linetype_manual("Line",  breaks=line_names, values = line_types) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("% of Deaths from P&I") + 
+  theme_light(base_size=14) +
+  theme(legend.text=element_text(size=10), 
+        plot.title = element_text(size=14)) +
+  labs(title="Figure 2. Pneumonia and Influenza Mortality",
+       caption="Generalized additive model - Viral added") +
+  guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
+
+```
+
+# References  
+
+```{r }
+sessioninfo::session_info()
+```

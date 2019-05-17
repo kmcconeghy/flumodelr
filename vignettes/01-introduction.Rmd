@@ -24,8 +24,18 @@ This vignette is a short introduction to the package for interested readers. In 
 3) Explanation of original Serfling Model.  
 [Serfling Background](https://kmcconeghy.github.io/flumodelr/articles/04-serfling.html)  
 
-4) Explanation of modern implementation of Serfling Model.  
+4) Explanation of modern implementation of Serfling Model in a Generalized linear 
+model.  
 [Modern Serfling Applications](https://kmcconeghy.github.io/flumodelr/articles/05-modserf.html)  
+
+5) Estimating attributable mortality using ARIMA models. 
+[ARIMA models](https://kmcconeghy.github.io/flumodelr/articles/06-arima.html) 
+
+6) Estimating attributable mortality using Generalized Additive Models. 
+[GAM models](https://kmcconeghy.github.io/flumodelr/articles/07-gam.html) 
+
+7) Estimating attributable mortality using Dynamic Bayesian Models. 
+[Bayesian models](https://kmcconeghy.github.io/flumodelr/articles/08-bsts.html) 
 
 ## Contacting authors  
 The primary author of the package was Kevin W. McConeghy. Several other researchers including Andrew Zullo, Rob van Aalst, Vincent Mor, Stefan Gravenstein provided statistical consultation, clinical insight and institutional support.  

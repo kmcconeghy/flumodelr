@@ -1,0 +1,85 @@
+---
+title: "Test different models"
+author: "Kevin W. McConeghy"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{flumodelr: 10-impute}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+library(flumodelr)
+library(lubridate)
+library(scales)
+```
+
+# Create simulated dataset  
+First step, create a dataset, five years of influenza data in CDC format/canon.   
+```{r }
+#some have 53 weeks, but ignored for simulated dataset  
+year <- rep(seq(2010, 2014, by=1), 52) 
+week <- rep(seq(1, 52, by=1), 5) 
+
+flu_sim <- tibble(year, week)
+flu_sim <- mutate(flu_sim, 
+                  week_in_order = row_number(),
+                  season = if_else(week>=40 | week<20, T, F))
+```
+
+## Data generating process  
+
+### Total deaths  
+Total deaths obtained from actual CDC reported data for 2010-2015. It is assumed
+this value is accurate, but what is unknown are the proportion of deaths 
+due to influenza.  
+```{r }
+flu_real <- fludta %>%
+  dplyr::filter(week<=52)
+```
+
+```{r }
+ggplot(flu_real, aes(x=week_in_order, y=alldeaths)) +
+  geom_line()
+```
+
+We add the real all-cause deaths to the dataset.  
+```{r }
+flu_sim$deaths_all <- flu_real$alldeaths
+```
+
+The objective is to simulate deaths attributable to influenza under different 
+assumptions.  
+
+A seasonal influenza data generating process.  
+Features of influenza deaths:
+1) Mild or severe season, qualitatively increases number of deaths. 
+2) Peak month, which month has peak   
+3) Peakedness, whether a sharp rise/fall, or gentle slope.  
+
+## Peakedness simulated with vertex parabola  
+$$Eq \ 1. \  y = a(x-h)^2 + k$$  
+Where `k` is the highest observed influenza death, `h` is the peak week, and `a` 
+determines peakedness.  
+
+```{r }
+#y = a(x-h)^2 + k
+
+```
+
+```{r }
+#peak of february, week 4
+flu_sim_1 <- flu_sim %>%
+  mutate(peak_week = row_number() - 4, 
+         peak = dgamma(week, shape = 4.2, scale=1.2),
+         deaths_flu_t = round(deaths_all*peak * season))
+
+
+```
+

@@ -10,6 +10,7 @@
 #'   \item{alldeaths}{No. of deaths due to any cause}
 #'   \item{perc_fludeaths}{fludeaths / alldeaths * 100}
 #'   \item{yrweek_dt}{year-week-day of rate, Date}
+#'   \item{fluyr}{Influenza season, Starts from June until May of next year} 
 #'   \item{prop_flupos}{No. of influenza positive isolates / total no. tested, from NREVSS data, see ?nrevss, the data was linked with the cdc122 data with a 2 week lead to account for delays in reporting}
 #'   \item{week_in_order}{A ordered count of weeks from beginning to end of dataset}
 #'   \item{epi}{A logical vector indicating epidemic seasons}

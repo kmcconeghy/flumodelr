@@ -1,0 +1,183 @@
+---
+title: "Create a simulated influenza season"
+author: "Kevin W. McConeghy"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{flumodelr: 11-simdata}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+library(flumodelr)
+library(lubridate)
+library(scales)
+library(prophet)
+```
+
+Basic workflow for creating a 'simulation' influenza season. 
+
+1) Use CDC reported data to inform general shape / curve.
+
+  1a) Integrate the CDC P&I deaths into a density plot.  
+  1b) Fit a two-mixture beta regression to determine initial values.  
+
+2) Use beta regression parameters as a guide for simulation  
+  2a) Simulate season density using two-mixture beta distribution.
+  2b) Convert density back to raw counts using arbitrary value.
+  
+3) Refine as a function program  
+
+# STEP 1: empirical influenza season  
+
+## CDC data (see ??)  
+```{r, echo=FALSE}
+EpiWeekToDates <- function(year, weeknum) {
+  
+  #Compute 4th day in January
+    jan4 <- ymd(paste(year, 1, 4, sep="-"))
+  
+  #Compute day of week
+    DofW <- wday(jan4, week_start = 7)-1 #Sunday start
+    #The -1 is  correction for how wday() counts days  
+    
+  #If Jan 4th was Sun, starting week date is 01/04/xxxx
+    startweek <- if_else(DofW == 7, jan4, (jan4 - (DofW)))
+ 
+  #First Date of Week
+    d0 = startweek + (weeknum - 1) * 7
+  
+  #Last Date of Week
+    d1 = startweek + (weeknum - 1) * 7 + 6 
+  
+  return(list(d0 = ymd(d0), d1 = ymd(d1)))
+}
+```
+
+```{r, echo=F, results='asis', fig.width=7}
+cdc_122 <- flumodelr::cdc122city
+
+#some formatting 
+cdc_122 <- cdc_122 %>%
+  group_by(year, week) %>%
+  summarize(fludeaths = sum(deaths_pnaflu, na.rm=T)) %>%
+  mutate(week_dt = EpiWeekToDates(year, week)[[1]])
+```
+
+```{r }
+g1 <- ggplot(cdc_122, aes(x=week_dt, y=fludeaths)) + 
+  geom_line(size=0.8, colour="#CC0000") +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of Deaths from P&I") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 1. Pneumonia and Influenza Mortality") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+g1
+```
+Because there is a systematic shift in the 1990s, will start modeling after that point.  
+
+```{r }
+cdc_122_1990 <- dplyr::filter(cdc_122, year>=1990)
+```
+
+```{r }
+g1 <- ggplot(cdc_122_1990, aes(x=week_dt, y=fludeaths)) + 
+  geom_line(size=0.8, colour="#CC0000") +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of Deaths from P&I") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 1. Pneumonia and Influenza Mortality") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+g1
+```
+Much more stable.  
+
+## Prophet fit
+```{r }
+fludta_phet <- cdc_122_1990 %>%
+  dplyr::select(week_dt, fludeaths) %>%
+  dplyr::rename(ds = week_dt, y=fludeaths)
+
+p_fit <- prophet(fludta_phet, 
+                 seasonality.mode = 'multiplicative',
+                 mcmc.samples = 2000,
+                 interval.width = 0.95)
+```
+
+```{r }
+future <- make_future_dataframe(p_fit, periods = 53, freq='week')
+tail(future)
+```
+```{r }
+forecast <- predict(p_fit, future)
+tail(forecast[c('ds', 'yhat', 'yhat_lower', 'yhat_upper')])
+```
+
+```{r }
+plot(p_fit, forecast)
+```
+Prophet does not fit the outlier seasons well (as expected they were
+unusually severe season).
+
+## Data generating process  
+
+### Total deaths  
+Total deaths obtained from actual CDC reported data for 2010-2015. It is assumed
+this value is accurate, but what is unknown are the proportion of deaths 
+due to influenza.  
+```{r }
+flu_real <- fludta %>%
+  dplyr::filter(week<=52)
+```
+
+```{r }
+ggplot(flu_real, aes(x=week_in_order, y=alldeaths)) +
+  geom_line()
+```
+
+We add the real all-cause deaths to the dataset.  
+```{r }
+flu_sim$deaths_all <- flu_real$alldeaths
+```
+
+The objective is to simulate deaths attributable to influenza under different 
+assumptions.  
+
+A seasonal influenza data generating process.  
+Features of influenza deaths:
+1) Mild or severe season, qualitatively increases number of deaths. 
+2) Peak month, which month has peak   
+3) Peakedness, whether a sharp rise/fall, or gentle slope.  
+
+## Peakedness simulated with vertex parabola  
+$$Eq \ 1. \  y = a(x-h)^2 + k$$  
+Where `k` is the highest observed influenza death, `h` is the peak week, and `a` 
+determines peakedness.  
+
+```{r }
+#y = a(x-h)^2 + k
+
+```
+
+```{r }
+#peak of february, week 4
+flu_sim_1 <- flu_sim %>%
+  mutate(peak_week = row_number() - 4, 
+         peak = dgamma(week, shape = 4.2, scale=1.2),
+         deaths_flu_t = round(deaths_all*peak * season))
+
+
+```
+

@@ -111,7 +111,11 @@ head(df.ILI)
       summarize(fludeaths = sum(deaths_pnaflu, na.rm=T),
                 alldeaths = sum(deaths_allcause, na.rm=T),
                 perc_fludeaths = fludeaths/alldeaths*100) %>%
-      mutate(yrweek_dt = EpiWeekToDates(year, week)[[1]]) %>%
+      mutate(yrweek_dt = EpiWeekToDates(year, week)[[1]],
+             fluyr = case_when(
+               month(yrweek_dt)>=6 ~ year(yrweek_dt),
+               month(yrweek_dt)<=5  ~ year(yrweek_dt)-1)
+             ) %>%
       na.omit() %>% #drop missing
       ungroup() %>%
       inner_join(., nrevss2[,c('yrweek_dt', 'prop_flupos')], 

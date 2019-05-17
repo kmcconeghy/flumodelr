@@ -1,0 +1,142 @@
+---
+title: "Seasonal ARIMA models"
+author: "Kevin W. McConeghy"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{flumodelr: 06-arima}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+library(flumodelr)
+library(lubridate)
+library(scales)
+library(forecast)
+```
+
+# Autoregressive models  
+
+When modeling time series in linear predictor model, past values of dependent 
+variable can be included as linear predictors in what is termed an 
+autoregression model (AR). The number of lagged dependent variables used as 
+predictors is referred to as the 'order' of an autoregressive model.
+
+#### Example. AR(2) Model  
+
+$$AR:  y_t = \alpha_0 + \beta_1*y_{t-1} + \beta_2*y_{t-2} + \varepsilon$$
+
+# Moving Average Models  
+
+An alternative approach is to use a moving average model. 
+
+$$MA: y_{t} = \alpha_0 + \beta_1*\varepsilon_{t-1} + \beta_2*\varepsilon_{t-2}
++ \dots + \beta_q*\varepsilon_{t-q}$$
+An MA(q) model uses past forecasting (fit) errors in a regression model.  
+
+Both models can be combined into what is called an 'ARIMA' model or autoregressive 
+integrated moving average.  
+
+$$ARIMA: \ y'_{t} = \alpha_0 + \beta_1*y'_{t-1} + \beta_2*y'_{t-2} + \dots +
+\beta_p*y'_{t-p} + \theta_1*\varepsilon_{t-1} + \theta_2*\varepsilon_{t-2}
++ \dots + \theta_q*\varepsilon_{t-q} + \varepsilon{_t}$$
+
+The ' signifies differencing (i.e. difference between forecasted points). A model
+is referred to as ARIMA (p, d, q), where p = AR order, d = degree of differencing, 
+q = order of MA.  
+
+Models can be specified or fit automatically using AIC or other fit values.  
+
+To determine p and q values researchers often plot autocorrelation.  
+
+### Exampling influenza via ACF / PACF plots  
+```{r }
+fludta <- flumodelr::fludta
+
+flu_deaths <- fludta$fludeaths
+```
+
+An 'ACF' or autocorrelation function plot computes the correlation between y_t and
+y_t-1, ..., ty-p. 
+```{r }
+ggAcf(flu_deaths, main='Autocorrelation plot')
+```
+Note because influenza highly peaked by season, and the data contains more than 
+one season you see the correlation flip over time.  
+
+However, a limitation with ACF plots is that if timepoint y_t and y_t-1 are correlated 
+then y_t and y_t-2 may be also simply because they are near y_t-1. 
+
+To account for this individuals use partial autocorrelation plots.
+```{r }
+ggPacf(flu_deaths, main='Partial autocorrelation plot')
+```
+The decaying in the ACF along with the two initial spikes in the PACF suggest
+a p order of at least 2 is necessary, but maybe not a MA model. 
+
+```{r }
+arima(flu_deaths, order=c(2, 0, 0))
+
+```
+Compare this to auto.arima, which performs an automatic search for the correct
+order. 
+
+```{r }
+auto.arima(flu_deaths, stepwise=F, approximation=F)
+```
+The auto.arima model suggests a MA(4) is appropriate, with slightly lower AIC.  
+
+A useful summary function is `ggtsdisplay`.  
+```{r }
+ggtsdisplay(flu_deaths)
+```
+
+A full review of ARIMA modelling should be sought elsewhere.  
+
+# Seasonal ARIMA  
+
+Influenza disease is not stationary over time, it is highly seasonal spiking 
+in the winter months. 
+```{r }
+flu_deaths %>% diff() %>% ggtsdisplay(., main='First Difference, yt\'')
+```
+
+A specific set of ARIMA models can be used in this case.
+```{r }
+fit <- Arima(flu_deaths, order=c(1, 0, 4), seasonal=c(0,1,1))
+fit
+```
+You can also plot the residuals:
+```{r }
+fit %>% residuals() %>% ggtsdisplay()
+```
+Notice the significant spike at lag 5.
+
+Now with Arima(0, 0, 5)(0,1,1):
+```{r }
+Arima(flu_deaths, order=c(0, 1, 5), seasonal=c(0,1,1)) %>% residuals() %>% ggtsdisplay()
+```
+Better.  
+
+```{r }
+Arima(flu_deaths, order=c(0, 1, 5), seasonal=c(0,1,1)) %>% checkresiduals()
+
+```
+
+In flumodelr, `flum` or `flurima` will take given ARIMA models or use auto.arima 
+to fit if none are specified.  
+
+```{r }
+fit <- flurima(fludta, outc = fludeaths, time=week_in_order, echo=T)
+```
+
+# References  
+
+```{r }
+sessioninfo::session_info()
+```

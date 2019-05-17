@@ -1,8 +1,12 @@
+# Version 0.0.9 11-26-2018
+  * Added SARIMA, GAM models as options  
+  * renamed get_fitvals, glm_fitvals, as function is approach more complex and 
+  specific with new modeling methods
+  
 # Version 0.0.8 11-20-2018
   * rewrote and consolidate code for fluglm
   * updated tidy eval for most recent version of rlang
   * changed fluglm output to be predicted and baseline fitted values
-  
 
 # Version 0.0.7 08-08-2018  
 
