@@ -13,15 +13,24 @@ library(flumodelr)
 fludta <- flumodelr::fludta
 
 ## ------------------------------------------------------------------------
+fludta %>% select(year,week,alldeaths,prop_flupos,week)
+
+## ------------------------------------------------------------------------
 fludta_mod <- ird(data =fludta, 
-                  outc =perc_fludeaths, 
+                  outc =alldeaths, 
                   viral=prop_flupos, 
-                  time =yrweek_dt,
-                  echo=T)
+                  time =week,
+                  echo =T)
 
 ## ------------------------------------------------------------------------
-fludta_rates <- rb(data=fludta_mod, outc = perc_fludeaths)
+fludta_mod %>% select(year,week,alldeaths,prop_flupos,week, season, high, fluseason)
 
 ## ------------------------------------------------------------------------
-gr(data=fludta_rates)
+fludta_rates <- rb(data =fludta_mod, outc =alldeaths, echo = T)
+
+## ------------------------------------------------------------------------
+fludta_rates
+
+## ---- fig.width=7--------------------------------------------------------
+gr(data =fludta_rates, outc =alldeaths_fluseason, echo = FALSE )
 

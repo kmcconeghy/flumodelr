@@ -6,7 +6,10 @@ context("flum")
 test_that("flum computes incidence rate difference", {
   
   
-  d <- flum(fludta, model="ird", 
+d <-  fludta %>%
+    dplyr::filter(!is.na(prop_flupos)) %>%
+    mutate(week_in_order = row_number()) %>% 
+    flum(fludta, model="ird", 
             outc=perc_fludeaths, time=yrweek_dt,
             viral=prop_flupos)
   
@@ -34,14 +37,17 @@ test_that("flum computes fluserf model", {
   
   #Tests
   expect_s3_class(d, "data.frame")
-  expect_equal(nrow(d), 261L)
+  expect_equal(nrow(d), 2857L)
   expect_that(dnames, equals(names(d)))
   expect_type(d$y0, "double")
   expect_type(d$y0_ul, "double")
 })
 
 test_that("flum computes fluglm model", {
-  d <- flum(fludta, model="fluglm", 
+  d <-  fludta %>%
+    dplyr::filter(!is.na(prop_flupos)) %>%
+    mutate(week_in_order = row_number()) %>%
+    flum(., model="fluglm", 
             outc=perc_fludeaths, time=week_in_order,
             viral='prop_flupos')
   

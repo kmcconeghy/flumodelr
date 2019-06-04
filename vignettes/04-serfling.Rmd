@@ -31,9 +31,14 @@ The paper outlines a strategy for estimating what proportion of deaths are due t
 ## Influenza  
 Critically, it should be understood that influenza epidemics are highly seasonal with spikes in the winter months, commonly January - February. This seasonality leads to a cyclical rate of influenza morbidity and mortality.  
 ```{r, echo=F, results='asis', fig.width=7}
-fludta <- flumodelr::fludta
+df_cdc <- flumodelr::fludta %>%
+  dplyr::filter(year>=2010) %>%
+  mutate(t = row_number(), #set origin to october
+         theta = 2*t / 52,
+         sin_2 = sinpi(theta),
+         cos_2 = cospi(theta)) 
 
-g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) + 
+g1 <- ggplot(df_cdc, aes(x=yrweek_dt, y=perc_fludeaths)) + 
   geom_line(size=0.8, colour="#CC0000") +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
@@ -42,7 +47,6 @@ g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) +
   theme_light(base_size=16) +
   theme(plot.title = element_text(size=14)) +
   labs(title="Figure 1. Pneumonia and Influenza Mortality")
-g1
 ```
 
 It was noted by early researchers that the rate of reported deaths (red line), may be modeled by a trigonomic function. 
@@ -59,7 +63,7 @@ $$Eq \ 1. \  y = \alpha_0 + \beta_1*t_1 + u$$
 
 Let t, be the unit of time in figure 1 (week = 1, week=2, ...).  The above model is inadequate, and will poorly fit the data (figure) because the secular trend is non-linear.  
 ```{r, echo=F, results='asis', fig.width=7}
-g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) + 
+g1 <- ggplot(df_cdc, aes(x=yrweek_dt, y=perc_fludeaths)) + 
   geom_line(size=0.8, colour="#CC0000") +
   geom_smooth(method='lm') +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
@@ -75,12 +79,227 @@ g1
   
 Early investigators such as Serfling proposed that a Fourier term be added to model the cycle like so:
 $$Eq \ 2. \  y = \alpha_0 + \beta_1*t + sine(\frac{2 \pi t}{52}) + cos(\frac{2 \pi t}{52}) + u$$
-The original paper used 4-week periods so the period denominator is 13. The waveform will be approximately sawtooth if t resets within a period (0-52). If t is continuous it will be a smooth curve. This allows us to use a linear model which accounts for the cyclical nature of the disease.  The original paper recommends one [Fourier term](https://en.wikipedia.org/wiki/Fourier_series).   
+The original paper used 4-week periods so the period denominator is 13. This allows us to use a linear model which accounts for the cyclical nature of the disease.  The original paper recommends one [Fourier term](https://en.wikipedia.org/wiki/Fourier_series).   
+
+### Model 1:  Original Serfling Model  
+The basic linear equation is like so:
+$$Y = beta_0*\alpha + beta_1*t + beta_6*cos(\frac{2 \pi t}{52}) + beta_7*sin(\frac{2 \pi t}{52})$$
+Where in our weekly CDC data, t is a single week, with a 52 week cycle. In the 
+original paper it was 4-week periods, with 13 per annual cycle.  
+
+### Method 1: Endemic baseline  
+Select a season of low epidemicity:  
+```{r, fig.width=7}
+g1 <- ggplot(df_cdc, aes(x=yrweek_dt, y=fludeaths)) + 
+  geom_line(size=0.8) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of Deaths from P&I") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 1. Pneumonia and Influenza Mortality") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+g1
+```
+
+2011 / 2012 is period of lowest influenza activity, so taken as the baseline.  
+
+This season was used to estimate parameters for the above equation then fit 
+to a future season.  
+
+#### Estimate model for 2011 / 2012 season  
+- fitting one season  
+- one fourier term  
+```{r }
+df_low <- df_cdc %>%
+  dplyr::filter(yrweek_dt >= ymd('2011-10-01') & yrweek_dt <= ymd('2012-09-30')) %>%
+  mutate(t = row_number(), #set origin to october
+         theta = 2*t / 52,
+         sin_2 = sinpi(theta),
+         cos_2 = cospi(theta)) 
+
+lm(fludeaths ~ t + sin_2 + cos_2, #note the 0 term
+  data=df_low, na.action = na.exclude) -> mod_1_low 
+
+summary(mod_1_low)
+```
+`sin_2` is the Fourier term: sin (2*$$\pi$$*t) / L where L is length of cycle (i.e. 52 weeks)  
+Fourier series can be iteratively explored for best fit by adjusting the harmonic 
+formula. 
+
+Inclusion of biannual or monthly cycles can be done with additional Fourier terms.  
+
+E.g. With semi-annual Fourier term:  
+
+$$Y = beta_0*\alpha + beta_1*t + 
+beta_6*cos(\frac{2 \pi t}{52}) + beta_7*sin(\frac{2 \pi t}{52}) 
++ beta_8*cos(\frac{2 \pi t}{26}) + beta_9*sin(\frac{2 \pi t}{26})$$
+
+```{r }
+df_low_pred <- suppressWarnings(predict(mod_1_low, se.fit=TRUE, 
+          interval="prediction", level=0.90)) 
+
+df_low <- bind_cols(df_low, pred_yhat_0 = df_low_pred$fit[, 'fit'])
+
+g_mod_1 <- ggplot(df_low) + 
+  geom_line(aes(x=yrweek_dt, y=fludeaths), size=0.8, alpha=0.5) +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_0), linetype='dashed', size=1, color = 'blue') +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of deaths") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 2. Original Serfling equation fit to 2011/12") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+g_mod_1
+```
+
+The fit works well for this particular period.  
+
+#### Apply model estimates to fit 2012 / 2013 year.  
+```{r }
+df_high <- df_cdc %>%
+  dplyr::filter(yrweek_dt >= ymd('2012-10-01') & yrweek_dt <= ymd('2013-09-30')) %>%
+  mutate(t = row_number(), #set origin to october
+         theta = 2*t / 52,
+         sin_2 = sinpi(theta),
+         cos_2 = cospi(theta)) 
+
+df_pred <- predict(mod_1_low, newdata=df_high, se.fit=TRUE, 
+           interval="prediction", level=0.90)  
+
+pred_yhat_0 <- df_pred$fit[,1] #fitted values
+pred_yhat_upr <- df_pred$fit[,3] 
+
+df_mod_1 <- df_high %>%
+  add_column(., pred_yhat_0, pred_yhat_upr)  
+```
+
+```{r, fig.width=7}
+g_mod_1 <- ggplot(df_mod_1) + 
+  geom_line(aes(x=yrweek_dt, y=fludeaths), size=0.8, alpha=0.5) +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_0), linetype='dashed', size=1, color = 'blue') +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_upr), linetype='dotted', color='red', size=1) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of deaths") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 3. 2011/12 estimates fitted to 2012/13 season") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+g_mod_1
+```
+
+Gray - observed deaths  
+Blue dash - fitted curved for 2011 / 2012, applied to 2012 / 2013
+Red dotted - upper 90% prediction interval  
+
+In the original paper, deaths exceeding the 90% interval would be considered in 
+excess, and if two consecutive weeks occurred than that was a 'epidemic'.  
+
+However, it was noted in the paper this was less practical when consecutive years 
+occur without a very low endemicity flu season. An alternative approach was 
+given that is more generalizable.  
+
+#### Method 2: Secular trend differencing  
+
+One approach is to estimate the model using the previous 5 years of data. Assuming 
+this will average out epidemics and give a baseline measure of activity.  
+
+- Fit a model using first 4 seasons, apply to 5th season   
+```{r }
+df_cdc_2  <- df_cdc %>%
+  dplyr::filter(fluyr<2014) %>%
+  mutate(t = row_number(), #set origin to october
+         theta = 2*t / 52,
+         sin_2 = sinpi(theta),
+         cos_2 = cospi(theta)) 
+
+mod_1_sec_fit <- df_cdc_2 %>%
+  lm(fludeaths ~ t + sin_2 + cos_2, #note the 0 term
+    data=., na.action = na.exclude) 
+
+df_pred <- predict(mod_1_sec_fit, newdata = df_cdc, se.fit=TRUE, 
+           interval="prediction", level=0.90)  
+
+pred_yhat_0 <- df_pred$fit[,1] #fitted values
+pred_yhat_upr <- df_pred$fit[,3] 
+
+df_mod_1_sec <- df_cdc %>%
+  add_column(., pred_yhat_0, pred_yhat_upr)  
+```
+
+```{r, fig.width=7}
+g_mod_1 <- ggplot(df_mod_1_sec[df_mod_1_sec$fluyr<2014, ]) + 
+  geom_line(aes(x=yrweek_dt, y=fludeaths), size=0.8, alpha=0.5) +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_0), linetype='dashed', size=1, color = 'blue') +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_upr), linetype='dotted', color='red', size=1) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of deaths") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 3. 2010 - 2014 estimates fitted") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+g_mod_1
+```
+
+Model fit from first four seasons, notice the 2012 / 2013 season does not fit the curve well.  
+
+```{r, fig.width=7}
+g_mod_1 <- ggplot(df_mod_1_sec[df_mod_1_sec$fluyr==2014, ]) + 
+  geom_line(aes(x=yrweek_dt, y=fludeaths), size=0.8, alpha=0.5) +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_0), linetype='dashed', size=1, color = 'blue') +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_upr), linetype='dotted', color='red', size=1) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of deaths") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 3. 2010 - 2014 estimates fitted to 2014/2015 season") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+g_mod_1
+```
+
+Gray - observed deaths  
+Blue dash - fitted curved for 2011 / 2012, applied to 2012 / 2013
+Red dotted - upper 90% prediction interval  
+
+### In quantitative terms:  
+```{r }
+df_rpt <- df_mod_1_sec %>%
+  dplyr::filter(fluyr==2014) %>%
+  select(fluyr, week, fludeaths, pred_yhat_0, pred_yhat_upr) %>%
+  rowwise() %>%
+  mutate(excess_deaths = max(fludeaths - pred_yhat_upr, 0)) %>%
+  round(., 0) 
+
+head(df_rpt)
+```
+Most weeks no excess deaths are reported, until the month of January when an epidemic occurs.  
+
+```{r }
+total <- formatC(sum(df_rpt$fludeaths), format = 'd', big.mark = ',')
+total_excess <- formatC(sum(df_rpt$excess_deaths), format = 'd', big.mark = ',')
+```
+
+The total reported deaths for the 2014 - 2015 influenza season were `r total` but only `r total_excess` are deemed in excess of expected based the 90% upper prediction interval for the cyclical regression.  
 
 ## Example. Fitted line (one Fourier term)   
 ```{r , results='as.is', fig.width=7}
 ## Add fourier term
 fit <- fludta %>%
+  dplyr::filter(year>=2010) %>%
   mutate(week2 = row_number(),
          theta = 2*week2/52,
          sin_f1 = sinpi(theta),
@@ -108,70 +327,6 @@ A single Fourier term does a reasonable job approximating the secular trend of d
 
 During certain seasons, there is a pronounced spike above the predicted (fit) line. For example in the 12-13, 13-14 and 14-15 seasons.  These can be subjectively considered severe influenza epidemics. However a goal could be to define objective criteria for epidemics. Such as any time-period 1.64 standard deviations above the fitted line representing a time of severe influenza morbidity and mortality, requiring significant public health intervention.    
 
-## Estimation approach for attributable or "excess" mortality   
-
-The serfling paper describes 4 steps:
-
- * Estimate secular trend  
- * Remove trend from data  
- * Estimate seasonal change from adjusted data  
- * Restore trend component  
- 
-In this package we operationalize this like so:
-
- * Construct a time-series dataset, with a variable for a flu outcome (i.e. deaths, hospitalizations).  
- * Estimate a cyclical regression as above; 
-  * Fit a trend line  (solid black line)  
-  * predict epidemic threshold (dashed black line)  
- * Observations falling outside the dashed black line are "excess"  
-  * Quantify values in excess of threshold    
-
-## Step-wise example  
-The flumodelr function fluserf will perform the above steps. We present the individual steps here for demonstration. 
-
-It is assumed the influenza epidemic period begins Oct. 1st, and ends May 31st. This is a conventional "flu" season in the U.S. However individual areas / regions may justify tailored periods. These assumptions are modifiable as options in the regression function.  
-
-### Step 1. Formatted influenza data  
-To compute a traditional Serfling model. The input dataframe must have time vector, indicator for the epidemic period (Oct. - May), and measure of influenza morbidity / mortality to be modeled.  
-```{r }
-fludta %>% select(yrweek_dt, perc_fludeaths)
-```
-
-` fluserf() ` Will allow you to specify the boundaries for epidemic periods, and then compute the baseline off of non-epidemic timepoints. Additionally you can provide it with a logical variable in the dataset which indicates the epidemic period.  
-
-### Example adding epidemic period indicator  
-```{r }
-fludta <- fludta %>%
-  mutate(epi = if_else(month(yrweek_dt)>=10 | month(yrweek_dt)<=5, T, F))  
-
-fludta %>%
-  dplyr::filter(year>=2010)
-```
-We see that there is now an indicator for Oct - May.  
-
-### Step 2. Fit predicted outcome and epidemic threshold   
-Here we estimate a model using only non-epidemic period timepoints. The coefficients from this model will then be used to predict values during the epidemic period.  
-
-#### Step 2a. Compute fourier terms  
-```{r }
-## Compute fourier terms
-fludta_serfling <- fludta %>%
-  mutate(week2 = row_number(),
-         theta = 2*week2/52,
-         sin_f1 = sinpi(theta),
-         cos_f1 = cospi(theta))
-```
-
-#### Step 2b. Baseline Cyclical model  
-Fit a model using non-epidemic periods, and excluding year 2015. This is the year we are focused on evaluating for excess mortality.  
-```{r }
-base_fit <- fludta_serfling %>%
-  dplyr::filter(epi==F & year<2015) %>%
-  lm(perc_fludeaths ~ week2 + sin_f1 + cos_f1, 
-     data=., na.action = na.exclude)
-```
-Fit a model using only non-epidemic periods.  
-
 ### Note regarding standard errors.  
 By default R's predict.lm will fit a 95% prediction interval. In Serfling's original paper it states:  
 
@@ -189,120 +344,13 @@ The CDC also describes the threshold as:
 > expected at that time of the year in the absence of substantial 
 > influenza-related mortality."
 
-` fluserf ` follows this method, but the modified serfling function allows for more options for threshold prediction. 1.645 standard deviations is equal to a one-sided upper limit 95% confidence interval.  
-
-#### Step 2c. Add predicted values to original dataset.  
-```{r }
-## Fitted values + prediction interval
-df_pred <- fludta_serfling %>%
-  dplyr::filter(year==2014 & week>=40 | year>2014) %>%
-  predict(base_fit, newdata=., se.fit=TRUE, 
-          interval="confidence", level=0.90) #must specify 0.9 bc two-sided
-
-pred_y0 <- df_pred$fit[,1] #fitted values
-pred_y0_serf <- df_pred$fit[,3] 
-
-df_base <- fludta %>%
-  dplyr::filter(year==2014 & week>=40 | year>2014) %>%
-  add_column(., pred_y0, pred_y0_serf)  
-
-df_base %>% select(year, week, perc_fludeaths, 
-                   pred_y0, pred_y0_serf)  
-```
-
-```{r, echo=F, results='as.is', fig.width=7}
-#Set up graph labels, line specs
-line_names <- c("% Deaths From P&I", "Expected %", "Epidemic Threshold")
-line_cols <- c("#CC0000", "black", "black")
-line_types <- c(1, 1, 2)
-names(line_cols) <- line_names
-names(line_types) <- line_names
-  
-ggplot(df_base, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=perc_fludeaths, colour=line_names[[1]], 
-                linetype=line_names[[1]]), size=0.8) +
-  geom_line(aes(y=pred_y0, colour=line_names[[2]], 
-                linetype=line_names[[2]]), size=0.8) +
-  geom_line(aes(y=pred_y0_serf, colour=line_names[[3]], 
-                linetype=line_names[[3]]), size=0.8) +
-  scale_colour_manual("Line", breaks=line_names, values = line_cols) +
-  scale_linetype_manual("Line", breaks=line_names, values = line_types) +
-  scale_x_date(labels = date_format("%b"), date_breaks="1 month",
-               expand=c(0, .9)) + 
-  xlab("2014 - 2015 Influenza Season") + ylab("% of Deaths from P&I") + 
-  theme_light(base_size=14) +
-  theme(legend.text=element_text(size=10), 
-        plot.title = element_text(size=14)) +
-  labs(title="Figure 4. Pneumonia and Influenza Mortality") +
-  guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
-```
-
-**% of Deaths from P&I** - No. of influenza or pneumonia deaths / total number of deaths *100.  
-**Expected %** - A fit of the cyclical regression model, (one Fourier term).  
-**Epidemic Threshold** - The fitted line + 1.64 standard deviations.  
-
-### Step 3. Compute excess deaths    
-The next step is to determine the difference in % of deaths in excess of the epidemic threshold.  
-
-```{r }
-df_excess <- df_base %>%
-  mutate(threshold = if_else(perc_fludeaths > pred_y0_serf, T, F),
-         simple_excess = if_else((perc_fludeaths - pred_y0_serf)>0,
-         perc_fludeaths - pred_y0_serf, 0))
-```
-
-In addition to being in excess, Serfling applies a rule that values are counted starting from two consecutive timepoints exceeding the threshold, then stopped after two timepoints below the threshold. This rule is problematic depending on how the period is programmed, if the unit of observation is more granular (day or week) then the rule will have more false-positives, if less granular (i.e. month) if will have false-negatives.  
-
-## Serfling consecutive rule
-We show how to implement this below, however recommend that it not be used routinely.  
-
-```{r }
-## Identify consecutive epidemic periods  
-  df_serf_excess <- df_excess %>%
-    mutate(serf_rule = if_else(threshold==T & 
-                                 lead(threshold)==T & 
-                                 lag(threshold)==T, T, F))
-##reset beginning and end periods
-  df_serf_excess <- df_serf_excess %>%
-    mutate(serf_rule = if_else(serf_rule==F & 
-                                 threshold==T & 
-                                 lead(serf_rule)==T, T, serf_rule),
-           serf_rule = if_else(serf_rule==F, 
-                               threshold==T & 
-                               lag(serf_rule)==T, T, serf_rule))
-  
- ##compute excess deaths
-   df_serf_excess <- df_serf_excess %>%
-     mutate(serf_excess = if_else(serf_rule==T, 
-                                  perc_fludeaths - pred_y0_serf, 0))
-
-
-df_serf_excess %>% select(year, week, threshold, simple_excess, serf_rule, serf_excess)
-```
-
-Note how for weeks 29 and 31, the Serfling rule discounts the excess mortality.  
-
-```{r, echo=F, results='as.is', fig.width=7.0}
-ggplot(df_serf_excess, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=simple_excess, colour="Excess mortality"), size=0.8, linetype=2) +
-  geom_line(aes(y=perc_fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
-  scale_x_date(labels = date_format("%b"), date_breaks="1 month",
-               expand=c(0, .9)) + 
-  scale_colour_manual("Line",
-                      values = c("Excess mortality"="#CC0000", 
-                                 "Reported mortality"="black")) +
-  xlab("2014- 2015 Influenza Year") + 
-  ylab("% Deaths from P&I") + 
-  theme_light(base_size=16) +
-  theme(plot.title = element_text(size=14)) +
-  labs(title="Figure 5. Periods of excess mortality over time")
-```
+` fluserf ` follows this method, but the modified serfling function allows for more options for threshold prediction. 1.645 standard deviations is equivalents to a one-sided upper limit 95% confidence interval.  
 
 ## fluserf() function
 ```{r }
 ##The following command completes the above steps 
 ##fit serfling model
-flu_fit <- fluserf(data=fludta, outc=perc_fludeaths, time=yrweek_dt)
+flu_fit <- fluserf(data=df_cdc, outc=perc_fludeaths, time=yrweek_dt)
 flu_fit
 ```
 

@@ -1,3 +1,8 @@
+# Version 0.1.0 05-20-2019
+  * Added forecast dependency
+  * Reformatted vignettes to fit companion manuscript for package
+  * Changed fludta dataset to included all years
+  
 # Version 0.0.9 11-26-2018
   * Added SARIMA, GAM models as options  
   * renamed get_fitvals, glm_fitvals, as function is approach more complex and 

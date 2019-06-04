@@ -51,14 +51,18 @@ that were above an epidemic threshold, and available US census data:
 annual excess [outcomes] = (excess weekly rate) x (number of epidemic weeks) x (population).
 
 ### Example: peri-season adjusted influenza attributable mortality
-In this example we will estimate influenza attributable mortality using a peri-season adjustment. We will adjust mortality in weeks with high viral activity (a) with weeks when viral activity was low (b). All we have is a dataset with surveillance data ('prop_flupos') in a certain calendar 'year' and 'week', plus the observed number of all cause hospitalizations in that week ('alldeaths').
+In this example we will estimate influenza attributable mortality using a peri-season adjustment. We will adjust mortality in weeks with high viral activity (a) with weeks when viral activity was low (b). All we have is a dataset with surveillance data ('prop_flupos') in a certain calendar 'year' and 'week', plus the observed number of all cause hospitalizations in that week ('alldeaths'). 
+
+We remove years without viral activity
 ```{r }
-fludta %>% select(year,week,alldeaths,prop_flupos,week)
+df <- fludta %>% 
+  dplyr::filter(year>2010 & year <2016) %>%
+  select(year, week, alldeaths, prop_flupos, week)
 ```
 
 ### Step 2. ird() function
 ```{r }
-fludta_mod <- ird(data =fludta, 
+fludta_mod <- ird(data =df, 
                   outc =alldeaths, 
                   viral=prop_flupos, 
                   time =week,
@@ -67,7 +71,8 @@ fludta_mod <- ird(data =fludta,
 
 The initial function prepares the dataset by identifying periods of high and low viral activity in the respiratory season. It creates the table fludta_mod, adding 3 varables (columns): respiratory 'season', 'high[,"prop_flupos"]' (TRUE = high viral activity, FALSE = low viral activity), and 'fluseason' (TRUE = flu season, FALSE = summer-season baseline)
 ```{r }
-fludta_mod %>% select(year,week,alldeaths,prop_flupos,week, season, high, fluseason)
+fludta_mod %>% select(year, week, alldeaths, 
+                      prop_flupos, week, season, high, fluseason)
 ```
 
 Note that 'high[,"prop_flupos"]' will not be created if ird(viral= missing).

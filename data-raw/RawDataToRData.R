@@ -1,8 +1,8 @@
 setwd("~/GitHub/flumodelr/data-raw")
 library('tidyverse')
 library('readr')
-library('devtools')
 library('lubridate')
+library('usethis')
 
 ##--ILINET
 df.ILI <- read_csv('ILINET.csv', skip=1)
@@ -22,7 +22,9 @@ head(df.ILI)
       mutate(ili_perc = as.numeric(ili_perc),
              ili_tot = as.integer(ili_tot),
              providers = as.integer(providers),
-             patients = as.integer(patients))
+             patients = as.integer(patients)) %>%
+    mutate_at( vars(year, week), as.integer)
+  
     head(ilinet)
     summary(ilinet)
   #--Save for package
@@ -48,7 +50,10 @@ head(df.ILI)
            type_A_h3n2 = H3N2v) %>%
     mutate(spec_tot = as.integer(spec_tot),
            spec_pos = as.numeric(spec_pos)) %>%
-    mutate_at(vars(starts_with('type')), funs(as.integer))
+    mutate_at(vars(starts_with('type')), funs(as.integer)) %>%
+    mutate_at( vars(year, week), 
+               as.integer)
+  
     head(nrevss)
     summary(nrevss)
     #--Save for package
@@ -68,41 +73,22 @@ head(df.ILI)
              week = WEEK,
              deaths_pnaflu = `Pneumonia and Influenza Deaths`,
              deaths_allcause = `All Deaths`,
-             deaths_65older = `65+ years (all cause deaths)`)
+             deaths_65older = `65+ years (all cause deaths)`) %>%
+      mutate_at( vars(year, week, starts_with('deaths_')), 
+                 as.integer)
     head(cdc122city)
     summary(cdc122city)
     #--Save for package
     use_data(cdc122city, overwrite = T)
-
-    EpiWeekToDates <- function(year, weeknum) {
-      
-      #Compute 4th day in January
-      jan4 <- ymd(paste(year, 1, 4, sep="-"))
-      
-      #Compute day of week
-      DofW <- wday(jan4, week_start = 7)-1 #Sunday start
-      #The -1 is  correction for how wday() counts days  
-      
-      #If Jan 4th was Sun, starting week date is 01/04/xxxx
-      startweek <- if_else(DofW == 7, jan4, (jan4 - (DofW)))
-      
-      #First Date of Week
-      d0 = startweek + (weeknum - 1) * 7
-      
-      #Last Date of Week
-      d1 = startweek + (weeknum - 1) * 7 + 6 
-      
-      return(list(d0 = ymd(d0), d1 = ymd(d1)))
-    }
     
-#--Make example time-series object  
+#--Make example influenza data-set 
   nrevss2 <- nrevss %>%
       mutate(spec_pos = rowSums(select(., starts_with('type_')), na.rm=T)) %>%
       group_by(year, week) %>%
       summarize(spec_tot = sum(spec_tot, na.rm=T),
                 spec_pos = sum(spec_pos, na.rm=T),
                 prop_flupos = spec_pos / spec_tot) %>%
-    mutate(yrweek_dt = EpiWeekToDates(year, week)[[1]],
+    mutate(yrweek_dt = epiweek_dt(year, week)[[1]],
            yrweek_dt = yrweek_dt + dweeks(2)) #Add 2 weeks for delay
   
     fludta <- cdc122city %>%
@@ -111,17 +97,19 @@ head(df.ILI)
       summarize(fludeaths = sum(deaths_pnaflu, na.rm=T),
                 alldeaths = sum(deaths_allcause, na.rm=T),
                 perc_fludeaths = fludeaths/alldeaths*100) %>%
-      mutate(yrweek_dt = EpiWeekToDates(year, week)[[1]],
+      mutate(yrweek_dt = epiweek_dt(year, week)[[1]],
              fluyr = case_when(
                month(yrweek_dt)>=6 ~ year(yrweek_dt),
                month(yrweek_dt)<=5  ~ year(yrweek_dt)-1)
              ) %>%
       na.omit() %>% #drop missing
       ungroup() %>%
-      inner_join(., nrevss2[,c('yrweek_dt', 'prop_flupos')], 
+      left_join(., nrevss2[,c('yrweek_dt', 'prop_flupos')], 
                  by=c('yrweek_dt')) %>% #visual inspection
       mutate(week_in_order = row_number(),
-             epi = if_else(month(yrweek_dt)>=10 | month(yrweek_dt)<=5, T, F))
+             epi = if_else(month(yrweek_dt)>=10 | month(yrweek_dt)<=5, T, F)) %>%
+      mutate_at( vars(year, week, fludeaths, alldeaths, fluyr), 
+                 as.integer)
 
     #--Save for package
     use_data(fludta, overwrite = T)

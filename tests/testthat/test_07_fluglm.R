@@ -22,8 +22,10 @@ test_that("test fluglm function - season ", {
 })
 
 test_that("test fluglm function - viral ", {
-  
-  d <- fluglm(fludta, outc = fludeaths, viral='prop_flupos', time = week_in_order)  
+d <-  fludta %>%
+  dplyr::filter(!is.na(prop_flupos)) %>%
+  mutate(week_in_order = row_number()) %>%
+  fluglm(., outc = fludeaths, viral='prop_flupos', time = week_in_order)  
   nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')
   
   #Tests
@@ -42,7 +44,10 @@ test_that("test fluglm function - viral ", {
 
 test_that("test fluglm function - neg binomial ", {
   
-  d <- fluglm(fludta, outc = fludeaths, viral='prop_flupos', time = week_in_order,
+d <-  fludta %>%
+    dplyr::filter(!is.na(prop_flupos)) %>%
+    mutate(week_in_order = row_number()) %>%
+    fluglm(., outc = fludeaths, viral='prop_flupos', time = week_in_order,
               glmnb=T)  
   nms <- c('flu_pred', 'flu_pred_upr', 'flu_pred_lwr')
   
@@ -61,7 +66,10 @@ test_that("test fluglm function - neg binomial ", {
 })
 
 test_that("test fluglm function - poisson", {
-  d <- fluglm(fludta, 
+d <-  fludta %>%
+    dplyr::filter(!is.na(prop_flupos)) %>%
+    mutate(week_in_order = row_number()) %>%
+    fluglm(., 
               outc = fludeaths, 
               time = week_in_order, 
               season =epi,

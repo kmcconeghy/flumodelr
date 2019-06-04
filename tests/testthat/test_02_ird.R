@@ -24,13 +24,13 @@ test_that("rb() function executes", {
                viral=prop_flupos, 
                time=yrweek_dt)
   d_fit <- rb(d_fit, perc_fludeaths)
-  dnames <- c('season', 'high_act', 'perc_fludeaths_fluseason',
+  dnames <- c('season', 'period', 'perc_fludeaths_fluseason',
               'perc_fludeaths_viral_act')
   #Tests
   expect_s3_class(d_fit, "data.frame")
   expect_that(dnames, equals(names(d_fit)))
   expect_type(d_fit$season, "double")
-  expect_type(d_fit$high_act, "logical")
+  expect_type(d_fit$period, "integer")
   expect_type(d_fit$perc_fludeaths_fluseason, "double")
   expect_type(d_fit$perc_fludeaths_viral_act, "double")
 })

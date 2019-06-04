@@ -2,7 +2,7 @@
 % Please edit documentation in R/ird.R
 \name{gr}
 \alias{gr}
-\title{gr: Bar graph for ird models}
+\title{gr: Line graph for ird models}
 \usage{
 gr(data)
 }
@@ -10,6 +10,6 @@ gr(data)
 \item{data}{A formatted dataset created irb() rb() commands}
 }
 \description{
-Outputs simple bar chart for incidence rate difference
+Outputs simple line graph for incidence rate difference
 models
 }

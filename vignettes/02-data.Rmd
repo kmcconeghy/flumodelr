@@ -14,6 +14,7 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 library(dplyr)
 library(ggplot2)
+library(flumodelr)
 ```
 
 The following brief descriptions of test data used in this package.  
@@ -43,7 +44,7 @@ https://www.cdc.gov/flu/weekly/overview.htm
 ```{r }
 cdc122 <- (flumodelr::cdc122city)  
 dim(cdc122)
-cdc122
+head(cdc122)
 ```
 
 # NREVSS  
@@ -69,7 +70,7 @@ For more information: http://www.cdc.gov/flu/weekly/overview.htm#Viral
 ```{r }
 nrevss <- (flumodelr::nrevss)  
 dim(nrevss)
-nrevss
+head(nrevss)
 ```
 
 # ILINet  
@@ -89,7 +90,7 @@ For more information, see: http://www.cdc.gov/flu/weekly/overview.htm#Outpatient
 ```{r }
 ilinet <- (flumodelr::ilinet)  
 dim(ilinet)
-ilinet
+head(ilinet)
 ```
 
 ## MMWR Weeks  
@@ -117,6 +118,10 @@ MMWR week #1 of the following MMWR year.
 
 All `?ilinet` , `?cdc122city` and `?nrevss` datasets are imported in their raw CDC format. It is the perogative of the user to determine how best to treat the CDC MMWR week definition. However, we illustrate below how the above description was used to compute a first day of week, date variable for the example dataset `?fludta`.  
 
+```{r }
+flumodelr::epiweek_dt
+```
+
 Alternative package which addresses this:  
 
 Xiahong Zhao (2016). EpiWeek: Conversion Between Epidemiological Weeks
@@ -126,7 +131,7 @@ and Calendar Dates. R package version 1.1. https://CRAN.R-project.org/package=Ep
 install.packages("EpiWeek")
 ```
 
-Also see `?epiweek()`  
+Also see `?epiweek_dt()`  
 
 ## Using the CDC122 Cities as Example  
 Code adapted from `EpiWeek` package.  
@@ -134,33 +139,14 @@ Code adapted from `EpiWeek` package.
 #### Conversion function  
 ```{r }
 library(lubridate) #For working with dates  
-EpiWeekToDates <- function(year, weeknum) {
-  
-  #Compute 4th day in January
-    jan4 <- ymd(paste(year, 1, 4, sep="-"))
-  
-  #Compute day of week
-    DofW <- wday(jan4, week_start = 7)-1 #Sunday start
-    #The -1 is  correction for how wday() counts days  
-    
-  #If Jan 4th was Sun, starting week date is 01/04/xxxx
-    startweek <- if_else(DofW == 7, jan4, (jan4 - (DofW)))
- 
-  #First Date of Week
-    d0 = startweek + (weeknum - 1) * 7
-  
-  #Last Date of Week
-    d1 = startweek + (weeknum - 1) * 7 + 6 
-  
-  return(list(d0 = ymd(d0), d1 = ymd(d1)))
-}
 ```
 
 ```{r }
 example <- cdc122 %>%
-  mutate(FirstDateOfWeek = EpiWeekToDates(year, week)[[1]])
+  mutate(FirstDateOfWeek = epiweek_dt(year, week)[[1]])
 
 example %>% select(year, week, FirstDateOfWeek) %>% 
   distinct() %>% 
-  filter(year>2010)
+  dplyr::filter(year>2010) %>%
+  head(.)
 ```

@@ -24,8 +24,7 @@ This vignette is a short introduction to the package for interested readers. In 
 3) Explanation of original Serfling Model.  
 [Serfling Background](https://kmcconeghy.github.io/flumodelr/articles/04-serfling.html)  
 
-4) Explanation of modern implementation of Serfling Model in a Generalized linear 
-model.  
+4) Explanation of modern implementation of Serfling Model in a Generalized linear model.  
 [Modern Serfling Applications](https://kmcconeghy.github.io/flumodelr/articles/05-modserf.html)  
 
 5) Estimating attributable mortality using ARIMA models. 

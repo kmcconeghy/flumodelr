@@ -54,7 +54,7 @@ summer season
 \examples{
 require(flumodelr)
 fludta <- flumodelr::fludta
-flu_fit <- ird(data=fludta, outc = perc_fludeaths, viral=prop_flupos, time=yrweek_dt)
+flu_fit <- ird(data=fludta, viral=prop_flupos, time=yrweek_dt)
 flu_rates <- rb(flu_fit, perc_fludeaths)
               
 flu_rates

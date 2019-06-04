@@ -1,10 +1,9 @@
-library('devtools')
 
 setwd("~/GitHub/flumodelr")
 
 ## Build
 devtools::document()
-devtools::build()
+pkgbuild::build()
 devtools::test()
 devtools::check()
 
