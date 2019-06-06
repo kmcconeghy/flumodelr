@@ -157,10 +157,10 @@ rb <- function(data=NULL, outc=NULL, echo=F){
   
   #sum the outcomes
     if("high" %in% names(data)) {highrates <- data %>% select(season, high, !!outc_eq) %>% group_by(season, high) %>% 
-                        summarize(out_high = mean(!!outc_eq))} #
+                        summarize(out_high = sum(!!outc_eq))} #
   
     flurates <- data %>%  select(season, fluseason, !!outc_eq) %>% group_by(season, fluseason) %>%
-                          summarize(out_flu = mean(!!outc_eq))
+                          summarize(out_flu = sum(!!outc_eq))
   
   #join the tables
     if("high" %in% names(data)){

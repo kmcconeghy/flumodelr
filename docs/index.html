@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-article">
+    <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -90,11 +90,8 @@
 
       
       </header><div class="row">
-  <div class="col-md-9 contents">
-    
+  <div class="contents col-md-9">
 
-    
-    
 <div id="flumodelr-an-r-package-for-estimating-attributable-influenza-morbidity-and-mortality" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#flumodelr-an-r-package-for-estimating-attributable-influenza-morbidity-and-mortality" class="anchor"></a>flumodelr: An R Package for Estimating Attributable Influenza Morbidity and Mortality</h1></div>
@@ -108,13 +105,21 @@
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install from CRAN: (Not implemented yet)</span></a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"flumodelr"</span>)</a>
-<a class="sourceLine" id="cb1-3" title="3"></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="co"># Or the the development version from GitHub:</span></a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="co"># install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb1-6" title="6">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"kmcconeghy/flumodelr"</span>)</a></code></pre></div>
-<p>This package relies heavily on the suite of packages and programming termed “Tidyverse”, e.g. “dplyr”, “lubridate”, that must be installed for proper functioning.</p>
+<p>```{r, eval=F}</p>
+</div>
+<div id="install-from-cran-not-implemented-yet" class="section level1">
+<h1 class="hasAnchor">
+<a href="#install-from-cran-not-implemented-yet" class="anchor"></a>install from CRAN: (Not implemented yet)</h1>
+<p>install.packages(“flumodelr”)</p>
+</div>
+<div id="or-the-the-development-version-from-github" class="section level1">
+<h1 class="hasAnchor">
+<a href="#or-the-the-development-version-from-github" class="anchor"></a>Or the the development version from GitHub:</h1>
+</div>
+<div id="installpackagesdevtools" class="section level1">
+<h1 class="hasAnchor">
+<a href="#installpackagesdevtools" class="anchor"></a>install.packages(“devtools”)</h1>
+<p>devtools::install_github(“kmcconeghy/flumodelr”) ``` This package relies heavily on the suite of packages and programming termed “Tidyverse”, e.g. “dplyr”, “lubridate”, that must be installed for proper functioning.</p>
 </div>
 <div id="usage" class="section level1">
 <h1 class="hasAnchor">
@@ -124,63 +129,29 @@
 <div id="simple-example" class="section level1">
 <h1 class="hasAnchor">
 <a href="#simple-example" class="anchor"></a>Simple Example</h1>
+<p><code>{r, include=F} library(flumodelr, quietly = T, warn.conflicts = F) library(tidyverse, quietly = T, warn.conflicts = F)</code></p>
 <div id="example-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-data" class="anchor"></a>Example data</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">fludta &lt;-<span class="st"> </span>fludta</a>
-<a class="sourceLine" id="cb2-2" title="2">fludta</a></code></pre></div>
-<pre><code>## # A tibble: 2,857 x 10
-##     year  week fludeaths alldeaths perc_fludeaths yrweek_dt  fluyr
-##    &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;int&gt;          &lt;dbl&gt; &lt;date&gt;     &lt;int&gt;
-##  1  1962     1       646     13033           4.96 1961-12-31  1961
-##  2  1962     2       663     13238           5.01 1962-01-07  1961
-##  3  1962     3       701     13324           5.26 1962-01-14  1961
-##  4  1962     4       646     13241           4.88 1962-01-21  1961
-##  5  1962     5       614     13044           4.71 1962-01-28  1961
-##  6  1962     6       609     13163           4.63 1962-02-04  1961
-##  7  1962     7       646     12904           5.01 1962-02-11  1961
-##  8  1962     8       668     12279           5.44 1962-02-18  1961
-##  9  1962     9       702     13418           5.23 1962-02-25  1961
-## 10  1962    10       623     13089           4.76 1962-03-04  1961
-## # ... with 2,847 more rows, and 3 more variables: prop_flupos &lt;dbl&gt;,
-## #   week_in_order &lt;int&gt;, epi &lt;lgl&gt;</code></pre>
+<p><code>{r } fludta &lt;- fludta fludta</code></p>
 </div>
 <div id="fit-traditional-serfling-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#fit-traditional-serfling-model" class="anchor"></a>Fit Traditional Serfling Model</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">flu_fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/fluserf.html">fluserf</a></span>(fludta, <span class="dt">outc =</span> perc_fludeaths, <span class="dt">time =</span> yrweek_dt)</a></code></pre></div>
+<p><code>{r } flu_fit &lt;- fluserf(fludta, outc = perc_fludeaths, time = yrweek_dt)</code></p>
 <p>Assumes epidemic influenza period of Sept. - May. Fits a cyclical trend line, y0, along with an threshold limit for epidemicity, y0_ul.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">flu_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span> (year, week, perc_fludeaths, y0, y0_ul)</a></code></pre></div>
-<pre><code>## # A tibble: 2,857 x 5
-##     year  week perc_fludeaths    y0 y0_ul
-##    &lt;int&gt; &lt;int&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1  1962     1           4.96  2.60  2.78
-##  2  1962     2           5.01  2.61  2.80
-##  3  1962     3           5.26  2.62  2.82
-##  4  1962     4           4.88  2.64  2.84
-##  5  1962     5           4.71  2.65  2.86
-##  6  1962     6           4.63  2.67  2.88
-##  7  1962     7           5.01  2.68  2.90
-##  8  1962     8           5.44  2.70  2.92
-##  9  1962     9           5.23  2.72  2.94
-## 10  1962    10           4.76  2.73  2.96
-## # ... with 2,847 more rows</code></pre>
+<p><code>{r } flu_fit %&gt;% select (year, week, perc_fludeaths, y0, y0_ul)</code></p>
 </div>
 <div id="influenza-time-series-plot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#influenza-time-series-plot" class="anchor"></a>Influenza Time-Series Plot</h3>
-<p>An convenience function for plotting the above fit lines.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="reference/fluplot.html">fluplot</a></span>(flu_fit, <span class="dt">xvar=</span>yrweek_dt, perc_fludeaths, y0, y0_ul,</a>
-<a class="sourceLine" id="cb7-2" title="2">                    <span class="dt">ylab=</span><span class="st">"% Deaths due to P&amp;I"</span>, </a>
-<a class="sourceLine" id="cb7-3" title="3">        <span class="dt">title=</span><span class="st">"Serfling Model"</span>)</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p>An convenience function for plotting the above fit lines.<br><code>{r } fluplot(flu_fit, xvar=yrweek_dt, perc_fludeaths, y0, y0_ul,                     ylab="% Deaths due to P&amp;I",          title="Serfling Model")</code></p>
 </div>
 </div>
 <div id="vignettes" class="section level1">
 <h1 class="hasAnchor">
 <a href="#vignettes" class="anchor"></a>Vignettes</h1>
-<p>Several companion documents have been written to assist interested readers with the background and use of the package. We suggest you start here: <a href="https://kmcconeghy.github.io/flumodelr/index.html">Introduction to flumodelr</a> or if the package is installed:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/vignette">vignette</a></span>(<span class="st">"01-Introduction"</span>, <span class="st">"flumodelr"</span>)</a></code></pre></div>
+<p>Several companion documents have been written to assist interested readers with the background and use of the package. We suggest you start here: <a href="https://kmcconeghy.github.io/flumodelr/index.html">Introduction to flumodelr</a> or if the package is installed:<br><code>{r, eval=F} vignette("01-Introduction", "flumodelr")</code></p>
 </div>
 <div id="latest-version-updates" class="section level1">
 <h1 class="hasAnchor">
@@ -195,7 +166,7 @@
 <div id="important-references" class="section level1">
 <h1 class="hasAnchor">
 <a href="#important-references" class="anchor"></a>Important References</h1>
-<ol style="list-style-type: decimal">
+<ol>
 <li><p>Serfling RE. Methods for current statistical analysis of excess pneumonia-influenza deaths. Public Health Rep. 1963 Jun; 78(6): 494 - 506. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1915276/">Pubmed Link</a></p></li>
 <li><p>Thompson WW1, Weintraub E, Dhankhar P, Cheng PY, Brammer L, Meltzer MI, Bresee JS, Shay DK. Estimates of US influenza-associated deaths made using four different methods. Influenza Other Respir Viruses. 2009 Jan;3(1):37-49. <a href="https://www.ncbi.nlm.nih.gov/pubmed/19453440">Pubmed Link</a></p></li>
 </ol>
@@ -217,6 +188,7 @@ Nina Joyce, Ph.D., Brown University School of Public Health, Dept. Health Servic
 <li><p>Baltazar Nunes. Researcher, Epidemiological Research Unit (Head), Departament of Epidemiology.</p></li>
 </ul>
 </div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -245,10 +217,8 @@ Nina Joyce, Ph.D., Brown University School of Public Health, Dept. Health Servic
 </ul>
 </div>
 
-      </div>
-
+  </div>
 </div>
-
 
       <footer><div class="copyright">
   <p>Developed by Kevin W. McConeghy, Rob Van Aalst, Andrew Zullo, Nina Joyce.</p>

@@ -13,17 +13,20 @@ library(flumodelr)
 fludta <- flumodelr::fludta
 
 ## ------------------------------------------------------------------------
-fludta %>% select(year,week,alldeaths,prop_flupos,week)
+df <- fludta %>% 
+  dplyr::filter(year>2010 & year <2016) %>%
+  select(year, week, alldeaths, prop_flupos, week)
 
 ## ------------------------------------------------------------------------
-fludta_mod <- ird(data =fludta, 
+fludta_mod <- ird(data =df, 
                   outc =alldeaths, 
                   viral=prop_flupos, 
                   time =week,
                   echo =T)
 
 ## ------------------------------------------------------------------------
-fludta_mod %>% select(year,week,alldeaths,prop_flupos,week, season, high, fluseason)
+fludta_mod %>% select(year, week, alldeaths, 
+                      prop_flupos, week, season, high, fluseason)
 
 ## ------------------------------------------------------------------------
 fludta_rates <- rb(data =fludta_mod, outc =alldeaths, echo = T)

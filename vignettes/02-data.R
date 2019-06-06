@@ -8,17 +8,17 @@ library(flumodelr)
 ## ------------------------------------------------------------------------
 cdc122 <- (flumodelr::cdc122city)  
 dim(cdc122)
-cdc122
+head(cdc122)
 
 ## ------------------------------------------------------------------------
 nrevss <- (flumodelr::nrevss)  
 dim(nrevss)
-nrevss
+head(nrevss)
 
 ## ------------------------------------------------------------------------
 ilinet <- (flumodelr::ilinet)  
 dim(ilinet)
-ilinet
+head(ilinet)
 
 ## ------------------------------------------------------------------------
 flumodelr::epiweek_dt
@@ -35,5 +35,6 @@ example <- cdc122 %>%
 
 example %>% select(year, week, FirstDateOfWeek) %>% 
   distinct() %>% 
-  dplyr::filter(year>2010)
+  dplyr::filter(year>2010) %>%
+  head(.)
 

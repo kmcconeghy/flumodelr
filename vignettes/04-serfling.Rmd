@@ -351,7 +351,8 @@ The CDC also describes the threshold as:
 ##The following command completes the above steps 
 ##fit serfling model
 flu_fit <- fluserf(data=df_cdc, outc=perc_fludeaths, time=yrweek_dt)
-flu_fit
+
+head(flu_fit)
 ```
 
 ### Plot function fluplot  

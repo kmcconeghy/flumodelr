@@ -10,9 +10,14 @@ library(scales)
 library(flumodelr)
 
 ## ---- echo=F, results='asis', fig.width=7--------------------------------
-fludta <- flumodelr::fludta
+df_cdc <- flumodelr::fludta %>%
+  dplyr::filter(year>=2010) %>%
+  mutate(t = row_number(), #set origin to october
+         theta = 2*t / 52,
+         sin_2 = sinpi(theta),
+         cos_2 = cospi(theta)) 
 
-g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) + 
+g1 <- ggplot(df_cdc, aes(x=yrweek_dt, y=perc_fludeaths)) + 
   geom_line(size=0.8, colour="#CC0000") +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
                expand=c(0, .9)) + 
@@ -21,10 +26,9 @@ g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) +
   theme_light(base_size=16) +
   theme(plot.title = element_text(size=14)) +
   labs(title="Figure 1. Pneumonia and Influenza Mortality")
-g1
 
 ## ---- echo=F, results='asis', fig.width=7--------------------------------
-g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) + 
+g1 <- ggplot(df_cdc, aes(x=yrweek_dt, y=perc_fludeaths)) + 
   geom_line(size=0.8, colour="#CC0000") +
   geom_smooth(method='lm') +
   scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
@@ -37,9 +41,157 @@ g1 <- ggplot(fludta, aes(x=yrweek_dt, y=perc_fludeaths)) +
        caption="Ordinary Least Squares")
 g1
 
+## ---- fig.width=7--------------------------------------------------------
+g1 <- ggplot(df_cdc, aes(x=yrweek_dt, y=fludeaths)) + 
+  geom_line(size=0.8) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of Deaths from P&I") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 1. Pneumonia and Influenza Mortality") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+g1
+
+## ------------------------------------------------------------------------
+df_low <- df_cdc %>%
+  dplyr::filter(yrweek_dt >= ymd('2011-10-01') & yrweek_dt <= ymd('2012-09-30')) %>%
+  mutate(t = row_number(), #set origin to october
+         theta = 2*t / 52,
+         sin_2 = sinpi(theta),
+         cos_2 = cospi(theta)) 
+
+lm(fludeaths ~ t + sin_2 + cos_2, #note the 0 term
+  data=df_low, na.action = na.exclude) -> mod_1_low 
+
+summary(mod_1_low)
+
+## ------------------------------------------------------------------------
+df_low_pred <- suppressWarnings(predict(mod_1_low, se.fit=TRUE, 
+          interval="prediction", level=0.90)) 
+
+df_low <- bind_cols(df_low, pred_yhat_0 = df_low_pred$fit[, 'fit'])
+
+g_mod_1 <- ggplot(df_low) + 
+  geom_line(aes(x=yrweek_dt, y=fludeaths), size=0.8, alpha=0.5) +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_0), linetype='dashed', size=1, color = 'blue') +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of deaths") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 2. Original Serfling equation fit to 2011/12") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+g_mod_1
+
+## ------------------------------------------------------------------------
+df_high <- df_cdc %>%
+  dplyr::filter(yrweek_dt >= ymd('2012-10-01') & yrweek_dt <= ymd('2013-09-30')) %>%
+  mutate(t = row_number(), #set origin to october
+         theta = 2*t / 52,
+         sin_2 = sinpi(theta),
+         cos_2 = cospi(theta)) 
+
+df_pred <- predict(mod_1_low, newdata=df_high, se.fit=TRUE, 
+           interval="prediction", level=0.90)  
+
+pred_yhat_0 <- df_pred$fit[,1] #fitted values
+pred_yhat_upr <- df_pred$fit[,3] 
+
+df_mod_1 <- df_high %>%
+  add_column(., pred_yhat_0, pred_yhat_upr)  
+
+## ---- fig.width=7--------------------------------------------------------
+g_mod_1 <- ggplot(df_mod_1) + 
+  geom_line(aes(x=yrweek_dt, y=fludeaths), size=0.8, alpha=0.5) +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_0), linetype='dashed', size=1, color = 'blue') +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_upr), linetype='dotted', color='red', size=1) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of deaths") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 3. 2011/12 estimates fitted to 2012/13 season") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+g_mod_1
+
+## ------------------------------------------------------------------------
+df_cdc_2  <- df_cdc %>%
+  dplyr::filter(fluyr<2014) %>%
+  mutate(t = row_number(), #set origin to october
+         theta = 2*t / 52,
+         sin_2 = sinpi(theta),
+         cos_2 = cospi(theta)) 
+
+mod_1_sec_fit <- df_cdc_2 %>%
+  lm(fludeaths ~ t + sin_2 + cos_2, #note the 0 term
+    data=., na.action = na.exclude) 
+
+df_pred <- predict(mod_1_sec_fit, newdata = df_cdc, se.fit=TRUE, 
+           interval="prediction", level=0.90)  
+
+pred_yhat_0 <- df_pred$fit[,1] #fitted values
+pred_yhat_upr <- df_pred$fit[,3] 
+
+df_mod_1_sec <- df_cdc %>%
+  add_column(., pred_yhat_0, pred_yhat_upr)  
+
+## ---- fig.width=7--------------------------------------------------------
+g_mod_1 <- ggplot(df_mod_1_sec[df_mod_1_sec$fluyr<2014, ]) + 
+  geom_line(aes(x=yrweek_dt, y=fludeaths), size=0.8, alpha=0.5) +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_0), linetype='dashed', size=1, color = 'blue') +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_upr), linetype='dotted', color='red', size=1) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of deaths") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 3. 2010 - 2014 estimates fitted") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+g_mod_1
+
+## ---- fig.width=7--------------------------------------------------------
+g_mod_1 <- ggplot(df_mod_1_sec[df_mod_1_sec$fluyr==2014, ]) + 
+  geom_line(aes(x=yrweek_dt, y=fludeaths), size=0.8, alpha=0.5) +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_0), linetype='dashed', size=1, color = 'blue') +
+  geom_line(aes(x=yrweek_dt, y=pred_yhat_upr), linetype='dotted', color='red', size=1) +
+  scale_x_date(labels = date_format("%Y"), date_breaks="1 year",
+               expand=c(0, .9)) + 
+  xlab("Year") + 
+  ylab("No. of deaths") + 
+  theme_light(base_size=16) +
+  theme(plot.title = element_text(size=14)) +
+  labs(title="Figure 3. 2010 - 2014 estimates fitted to 2014/2015 season") +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+g_mod_1
+
+## ------------------------------------------------------------------------
+df_rpt <- df_mod_1_sec %>%
+  dplyr::filter(fluyr==2014) %>%
+  select(fluyr, week, fludeaths, pred_yhat_0, pred_yhat_upr) %>%
+  rowwise() %>%
+  mutate(excess_deaths = max(fludeaths - pred_yhat_upr, 0)) %>%
+  round(., 0) 
+
+head(df_rpt)
+
+## ------------------------------------------------------------------------
+total <- formatC(sum(df_rpt$fludeaths), format = 'd', big.mark = ',')
+total_excess <- formatC(sum(df_rpt$excess_deaths), format = 'd', big.mark = ',')
+
 ## ---- results='as.is', fig.width=7---------------------------------------
 ## Add fourier term
 fit <- fludta %>%
+  dplyr::filter(year>=2010) %>%
   mutate(week2 = row_number(),
          theta = 2*week2/52,
          sin_f1 = sinpi(theta),
@@ -62,120 +214,9 @@ g1 <- ggplot(fit, aes(x=yrweek_dt)) +
 g1
 
 ## ------------------------------------------------------------------------
-fludta %>% select(yrweek_dt, perc_fludeaths)
-
-## ------------------------------------------------------------------------
-fludta <- fludta %>%
-  mutate(epi = if_else(month(yrweek_dt)>=10 | month(yrweek_dt)<=5, T, F))  
-
-fludta %>%
-  dplyr::filter(year>=2010)
-
-## ------------------------------------------------------------------------
-## Compute fourier terms
-fludta_serfling <- fludta %>%
-  mutate(week2 = row_number(),
-         theta = 2*week2/52,
-         sin_f1 = sinpi(theta),
-         cos_f1 = cospi(theta))
-
-## ------------------------------------------------------------------------
-base_fit <- fludta_serfling %>%
-  dplyr::filter(epi==F & year<2015) %>%
-  lm(perc_fludeaths ~ week2 + sin_f1 + cos_f1, 
-     data=., na.action = na.exclude)
-
-## ------------------------------------------------------------------------
-## Fitted values + prediction interval
-df_pred <- fludta_serfling %>%
-  dplyr::filter(year==2014 & week>=40 | year>2014) %>%
-  predict(base_fit, newdata=., se.fit=TRUE, 
-          interval="confidence", level=0.90) #must specify 0.9 bc two-sided
-
-pred_y0 <- df_pred$fit[,1] #fitted values
-pred_y0_serf <- df_pred$fit[,3] 
-
-df_base <- fludta %>%
-  dplyr::filter(year==2014 & week>=40 | year>2014) %>%
-  add_column(., pred_y0, pred_y0_serf)  
-
-df_base %>% select(year, week, perc_fludeaths, 
-                   pred_y0, pred_y0_serf)  
-
-## ---- echo=F, results='as.is', fig.width=7-------------------------------
-#Set up graph labels, line specs
-line_names <- c("% Deaths From P&I", "Expected %", "Epidemic Threshold")
-line_cols <- c("#CC0000", "black", "black")
-line_types <- c(1, 1, 2)
-names(line_cols) <- line_names
-names(line_types) <- line_names
-  
-ggplot(df_base, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=perc_fludeaths, colour=line_names[[1]], 
-                linetype=line_names[[1]]), size=0.8) +
-  geom_line(aes(y=pred_y0, colour=line_names[[2]], 
-                linetype=line_names[[2]]), size=0.8) +
-  geom_line(aes(y=pred_y0_serf, colour=line_names[[3]], 
-                linetype=line_names[[3]]), size=0.8) +
-  scale_colour_manual("Line", breaks=line_names, values = line_cols) +
-  scale_linetype_manual("Line", breaks=line_names, values = line_types) +
-  scale_x_date(labels = date_format("%b"), date_breaks="1 month",
-               expand=c(0, .9)) + 
-  xlab("2014 - 2015 Influenza Season") + ylab("% of Deaths from P&I") + 
-  theme_light(base_size=14) +
-  theme(legend.text=element_text(size=10), 
-        plot.title = element_text(size=14)) +
-  labs(title="Figure 4. Pneumonia and Influenza Mortality") +
-  guides(colour = guide_legend("Line"), linetype = guide_legend("Line"))
-
-## ------------------------------------------------------------------------
-df_excess <- df_base %>%
-  mutate(threshold = if_else(perc_fludeaths > pred_y0_serf, T, F),
-         simple_excess = if_else((perc_fludeaths - pred_y0_serf)>0,
-         perc_fludeaths - pred_y0_serf, 0))
-
-## ------------------------------------------------------------------------
-## Identify consecutive epidemic periods  
-  df_serf_excess <- df_excess %>%
-    mutate(serf_rule = if_else(threshold==T & 
-                                 lead(threshold)==T & 
-                                 lag(threshold)==T, T, F))
-##reset beginning and end periods
-  df_serf_excess <- df_serf_excess %>%
-    mutate(serf_rule = if_else(serf_rule==F & 
-                                 threshold==T & 
-                                 lead(serf_rule)==T, T, serf_rule),
-           serf_rule = if_else(serf_rule==F, 
-                               threshold==T & 
-                               lag(serf_rule)==T, T, serf_rule))
-  
- ##compute excess deaths
-   df_serf_excess <- df_serf_excess %>%
-     mutate(serf_excess = if_else(serf_rule==T, 
-                                  perc_fludeaths - pred_y0_serf, 0))
-
-
-df_serf_excess %>% select(year, week, threshold, simple_excess, serf_rule, serf_excess)
-
-## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
-ggplot(df_serf_excess, aes(x=yrweek_dt)) + 
-  geom_line(aes(y=simple_excess, colour="Excess mortality"), size=0.8, linetype=2) +
-  geom_line(aes(y=perc_fludeaths, colour="Reported mortality"), size=0.8, linetype=1) +
-  scale_x_date(labels = date_format("%b"), date_breaks="1 month",
-               expand=c(0, .9)) + 
-  scale_colour_manual("Line",
-                      values = c("Excess mortality"="#CC0000", 
-                                 "Reported mortality"="black")) +
-  xlab("2014- 2015 Influenza Year") + 
-  ylab("% Deaths from P&I") + 
-  theme_light(base_size=16) +
-  theme(plot.title = element_text(size=14)) +
-  labs(title="Figure 5. Periods of excess mortality over time")
-
-## ------------------------------------------------------------------------
 ##The following command completes the above steps 
 ##fit serfling model
-flu_fit <- fluserf(data=fludta, outc=perc_fludeaths, time=yrweek_dt)
+flu_fit <- fluserf(data=df_cdc, outc=perc_fludeaths, time=yrweek_dt)
 flu_fit
 
 ## ---- results='as.is', fig.width=7.0-------------------------------------

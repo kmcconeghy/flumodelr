@@ -99,8 +99,8 @@ head(df.ILI)
                 perc_fludeaths = fludeaths/alldeaths*100) %>%
       mutate(yrweek_dt = epiweek_dt(year, week)[[1]],
              fluyr = case_when(
-               month(yrweek_dt)>=6 ~ year(yrweek_dt),
-               month(yrweek_dt)<=5  ~ year(yrweek_dt)-1)
+               month(yrweek_dt)>=7 ~ year(yrweek_dt),
+               month(yrweek_dt)<=6  ~ year(yrweek_dt)-1)
              ) %>%
       na.omit() %>% #drop missing
       ungroup() %>%

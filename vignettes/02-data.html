@@ -12,54 +12,287 @@
 
 <meta name="author" content="Kevin W. McConeghy" />
 
-<meta name="date" content="2017-12-28" />
+<meta name="date" content="2019-06-06" />
 
 <title>flumodelr: Data</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -69,8 +302,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">flumodelr: Data</h1>
-<h4 class="author"><em>Kevin W. McConeghy</em></h4>
-<h4 class="date"><em>2017-12-28</em></h4>
+<h4 class="author">Kevin W. McConeghy</h4>
+<h4 class="date">2019-06-06</h4>
 
 
 
@@ -84,18 +317,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>National Center for Health Statistics (NCHS) mortality surveillance data – &gt; NCHS collects death certificate data from state vital statistics offices for &gt; all deaths occurring in the United States. Pneumonia and influenza (P&amp;I) deaths are identified based on ICD-10 multiple cause of death codes. NCHS surveillance data are aggregated by the week of death occurrence and as a result, P&amp;I percentages based on the NCHS surveillance data are released two &gt; weeks after the week of death to allow for collection of enough data to produce a stable P&amp;I percentage. The NCHS surveillance data based on P&amp;I percentage for earlier weeks are continually revised and may increase or decrease as new and updated death certificate data are received from the states by NCHS. The seasonal baseline of P&amp;I deaths is calculated using a periodic regression model that incorporates a robust regression procedure applied to data from the previous five years. An increase of 1.645 standard &gt; deviations above the seasonal baseline of P&amp;I deaths is considered the “epidemic threshold,” i.e., the point at which the observed proportion of deaths attributed to pneumonia or influenza was significantly higher than would be expected at that time of the year in the absence of substantial influenza-related mortality.</p>
 </blockquote>
 <p><a href="https://www.cdc.gov/flu/weekly/overview.htm" class="uri">https://www.cdc.gov/flu/weekly/overview.htm</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cdc122 &lt;-<span class="st"> </span>(flumodelr<span class="op">::</span>cdc122city)  
-<span class="kw">dim</span>(cdc122)
-<span class="co">#&gt; [1] 346342      8</span>
-cdc122
-<span class="co">#&gt; # A tibble: 346,342 x 8</span>
-<span class="co">#&gt;   region state city    year  week deaths_pnaflu deaths_allcause deaths_65~</span>
-<span class="co">#&gt;    &lt;int&gt; &lt;chr&gt; &lt;chr&gt;  &lt;int&gt; &lt;int&gt;         &lt;int&gt;           &lt;int&gt;      &lt;int&gt;</span>
-<span class="co">#&gt; 1      1 MA    Boston  1962     1            11             262        146</span>
-<span class="co">#&gt; 2      1 MA    Boston  1962     2            11             270        167</span>
-<span class="co">#&gt; 3      1 MA    Boston  1962     3             5             237        142</span>
-<span class="co">#&gt; 4      1 MA    Boston  1962     4            12             285        175</span>
-<span class="co">#&gt; # ... with 346,338 more rows</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">cdc122 &lt;-<span class="st"> </span>(flumodelr<span class="op">::</span>cdc122city)  </a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">dim</span>(cdc122)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co">#&gt; [1] 346342      8</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">head</span>(cdc122)</a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="co">#&gt; # A tibble: 6 x 8</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co">#&gt;   region state city   year  week deaths_pnaflu deaths_allcause</span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt;         &lt;int&gt;           &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co">#&gt; 1      1 MA    Bost~  1962     1            11             262</span></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="co">#&gt; 2      1 MA    Bost~  1962     2            11             270</span></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="co">#&gt; 3      1 MA    Bost~  1962     3             5             237</span></a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="co">#&gt; 4      1 MA    Bost~  1962     4            12             285</span></a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt; # ... with 2 more rows, and 1 more variable: deaths_65older &lt;int&gt;</span></a></code></pre></div>
 </div>
 </div>
 <div id="nrevss" class="section level1">
@@ -112,18 +345,19 @@ cdc122
 <p>The U.S. WHO and NREVSS collaborating laboratories report the total number &gt; of respiratory specimens tested and the number positive for influenza types &gt; A and B each week to CDC. Most of the U.S. WHO collaborating laboratories also report the influenza A subtype (H1 or H3) of the viruses they have isolated, but the majority of NREVSS laboratories do not report the influenza A subtype.</p>
 </blockquote>
 <p>For more information: <a href="http://www.cdc.gov/flu/weekly/overview.htm#Viral" class="uri">http://www.cdc.gov/flu/weekly/overview.htm#Viral</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nrevss &lt;-<span class="st"> </span>(flumodelr<span class="op">::</span>nrevss)  
-<span class="kw">dim</span>(nrevss)
-<span class="co">#&gt; [1] 14094    12</span>
-nrevss
-<span class="co">#&gt; # A tibble: 14,094 x 12</span>
-<span class="co">#&gt;   state   year  week spec~ spec~ type~ type~ type~ type~ type~ type~ type~</span>
-<span class="co">#&gt;   &lt;chr&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span>
-<span class="co">#&gt; 1 Alaba~  2010    40    54  0        0     0     0     0     0     0     0</span>
-<span class="co">#&gt; 2 Alaska  2010    40    40  0        0     0     0     0     0     0     0</span>
-<span class="co">#&gt; 3 Arizo~  2010    40    40  2.50     0     0     1     0     0     0     0</span>
-<span class="co">#&gt; 4 Arkan~  2010    40    15  0        0     0     0     0     0     0     0</span>
-<span class="co">#&gt; # ... with 14,090 more rows</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">nrevss &lt;-<span class="st"> </span>(flumodelr<span class="op">::</span>nrevss)  </a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">dim</span>(nrevss)</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt; [1] 14094    12</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="kw">head</span>(nrevss)</a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; # A tibble: 6 x 12</span></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt;   state  year  week spec_tot spec_pos type_A_h1n1 type_A_h1 type_A_h3</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;    &lt;dbl&gt;       &lt;int&gt;     &lt;int&gt;     &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; 1 Alab~  2010    40       54      0             0         0         0</span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="co">#&gt; 2 Alas~  2010    40       40      0             0         0         0</span></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="co">#&gt; 3 Ariz~  2010    40       40      2.5           0         0         1</span></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="co">#&gt; 4 Arka~  2010    40       15      0             0         0         0</span></a>
+<a class="sourceLine" id="cb2-12" title="12"><span class="co">#&gt; # ... with 2 more rows, and 4 more variables: type_A_np &lt;int&gt;,</span></a>
+<a class="sourceLine" id="cb2-13" title="13"><span class="co">#&gt; #   type_A_us &lt;int&gt;, type_B &lt;int&gt;, type_A_h3n2 &lt;int&gt;</span></a></code></pre></div>
 </div>
 </div>
 <div id="ilinet" class="section level1">
@@ -136,18 +370,18 @@ nrevss
 <p>The number and percent of patients presenting with ILI each week will vary &gt; by region and season due to many factors, including having different provider type mixes (children present with higher rates of ILI than adults, &gt; and therefore regions with a higher percentage of pediatric practices will have higher numbers of cases). Therefore it is not appropriate to compare the magnitude of the percent of visits due to ILI between regions and seasons.</p>
 </blockquote>
 <p>For more information, see: <a href="http://www.cdc.gov/flu/weekly/overview.htm#Outpatient" class="uri">http://www.cdc.gov/flu/weekly/overview.htm#Outpatient</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ilinet &lt;-<span class="st"> </span>(flumodelr<span class="op">::</span>ilinet)  
-<span class="kw">dim</span>(ilinet)
-<span class="co">#&gt; [1] 19556     7</span>
-ilinet
-<span class="co">#&gt; # A tibble: 19,556 x 7</span>
-<span class="co">#&gt;   state     year  week ili_perc ili_tot providers patients</span>
-<span class="co">#&gt;   &lt;chr&gt;    &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;   &lt;int&gt;     &lt;int&gt;    &lt;int&gt;</span>
-<span class="co">#&gt; 1 Alabama   2010    40    2.13      249        35    11664</span>
-<span class="co">#&gt; 2 Alaska    2010    40    0.875      15         7     1714</span>
-<span class="co">#&gt; 3 Arizona   2010    40    0.675     172        49    25492</span>
-<span class="co">#&gt; 4 Arkansas  2010    40    0.696      18        15     2586</span>
-<span class="co">#&gt; # ... with 19,552 more rows</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">ilinet &lt;-<span class="st"> </span>(flumodelr<span class="op">::</span>ilinet)  </a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">dim</span>(ilinet)</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#&gt; [1] 19556     7</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="kw">head</span>(ilinet)</a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="co">#&gt; # A tibble: 6 x 7</span></a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="co">#&gt;   state     year  week ili_perc ili_tot providers patients</span></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="co">#&gt;   &lt;chr&gt;    &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;   &lt;int&gt;     &lt;int&gt;    &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb3-8" title="8"><span class="co">#&gt; 1 Alabama   2010    40    2.13      249        35    11664</span></a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="co">#&gt; 2 Alaska    2010    40    0.875      15         7     1714</span></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="co">#&gt; 3 Arizona   2010    40    0.675     172        49    25492</span></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="co">#&gt; 4 Arkansas  2010    40    0.696      18        15     2586</span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="co">#&gt; # ... with 2 more rows</span></a></code></pre></div>
 </div>
 <div id="mmwr-weeks" class="section level2">
 <h2>MMWR Weeks</h2>
@@ -160,53 +394,56 @@ ilinet
 <blockquote>
 <p>“The first day of any MMWR week is Sunday. MMWR week numbering is sequential beginning with 1 and incrementing with each week to a maximum of 52 or 53. MMWR week #1 of an MMWR year is the first week of the year that has at least four days in the calendar year.”</p>
 </blockquote>
-<p>This means if Jan. 1 occurs on a Sunday, Monday, Tuesday or Wednesday, the calendar week that includes Jan. 1 would be MMWR week #1. If Jan 1 occurs on a Thursday, Friday, or Saturday, the calendar week that includes Jan 1 would be the last MMWR week of the previous year (#52 or #53). Because of this rule, December 29, 30, and 31 could potentially fall into MMWR week #1 of the following MMWR year.</p>
+<p>This means if Jan. 1 occurs on a Sunday, Monday, Tuesday or Wednesday, the calendar week that includes Jan. 1 would be MMWR week #1. If Jan 1 occurs on a Thursday, Friday, or Saturday, the calendar week that includes Jan 1 would be the last MMWR week of the previous year (#52 or #53). Because of this rule, December 29, 30, and 31 could potentially fall into MMWR week #1 of the following MMWR year.</p>
 <p>All <code>?ilinet</code> , <code>?cdc122city</code> and <code>?nrevss</code> datasets are imported in their raw CDC format. It is the perogative of the user to determine how best to treat the CDC MMWR week definition. However, we illustrate below how the above description was used to compute a first day of week, date variable for the example dataset <code>?fludta</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">flumodelr<span class="op">::</span>epiweek_dt</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">#&gt; function(year, weeknum) {</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt;   #Compute 4th day in January</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt;   jan4 &lt;- ymd(paste(year, 1, 4, sep=&quot;-&quot;))</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt;   #Compute day of week</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt;   DofW &lt;- wday(jan4, week_start = 7)-1 #Sunday start</span></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt;   #The -1 is  correction for how wday() counts days  </span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt;   #If Jan 4th was Sun, starting week date is 01/04/xxxx</span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="co">#&gt;   startweek &lt;- if_else(DofW == 7, jan4, (jan4 - (DofW)))</span></a>
+<a class="sourceLine" id="cb4-13" title="13"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb4-14" title="14"><span class="co">#&gt;   #First Date of Week</span></a>
+<a class="sourceLine" id="cb4-15" title="15"><span class="co">#&gt;   d0 = startweek + (weeknum - 1) * 7</span></a>
+<a class="sourceLine" id="cb4-16" title="16"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb4-17" title="17"><span class="co">#&gt;   #Last Date of Week</span></a>
+<a class="sourceLine" id="cb4-18" title="18"><span class="co">#&gt;   d1 = startweek + (weeknum - 1) * 7 + 6 </span></a>
+<a class="sourceLine" id="cb4-19" title="19"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb4-20" title="20"><span class="co">#&gt;   return(list(d0 = ymd(d0), d1 = ymd(d1)))</span></a>
+<a class="sourceLine" id="cb4-21" title="21"><span class="co">#&gt; }</span></a>
+<a class="sourceLine" id="cb4-22" title="22"><span class="co">#&gt; &lt;environment: namespace:flumodelr&gt;</span></a></code></pre></div>
 <p>Alternative package which addresses this:</p>
 <p>Xiahong Zhao (2016). EpiWeek: Conversion Between Epidemiological Weeks and Calendar Dates. R package version 1.1. <a href="https://CRAN.R-project.org/package=EpiWeek" class="uri">https://CRAN.R-project.org/package=EpiWeek</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;EpiWeek&quot;</span>)</code></pre></div>
-<p>Also see <code>?epiweek()</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">install.packages</span>(<span class="st">&quot;EpiWeek&quot;</span>)</a></code></pre></div>
+<p>Also see <code>?epiweek_dt()</code></p>
 </div>
 <div id="using-the-cdc122-cities-as-example" class="section level2">
 <h2>Using the CDC122 Cities as Example</h2>
 <p>Code adapted from <code>EpiWeek</code> package.</p>
 <div id="conversion-function" class="section level4">
 <h4>Conversion function</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lubridate) <span class="co">#For working with dates  </span>
-EpiWeekToDates &lt;-<span class="st"> </span><span class="cf">function</span>(year, weeknum) {
-  
-  <span class="co">#Compute 4th day in January</span>
-    jan4 &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="kw">paste</span>(year, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dt">sep=</span><span class="st">&quot;-&quot;</span>))
-  
-  <span class="co">#Compute day of week</span>
-    DofW &lt;-<span class="st"> </span><span class="kw">wday</span>(jan4, <span class="dt">week_start =</span> <span class="dv">7</span>)<span class="op">-</span><span class="dv">1</span> <span class="co">#Sunday start</span>
-    <span class="co">#The -1 is  correction for how wday() counts days  </span>
-    
-  <span class="co">#If Jan 4th was Sun, starting week date is 01/04/xxxx</span>
-    startweek &lt;-<span class="st"> </span><span class="kw">if_else</span>(DofW <span class="op">==</span><span class="st"> </span><span class="dv">7</span>, jan4, (jan4 <span class="op">-</span><span class="st"> </span>(DofW)))
- 
-  <span class="co">#First Date of Week</span>
-    d0 =<span class="st"> </span>startweek <span class="op">+</span><span class="st"> </span>(weeknum <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="dv">7</span>
-  
-  <span class="co">#Last Date of Week</span>
-    d1 =<span class="st"> </span>startweek <span class="op">+</span><span class="st"> </span>(weeknum <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="dv">7</span> <span class="op">+</span><span class="st"> </span><span class="dv">6</span> 
-  
-  <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">d0 =</span> <span class="kw">ymd</span>(d0), <span class="dt">d1 =</span> <span class="kw">ymd</span>(d1)))
-}</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span>cdc122 <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">FirstDateOfWeek =</span> <span class="kw">EpiWeekToDates</span>(year, week)[[<span class="dv">1</span>]])
-
-example <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, FirstDateOfWeek) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">distinct</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(year<span class="op">&gt;</span><span class="dv">2010</span>)
-<span class="co">#&gt; # A tibble: 300 x 3</span>
-<span class="co">#&gt;    year  week FirstDateOfWeek</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;date&gt;         </span>
-<span class="co">#&gt; 1  2011     1 2011-01-02     </span>
-<span class="co">#&gt; 2  2011     2 2011-01-09     </span>
-<span class="co">#&gt; 3  2011     3 2011-01-16     </span>
-<span class="co">#&gt; 4  2011     4 2011-01-23     </span>
-<span class="co">#&gt; # ... with 296 more rows</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">library</span>(lubridate) <span class="co">#For working with dates  </span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">example &lt;-<span class="st"> </span>cdc122 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">FirstDateOfWeek =</span> <span class="kw">epiweek_dt</span>(year, week)[[<span class="dv">1</span>]])</a>
+<a class="sourceLine" id="cb7-3" title="3"></a>
+<a class="sourceLine" id="cb7-4" title="4">example <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year, week, FirstDateOfWeek) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="st">  </span><span class="kw">distinct</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(year<span class="op">&gt;</span><span class="dv">2010</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-7" title="7"><span class="st">  </span><span class="kw">head</span>(.)</a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="co">#&gt; # A tibble: 6 x 3</span></a>
+<a class="sourceLine" id="cb7-9" title="9"><span class="co">#&gt;    year  week FirstDateOfWeek</span></a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;date&gt;         </span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="co">#&gt; 1  2011     1 2011-01-02     </span></a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="co">#&gt; 2  2011     2 2011-01-09     </span></a>
+<a class="sourceLine" id="cb7-13" title="13"><span class="co">#&gt; 3  2011     3 2011-01-16     </span></a>
+<a class="sourceLine" id="cb7-14" title="14"><span class="co">#&gt; 4  2011     4 2011-01-23     </span></a>
+<a class="sourceLine" id="cb7-15" title="15"><span class="co">#&gt; # ... with 2 more rows</span></a></code></pre></div>
 </div>
 </div>
 </div>
