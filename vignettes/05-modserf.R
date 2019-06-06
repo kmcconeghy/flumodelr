@@ -9,10 +9,11 @@ library(lubridate)
 library(scales)
 
 ## ------------------------------------------------------------------------
-fludta <- flumodelr::fludta
+df_cdc <- flumodelr::fludta %>%
+  dplyr::filter(year>=2010 & year<2016) 
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
-ggplot(fludta, aes(x=yrweek_dt)) + 
+ggplot(df_cdc, aes(x=yrweek_dt)) + 
   geom_line(aes(y=perc_fludeaths, colour="% Deaths from P&I", 
                 linetype="% Deaths from P&I"), size=0.8) +
   geom_line(aes(y=prop_flupos*10, colour="No. Positive per 10 isolates", 
@@ -35,39 +36,38 @@ ggplot(fludta, aes(x=yrweek_dt)) +
   labs(title="Figure 1. Influenza (+) isolates over time")
 
 ## ------------------------------------------------------------------------
-fludta <- flumodelr::fludta
-fludta
+head(df_cdc)
 
 ## ------------------------------------------------------------------------
-fludta_mod <- fludta %>%
-  mutate(week2 = row_number(),
-         theta = 2*week2/52,
-         sin_f1 = sinpi(theta),
-         cos_f1 = cospi(theta))
+df_cdc_2 <- df_cdc %>%
+  mutate(t = row_number(), #set origin to october
+         theta = 2*t / 52,
+         sin_2 = sinpi(theta),
+         cos_2 = cospi(theta))
 
 ## ------------------------------------------------------------------------
-fludta_mod <- fludta_mod %>%
-  mutate(week_2 = week2^2,
-         week_3 = week2^3,
-         week_4 = week2^4,
-         week_5 = week2^5)
+df_cdc_2 <- df_cdc_2 %>%
+  mutate(week_2 = t^2,
+         week_3 = t^3,
+         week_4 = t^4,
+         week_5 = t^5)
 
 ## ------------------------------------------------------------------------
-base_fit <- fludta_mod %>%
-  lm(perc_fludeaths ~ week2 + week_2 + week_3 + week_4 + week_5 +
-       prop_flupos + sin_f1 + cos_f1, data=., na.action = na.exclude)
+base_fit <- df_cdc_2 %>%
+  lm(perc_fludeaths ~ t + week_2 + week_3 + week_4 + week_5 +
+       prop_flupos + sin_2 + cos_2, data=., na.action = na.exclude)
 summary(base_fit)
 
 ## ------------------------------------------------------------------------
-base_pred <- fludta_mod %>%
+base_pred <- df_cdc_2 %>%
   mutate(prop_flupos = 0) %>% #Note setting to zero
   predict(base_fit, newdata=., se.fit=TRUE, 
           interval="prediction", level=0.90)
 
 ## ------------------------------------------------------------------------
-fludta_fitted <- fludta %>%
+fludta_fitted <- df_cdc_2 %>%
   add_column(., y0=base_pred$fit[,1], y0_ul=base_pred$fit[,3]) 
-fludta_fitted
+head(fludta_fitted)
 
 ## ---- echo=F, results='as.is', fig.width=7-------------------------------
 #Set up graph labels, line specs
@@ -99,7 +99,8 @@ ggplot(fludta_fitted, aes(x=yrweek_dt)) +
 
 ## ------------------------------------------------------------------------
 df_excess <- fludiff(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0_ul)
-df_excess
+df_excess %>%
+  head(.)
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
 ggplot(df_excess, aes(x=yrweek_dt)) + 
@@ -118,7 +119,8 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
 
 ## ------------------------------------------------------------------------
 df_excess <- fludiff(fludta_fitted, obsvar=perc_fludeaths, fitvar=y0)
-df_excess
+df_excess %>%
+  head(.)
 
 ## ---- echo=F, results='as.is', fig.width=7.0-----------------------------
 ggplot(df_excess, aes(x=yrweek_dt)) + 
@@ -136,58 +138,64 @@ ggplot(df_excess, aes(x=yrweek_dt)) +
   labs(title="Figure 4. Periods of excess mortality over time")
 
 ## ------------------------------------------------------------------------
-fludta <- flumodelr::fludta  
-
-fludta_mod <- flum(fludta, model="ird", 
+fludta_mod <- flum(df_cdc_2, model="ird", 
                    outc=perc_fludeaths, time=yrweek_dt,
                    viral=prop_flupos)
 
-fludta_mod %>% select(year, week, prop_flupos, season, high)
+head(fludta_mod)
 
 ## ------------------------------------------------------------------------
-fludta_mod <- flum(fludta, model="fluserf", 
+fludta_mod <- flum(df_cdc_2, model="fluserf", 
                    outc=perc_fludeaths, time=yrweek_dt)
 
-fludta_mod %>% select(year, week, perc_fludeaths, y0, y0_ul)
+fludta_mod %>% 
+  select(year, week, perc_fludeaths, y0, y0_ul) %>%
+  head()
 
-## ------------------------------------------------------------------------
-flum(fludta, model="fluglm", 
-            outc=fludeaths, time=week_in_order, 
-            viral = "prop_flupos")
+## ---- eval=F-------------------------------------------------------------
+#  fludta_mod %>%
+#    dplyr::filter(!is.na(prop_flupos)) %>%
+#  flum(., model="fluglm",
+#              outc=fludeaths, time=t,
+#              viral = "prop_flupos") %>%
+#  head(.)
 
 ## ------------------------------------------------------------------------
 ## Without polynomial terms
-flum(fludta, model="fluglm", 
+flum(df_cdc_2, model="fluglm", 
      outc=fludeaths, time=week_in_order, 
      viral = "prop_flupos", poly=F)
 
 ## ------------------------------------------------------------------------
 ## Epidemic period, non-specified
-flum(fludta, model="fluglm", 
-     outc=fludeaths, time=week_in_order, 
+flum(df_cdc_2, model="fluglm", 
+     outc=fludeaths, time=t, 
      season=T)
 
 ## ------------------------------------------------------------------------
 ## Epidemic period specified
-fludta_mod <- ird(data=fludta, 
-               outc = perc_fludeaths, viral=prop_flupos, time=week_in_order)
+fludta_mod <- ird(data=df_cdc_2, 
+               outc = perc_fludeaths, viral=prop_flupos, time=t)
 
-flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=week_in_order, 
-       season=high)
+flum(data=fludta_mod, model="fluglm", outc=fludeaths, time=t, 
+       season=high) %>%
+  head(.)
 
 ## ------------------------------------------------------------------------
 ## Poisson model with offset term
-flum(fludta, 
+flum(df_cdc_2, 
      model="fluglm", outc = fludeaths, 
-     time = week_in_order, season=T, 
-     family=poisson, offset=log(alldeaths))
+     time = t, season=T, 
+     family=poisson, offset=log(alldeaths)) %>%
+  head(.)
 
 ## ------------------------------------------------------------------------
 ## Negative binomial model with offset term
-flum(fludta, 
+flum(df_cdc_2, 
      model="fluglm", outc = fludeaths, 
-     time = week_in_order, viral='prop_flupos',
-     glmnb = T)
+     time = t, viral='prop_flupos',
+     glmnb = T) %>%
+head(.)
 
 ## ------------------------------------------------------------------------
 sessioninfo::session_info()

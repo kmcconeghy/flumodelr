@@ -217,12 +217,10 @@ g1
 ##The following command completes the above steps 
 ##fit serfling model
 flu_fit <- fluserf(data=df_cdc, outc=perc_fludeaths, time=yrweek_dt)
-flu_fit
+
+head(flu_fit)
 
 ## ---- results='as.is', fig.width=7.0-------------------------------------
 fluplot(flu_fit, xvar=yrweek_dt, perc_fludeaths, y0, y0_ul,
                     ylab="% Deaths from P&I", title="Serfling Model")
-
-## ------------------------------------------------------------------------
-sessioninfo::session_info()
 
